@@ -12,7 +12,7 @@ export class AppComponent implements OnInit {
   public title = 'app';
 
   private client_id: string = "52b5a2676ba940f8922f7b62fe0679c0";
-  private scope: string = "";
+  private scope: string = "playlist-read-private playlist-read-collaborative";
 
   constructor(private currentRoute: ActivatedRoute){}
 
