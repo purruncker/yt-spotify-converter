@@ -43,7 +43,6 @@ export class AppComponent implements OnInit {
 
   public async hello() : Promise<void>{
 
-    const fakeTOken: string = "BQAItLtIVW9J4lSau5-i9UFFmb3qGl54gKsFfqgjzgef5NSlnMMuzSkhBFMLyY_mKjs9aZ6iB4qSKSIcqGj6QOF_pTxAGUJ0_tnmXpzBZUP1deI91wL315YV6zp7MPLh76kZlsQ7dFyIAcHLUrzdsg0kBG7N_bwAJglO0jQmoiyS";
 
     const opts = {
       headers : new HttpHeaders({
@@ -54,7 +53,7 @@ export class AppComponent implements OnInit {
     }
     this.httpclient.get("https://api.spotify.com/v1/me",opts).toPromise().then(data=>
     {
-      this.name = Object.getOwnPropertyDescriptor(data,'display_name')?.value ;
+      this.name = data['display_name'];
       console.log(this.name);
     }
     )
