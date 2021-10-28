@@ -34,5 +34,24 @@ export class AppComponent implements OnInit {
     })
   }
 
-  
+  public name:String ="";
+
+  public async hello() : Promise<void>{
+
+    const fakeTOken: string = "BQDGh8uLE7-jb4ySk63zxYNA9871regtlGYfvDObOsJRo6xdEzXuG4IHVzmsrXvjf2eSisdcnl8JXK2RNyq2Jcc0kidaAg4JvgwNcnqHUzQxxWSi9VTMsmr3tVqwMk_x06MVB_YAIuWCWop1qX6mCbkMMja-cR8dnJnfvP0djzyI";
+
+    const opts = {
+      headers : new HttpHeaders({
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + fakeTOken
+      })
+    }
+    this.httpclient.get("https://api.spotify.com/v1/me",opts).toPromise().then(data=>
+    {
+      this.name = data['display_name'];
+      console.log(this.name);
+    }
+    )
+  } 
 }
