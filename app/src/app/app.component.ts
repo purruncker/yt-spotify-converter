@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import * as querystring from 'query-string';
+import { ActivatedRoute, Router } from '@angular/router';
+import * as querystring from "query-string";
 
 @Component({
   selector: 'app-root',
@@ -9,15 +9,14 @@ import * as querystring from 'query-string';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
+  [x: string]: any;
 
   public title = 'app';
 
   private client_id: string = "52b5a2676ba940f8922f7b62fe0679c0";
   private scope: string = "playlist-read-private playlist-read-collaborative";
 
-  private token : string = "";
-
-  constructor(private currentRoute: ActivatedRoute, private httpclient: HttpClient){}
+  constructor(private currentRoute: ActivatedRoute, private httpclient : HttpClient){}
 
   public async loginWithSpotify(): Promise<void> {
     const data = {
@@ -33,16 +32,15 @@ export class AppComponent implements OnInit {
 
   public async ngOnInit(): Promise<void> {
     this.currentRoute.queryParams.subscribe((map) => {
-      this.token =map.code ;
-      console.log(this.token);
+      console.log(map.code)
     })
-
   }
 
   public name:String ="";
 
   public async hello() : Promise<void>{
 
+    const fakeTOken: string = "BQDGh8uLE7-jb4ySk63zxYNA9871regtlGYfvDObOsJRo6xdEzXuG4IHVzmsrXvjf2eSisdcnl8JXK2RNyq2Jcc0kidaAg4JvgwNcnqHUzQxxWSi9VTMsmr3tVqwMk_x06MVB_YAIuWCWop1qX6mCbkMMja-cR8dnJnfvP0djzyI";
 
     const opts = {
       headers : new HttpHeaders({
