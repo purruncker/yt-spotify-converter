@@ -1,3 +1,4 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as querystring from "query-string";
@@ -14,7 +15,7 @@ export class AppComponent implements OnInit {
   private client_id: string = "52b5a2676ba940f8922f7b62fe0679c0";
   private scope: string = "playlist-read-private playlist-read-collaborative";
 
-  constructor(private currentRoute: ActivatedRoute){}
+  constructor(private currentRoute: ActivatedRoute, private httpclient : HttpClient){}
 
   public async loginWithSpotify(): Promise<void> {
     const data = {
