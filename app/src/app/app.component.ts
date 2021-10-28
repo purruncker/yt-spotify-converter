@@ -2,6 +2,9 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as querystring from "query-string";
+import { Observable } from 'rxjs';
+
+import { first, map } from "rxjs/operators"
 
 @Component({
   selector: 'app-root',
@@ -14,11 +17,12 @@ export class AppComponent implements OnInit {
   public title = 'app';
 
   private client_id: string = "52b5a2676ba940f8922f7b62fe0679c0";
-  private scope: string = "playlist-read-private playlist-read-collaborative";
+  private scope: string = "user-read-private playlist-read-private playlist-read-collaborative user-read-email";
+  private accessToken?: string;
 
-  constructor(private currentRoute: ActivatedRoute, private httpclient : HttpClient){}
+  constructor(private currentRoute: ActivatedRoute, private httpclient : HttpClient, private router: Router){}
 
-  public async loginWithSpotify(): Promise<void> {
+  public async requestSpotifyGrantCode(): Promise<void> {
     const data = {
       response_type: 'code',
       client_id: this.client_id,
@@ -30,9 +34,47 @@ export class AppComponent implements OnInit {
     window.location.href = "https://accounts.spotify.com/authorize?" + querystring.stringify(data);
   }
 
+  public requestSpotifyAccessToken(grantCode: string): Observable<string> {
+    return this.httpclient.post<string>("http://localhost:3000/authentication", { grantCode }).pipe(
+      // Only get first
+      first(),
+
+      // Extract accessToken from response and return only
+      // the value.
+      map((value) => {
+        return value["access_token"]
+      })
+    )
+  }
+
   public async ngOnInit(): Promise<void> {
     this.currentRoute.queryParams.subscribe((map) => {
-      console.log(map.code)
+      // TODO: Create route (e.g.: /authenticate) to receive login attempt
+
+      // Received grant_code.
+      // This is used to request an access_token, which is used
+      // for future requests to spotify.
+      const grantCode = map.code;
+
+      // Prevent error, because observer also triggered if route
+      // is accessed without a ?code query param.
+      if(!grantCode) return;
+
+      // Reset query params by navigating to exact same route
+      // but replacing queryParams. This prevents unknown
+      // grant_code error.
+      this.router.navigate([], {
+        relativeTo: this.currentRoute,
+        queryParams: {}
+      })
+
+      // Request the access token
+      this.requestSpotifyAccessToken(grantCode).subscribe((access_token) => {
+        console.log(access_token)
+
+        this.accessToken = access_token
+        this.hello()
+      })
     })
   }
 
@@ -40,13 +82,11 @@ export class AppComponent implements OnInit {
 
   public async hello() : Promise<void>{
 
-    const fakeTOken: string = "BQDGh8uLE7-jb4ySk63zxYNA9871regtlGYfvDObOsJRo6xdEzXuG4IHVzmsrXvjf2eSisdcnl8JXK2RNyq2Jcc0kidaAg4JvgwNcnqHUzQxxWSi9VTMsmr3tVqwMk_x06MVB_YAIuWCWop1qX6mCbkMMja-cR8dnJnfvP0djzyI";
-
     const opts = {
       headers : new HttpHeaders({
         "Accept": "application/json",
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + fakeTOken
+        "Authorization": "Bearer " + this.accessToken
       })
     }
     this.httpclient.get("https://api.spotify.com/v1/me",opts).toPromise().then(data=>
