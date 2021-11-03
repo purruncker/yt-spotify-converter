@@ -3,8 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as querystring from "query-string";
 import { Observable } from 'rxjs';
+import { playlist } from '../app/playlist'
 
 import { first, map } from "rxjs/operators"
+import { ArrayType } from '@angular/compiler';
 
 @Component({
   selector: 'app-root',
@@ -20,7 +22,7 @@ export class AppComponent implements OnInit {
   private scope: string = "user-read-private playlist-read-private playlist-read-collaborative user-read-email";
   private accessToken?: string;
 
-  constructor(private currentRoute: ActivatedRoute, private httpclient : HttpClient, private router: Router){}
+  constructor(private currentRoute: ActivatedRoute, private httpclient: HttpClient, private router: Router) { }
 
   public async requestSpotifyGrantCode(): Promise<void> {
     const data = {
@@ -30,7 +32,7 @@ export class AppComponent implements OnInit {
       redirect_uri: "http://localhost:4200",
       state: "veryRandomString123"
     }
-    
+
     window.location.href = "https://accounts.spotify.com/authorize?" + querystring.stringify(data);
   }
 
@@ -58,7 +60,7 @@ export class AppComponent implements OnInit {
 
       // Prevent error, because observer also triggered if route
       // is accessed without a ?code query param.
-      if(!grantCode) return;
+      if (!grantCode) return;
 
       // Reset query params by navigating to exact same route
       // but replacing queryParams. This prevents unknown
@@ -74,26 +76,55 @@ export class AppComponent implements OnInit {
 
         this.accessToken = access_token
         this.hello()
+        this.getPlaylists()
       })
     })
   }
 
-  public name:String ="";
+  public name: String = "";
 
-  public async hello() : Promise<void>{
+  public async hello(): Promise<void> {
 
     const opts = {
-      headers : new HttpHeaders({
+      headers: new HttpHeaders({
         "Accept": "application/json",
         "Content-Type": "application/json",
         "Authorization": "Bearer " + this.accessToken
       })
     }
-    this.httpclient.get("https://api.spotify.com/v1/me",opts).toPromise().then(data=>
-    {
+    this.httpclient.get("https://api.spotify.com/v1/me", opts).toPromise().then(data => {
       this.name = data['display_name'];
       console.log(this.name);
     }
     )
-  } 
+  }
+
+  public playlists: playlist[] = [];
+
+  public async getPlaylists(): Promise<void> {
+
+    const opts = {
+      headers: new HttpHeaders({
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + this.accessToken
+      })
+    }
+    this.httpclient.get("https://api.spotify.com/v1/me/playlists", opts).toPromise().then(data => {
+      if (!data.hasOwnProperty('items')) {
+        return;
+      }
+      let res = data['items'];
+      console.log(res.length)
+      for (let i = 0; i < res.length; i++) {
+        let item: playlist = {
+          id: res[i]['id'],
+          name: res[i]['name']
+        }
+        this.playlists.push(item);
+      }
+    }
+    )
+  }
+
 }
