@@ -101,30 +101,13 @@ export class AppComponent implements OnInit {
 
   public playlists: playlist[] = [];
 
-  public async getPlaylists(): Promise<void> {
+  public async getPlaylists(): Promise<playlist[]> {
 
-    const opts = {
-      headers: new HttpHeaders({
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + this.accessToken
-      })
-    }
-    this.httpclient.get("https://api.spotify.com/v1/me/playlists", opts).toPromise().then(data => {
-      if (!data.hasOwnProperty('items')) {
-        return;
-      }
-      let res = data['items'];
-      console.log(res.length)
-      for (let i = 0; i < res.length; i++) {
-        let item: playlist = {
-          id: res[i]['id'],
-          name: res[i]['name']
-        }
-        this.playlists.push(item);
-      }
+    this.httpclient.get("http://localhost:3000/spotify-playlist/" + this.accessToken).toPromise().then(data => {
+      this.playlists = data as playlist[];
     }
     )
+    return this.playlists
   }
 
 }

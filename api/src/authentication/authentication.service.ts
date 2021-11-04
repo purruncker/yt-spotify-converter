@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateAuthenticationDto } from './dto/create-authentication.dto';
 
 import axios from 'axios';
+
 import { ISpotifyAuthenticationDTO } from './dto/spotify-authentication.dto';
 
 @Injectable()
@@ -30,7 +31,7 @@ export class AuthenticationService {
       return axios.post("https://accounts.spotify.com/api/token", params, config).then((result) => {
         resolve(result.data as ISpotifyAuthenticationDTO)
       }).catch((error) => {
-        if(error.isAxiosError) {
+        if (error.isAxiosError) {
           reject(error.response.data)
         } else {
           reject(error)

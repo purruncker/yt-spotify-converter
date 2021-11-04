@@ -4,11 +4,12 @@ import { AppService } from './app.service';
 import { TestModule } from './test/test.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { ConfigModule } from '@nestjs/config';
+import { PlaylistSpotifyModule } from './playlist-spotify/playlist-spotify.module';
 
 @Module({
   imports: [
-    TestModule, 
-    AuthenticationModule, 
+    TestModule,
+    AuthenticationModule,
     ConfigModule.forRoot({
       isGlobal: true,
       envFilePath: [
@@ -17,9 +18,9 @@ import { ConfigModule } from '@nestjs/config';
         '.env.dev',
         '.env'
       ]
-    })
+    }), PlaylistSpotifyModule
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule {}
+export class AppModule { }
