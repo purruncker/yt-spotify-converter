@@ -5,6 +5,7 @@ import { TestModule } from './test/test.module';
 import { AuthenticationModule } from './authentication/authentication.module';
 import { ConfigModule } from '@nestjs/config';
 import { PlaylistSpotifyModule } from './playlist-spotify/playlist-spotify.module';
+import { SongsModule } from './songs/songs.module';
 
 @Module({
   imports: [
@@ -18,7 +19,7 @@ import { PlaylistSpotifyModule } from './playlist-spotify/playlist-spotify.modul
         '.env.dev',
         '.env'
       ]
-    }), PlaylistSpotifyModule
+    }), PlaylistSpotifyModule, SongsModule
   ],
   controllers: [AppController],
   providers: [AppService],

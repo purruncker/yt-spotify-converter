@@ -1,4 +1,4 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as querystring from "query-string";
@@ -7,6 +7,7 @@ import { playlist } from '../app/playlist'
 
 import { first, map } from "rxjs/operators"
 import { ArrayType } from '@angular/compiler';
+import { song } from './songs';
 
 @Component({
   selector: 'app-root',
@@ -82,6 +83,7 @@ export class AppComponent implements OnInit {
   }
 
   public name: String = "";
+  public showName: Boolean = true;
 
   public async hello(): Promise<void> {
 
@@ -97,9 +99,11 @@ export class AppComponent implements OnInit {
       console.log(this.name);
     }
     )
+    this.showName = true;
   }
 
   public playlists: playlist[] = [];
+  public showPlaylists: boolean = true;
 
   public async getPlaylists(): Promise<playlist[]> {
 
@@ -107,7 +111,29 @@ export class AppComponent implements OnInit {
       this.playlists = data as playlist[];
     }
     )
+    this.showPlaylist = true;
     return this.playlists
+  }
+
+  public songs: song[] = [];
+  public showSongs: boolean = true;
+
+  public async getSongs(id: string) {
+    //console.log(id);
+    const params = new HttpParams()
+      .set('token', this.accessToken);
+    //console.log(params);
+    this.httpclient.get("http://localhost:3000/songs/" + id, { params }).toPromise().then(data => {
+      this.songs = data as song[];
+    })
+    this.showPlaylists = false;
+    this.showName = false;
+    return this.songs;
+  }
+
+  public async home() {
+    await window.location.reload()
+    // this.requestSpotifyGrantCode()
   }
 
 }
