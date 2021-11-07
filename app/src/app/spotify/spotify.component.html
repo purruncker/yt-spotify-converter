@@ -1,0 +1,40 @@
+<button *ngIf="accessToken == ''" (click)="requestSpotifyGrantCode()">Anmelden mit
+    Spotify</button> <br>
+<br>
+<h1 *ngIf="name && showName"> Wilkommen {{name}}!</h1>
+<br>
+<div *ngIf="playlists.length && showPlaylists">
+    <h2>Gefundene Playlisten:</h2>
+    <tr>
+        <td>name</td>
+        <td>id</td>
+        <td>Anzahl Lieder</td>
+    </tr>
+    <tr *ngFor="let playlist of playlists">
+        <td>{{playlist.name}}</td>
+        <td>{{playlist.id}}</td>
+        <td>{{playlist.count}}</td>
+        <td>
+            <button (click)="getSongs(playlist.id)">exportieren</button> <br>
+        </td>
+
+    </tr>
+
+</div>
+
+<div *ngIf="songs.length && showSongs">
+    <h2>Gefundene Lieder:</h2>
+    <tr>
+        <td>name</td>
+        <td>Artist</td>
+    </tr>
+    <tr *ngFor="let song of songs">
+        <td>{{song.name}}</td>
+        <td *ngFor="let artist of song['artists']">
+            <p>{{artist['name']}}</p>
+        </td>
+    </tr>
+
+</div>
+
+<!--<app-yt *ngIf="songs.length" [testdata]="parentdata"></app-yt>-->

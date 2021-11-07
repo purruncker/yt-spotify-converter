@@ -6,6 +6,7 @@ import { AuthenticationModule } from './authentication/authentication.module';
 import { ConfigModule } from '@nestjs/config';
 import { PlaylistSpotifyModule } from './playlist-spotify/playlist-spotify.module';
 import { SongsModule } from './songs/songs.module';
+import { YtAuthModule } from './yt-auth/yt-auth.module';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { SongsModule } from './songs/songs.module';
         '.env.dev',
         '.env'
       ]
-    }), PlaylistSpotifyModule, SongsModule
+    }), PlaylistSpotifyModule, SongsModule, YtAuthModule
   ],
   controllers: [AppController],
   providers: [AppService],
