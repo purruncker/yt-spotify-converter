@@ -29,6 +29,7 @@ export class YtComponent implements OnInit {
 
       //localStorage.getItem('songs')
       //TODO: Remove after the export is done 
+      //if (localStorage)
     }
 
     this.currentRoute.queryParams.subscribe((map) => {
