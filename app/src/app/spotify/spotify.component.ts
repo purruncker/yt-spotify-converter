@@ -52,7 +52,8 @@ export class SpotifyComponent implements OnInit {
   }
 
   public async ngOnInit(): Promise<void> {
-    console.log(this.accessToken);
+    //console.log(this.accessToken);
+    //TODO: Localstorage for token
     this.currentRoute.queryParams.subscribe((map) => {
       // TODO: Create route (e.g.: /authenticate) to receive login attempt
       //console.log(map.code);

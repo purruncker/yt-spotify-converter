@@ -24,6 +24,7 @@ export class YtComponent implements OnInit {
 
   ngOnInit(): void {
     //console.log(this.test);
+    //TODO: Localstorage for token
     if (localStorage.getItem('songs') != undefined) {
       this.songs = JSON.parse(localStorage.getItem('songs'))
 
