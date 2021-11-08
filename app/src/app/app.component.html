@@ -1,5 +1,9 @@
-<button (click)="loginWithSpotify()">Anmelden mit Spotify</button><br>
-<button (click)="hello()">Check  log in</button>
+<nav>
+    <a routerLink="/">Home</a>
+    <a routerLink="/spotify">Spotify Login</a>
+    <a routerLink="/yt">Youtube Login</a>
+
+</nav>
 <br>
-<br>
-<h1 *ngIf="name"> Wilkommen {{name}}!</h1>
+<router-outlet></router-outlet>
+

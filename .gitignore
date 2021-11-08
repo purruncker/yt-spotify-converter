@@ -3,4 +3,7 @@ node_modules/
 .vscode/
 
 package-lock.json
-app/test.json
+
+.env.dev
+api/env.dev
+

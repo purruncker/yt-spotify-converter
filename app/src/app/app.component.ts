@@ -1,7 +1,12 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as querystring from "query-string";
+import { Observable } from 'rxjs';
+import { playlist } from './spotify/playlist'
+
+import { first, map } from "rxjs/operators"
+
 
 @Component({
   selector: 'app-root',
@@ -10,55 +15,15 @@ import * as querystring from "query-string";
 })
 export class AppComponent implements OnInit {
 
-  public title = 'app';
 
-  private client_id: string = "52b5a2676ba940f8922f7b62fe0679c0";
-  private scope: string = "user-read-private playlist-read-private playlist-read-collaborative user-read-email";
-
-  private token:String ="";
-  constructor(private currentRoute: ActivatedRoute, private httpclient : HttpClient){}
-
-  public async loginWithSpotify(): Promise<void> {
-    const data = {
-      response_type: 'token',
-      client_id: this.client_id,
-      scope: this.scope,
-      redirect_uri: "http://localhost:4200",
-      state: "veryRandomString123"
-    }
-    window.location.href = "https://accounts.spotify.com/authorize?" + querystring.stringify(data);
-  }
+  constructor(private currentRoute: ActivatedRoute, private httpclient: HttpClient, private router: Router) { }
 
   public async ngOnInit(): Promise<void> {
-    // this.currentRoute.queryParams.subscribe((map) => {
-    //   console.log(map['access_token']);
-    //   console.log(this.token)
-    // })
-    this.currentRoute.queryParams.subscribe(map => {
-
-      console.log(map);
-      this.token = map['access_token'];
-      console.log(this.token)
-    })
   }
 
-  public name:String ="";
+  public async home() {
+    await window.location.reload()
+    // this.requestSpotifyGrantCode()
+  }
 
-  public async hello() : Promise<void>{
-
-    const opts = {
-      headers : new HttpHeaders({
-        "Accept": "application/json",
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + this.token
-      })
-    }
-    console.log(this.token);
-    this.httpclient.get("https://api.spotify.com/v1/me",opts).toPromise().then(data=>
-    {
-      this.name = data['display_name'];
-      console.log(this.name);
-    }
-    )
-  } 
 }
