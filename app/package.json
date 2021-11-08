@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --open",
+    "start": "ng serve --open --watch",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
@@ -20,6 +20,7 @@
     "@angular/router": "~12.2.0",
     "query-string": "^7.0.1",
     "rxjs": "~6.6.0",
+    "tailwindcss": "^2.2.19",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
   },

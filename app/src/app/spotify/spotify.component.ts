@@ -21,7 +21,8 @@ export class SpotifyComponent implements OnInit {
   // private client_id_spotify: string = "52b5a2676ba940f8922f7b62fe0679c0";
   private client_id_spotify: string = "155c517b9e2548f0805bbc3b30896d63";
 
-  private scope_spotify: string = "user-read-private playlist-read-private playlist-read-collaborative user-read-email";
+  private playlistScopes: string = "playlist-read-private playlist-read-collaborative"
+  private scope_spotify: string = `user-read-private user-read-email ${this.playlistScopes}`;
   public accessToken?: string = '';
 
   constructor(private currentRoute: ActivatedRoute, private httpclient: HttpClient, private router: Router) { }
