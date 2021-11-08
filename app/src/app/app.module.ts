@@ -10,6 +10,7 @@ import { routingComponents } from './app-routing.module';
 import { ErrorPageComponent } from './error-page/error-page.component';
 import { HomePageComponent } from './home-page/home-page.component'
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -21,6 +22,7 @@ import { HomePageComponent } from './home-page/home-page.component'
     BrowserModule,
     HttpClientModule,
     AppRoutingModule
+
   ],
   providers: [],
   bootstrap: [AppComponent]
