@@ -5,8 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
 import { routingComponents } from './app-routing.module';
-import { ErrorPageComponent } from './error-page/error-page.component';
-import { HomePageComponent } from './home-page/home-page.component'
+import { ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -18,7 +17,9 @@ import { HomePageComponent } from './home-page/home-page.component'
   imports: [
     BrowserModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule,
+
 
   ],
   providers: [],

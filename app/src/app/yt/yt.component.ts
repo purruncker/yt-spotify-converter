@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as querystring from "query-string";
 import { Observable } from 'rxjs';
@@ -16,8 +17,18 @@ import { song } from '../spotify/songs';
 export class YtComponent implements OnInit {
 
   //@Input('testdata') public test;
-
-  constructor(private currentRoute: ActivatedRoute, private httpclient: HttpClient, private router: Router) { }
+  plalistNameform: FormGroup
+  constructor(
+    private currentRoute: ActivatedRoute,
+    private httpclient: HttpClient,
+    private router: Router,
+    private formbuilder: FormBuilder
+  ) {
+    this.plalistNameform = this.formbuilder.group({
+      plalistName: formbuilder.control('', [Validators.required]),
+      status: formbuilder.control("unlisted", [Validators.required])
+    })
+  }
 
   public accessToken?: string = '';
   public songs: song[] = [];
@@ -47,13 +58,14 @@ export class YtComponent implements OnInit {
 
         //console.log(access_token)
         this.accessToken = access_token;
+        console.log(this.accessToken)
       })
     }
     )
   }
 
   private client_id_youtube: string = "429913780229-21c99v1n1uubuu22l2afvvmetio46ldp.apps.googleusercontent.com";
-  private scope_youtube: string = "https://www.googleapis.com/auth/youtube";
+  private scope_youtube: string = "https://www.googleapis.com/auth/youtube.force-ssl";
 
   public async requestYoutubeGrantCode(): Promise<void> {
     const data = {
@@ -69,15 +81,33 @@ export class YtComponent implements OnInit {
 
   public requestYtAccessToken(grantCode: string): Observable<string> {
     return this.httpclient.post<string>("http://localhost:3000/yt-auth", { grantCode }).pipe(
-      // Only get first
       first(),
 
-      // Extract accessToken from response and return only
-      // the value.
       map((value) => {
         return value["access_token"]
       })
     )
+  }
+
+  public showSongs: boolean = false;
+  public toggleSongs() {
+    this.showSongs = !this.showSongs;
+  }
+
+  public onSubmitPlalistname() {
+    //console.log(this.plalistNameform.value['plalistName'])
+    //console.log(this.plalistNameform.value['status'])
+    const body = {
+
+      playlistName: this.plalistNameform.value['plalistName'],
+      acessToken: this.accessToken,
+      status: this.plalistNameform.value['status']
+
+    }
+    //console.log(body);
+    this.httpclient.post("http://localhost:3000/playlist-yt", body).toPromise().then(data => {
+      console.log(data)
+    })
   }
 
 }

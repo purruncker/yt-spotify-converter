@@ -17,7 +17,7 @@ export class YtAuthService {
 
       return axios.post("https://oauth2.googleapis.com/token", params).then((result) => {
         resolve(result.data as UpdateYtAuthDto)
-        console.log(result);
+        //console.log(result);
       }).catch((error) => {
         if (error.isAxiosError) {
           reject(error.response.data)
