@@ -10,8 +10,8 @@ export class PlaylistSpotifyController {
   constructor(private readonly playlistSpotifyService: PlaylistSpotifyService) { }
 
   @Get(':token')
-  create(@Param("token") createPlaylistSpotifyDto: CreatePlaylistSpotifyDto) {
-    return this.playlistSpotifyService.get(createPlaylistSpotifyDto);
+  create(@Param("token") accessToken: string) {
+    return this.playlistSpotifyService.get(accessToken);
   }
 
 }

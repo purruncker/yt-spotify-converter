@@ -1,16 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { CreatePlaylistSpotifyDto } from './dto/create-playlist-spotify.dto';
 import { CurrentUseresSpotifyPlaylistsDTO } from './dto/playlist-spotify.dto';
 import axios from 'axios';
+
 @Injectable()
 export class PlaylistSpotifyService {
-  public async get(createPlaylistSpotifyDto: CreatePlaylistSpotifyDto) {
+  public async get(accessToken: string) {
 
     const header = {
       headers: {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + createPlaylistSpotifyDto
+        'Authorization': 'Bearer ' + accessToken
       }
     }
     return axios.get("https://api.spotify.com/v1/me/playlists", header).then(data => {

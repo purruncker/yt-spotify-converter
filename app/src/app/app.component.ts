@@ -7,6 +7,7 @@ import { playlist } from './spotify/playlist'
 
 import { first, map } from "rxjs/operators"
 
+
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -24,6 +25,5 @@ export class AppComponent implements OnInit {
     await window.location.reload()
     // this.requestSpotifyGrantCode()
   }
-
 
 }
