@@ -1,7 +1,9 @@
 <body>
-    <button (click)="requestYoutubeGrantCode()">Anmelden mit Youtube</button> <br>
+
+    
+    <button class="bg-red-600 text-white text-center px-6 hover:bg-red-700 active:bg-red-800 inline-block" (click)="requestYoutubeGrantCode()"><i class="fab fa-youtube w-9"></i> Mit YouTube anmelden</button>
     <br>
-    <button *ngIf="songs.length" (click)="toggleSongs()">Gefundene Lieder anzeigen </button> <br>
+    <button *ngIf="songs.length" (click)="toggleSongs()" class="inline-block">Gefundene Lieder anzeigen </button> <br>
     <br>
     <div *ngIf="songs.length && showSongs">
         <h2>Gefundene Lieder:</h2>

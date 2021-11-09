@@ -3,3 +3,9 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+@import "../node_modules/@fortawesome/fontawesome-free/css/all.min.css";
+
+button {
+    @apply transition-all appearance-none bg-indigo-400 rounded-md py-2 px-4 text-sm text-white font-semibold hover:bg-indigo-500 active:bg-indigo-600;
+}
