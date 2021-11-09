@@ -3,10 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as querystring from "query-string";
 import { Observable } from 'rxjs';
-import { playlist } from './playlist'
 
 import { first, map } from "rxjs/operators"
-import { song } from './songs';
+import { PlaylistDTO } from 'src/app/dto/playlist.dto';
+import { SongDTO } from 'src/app/dto/song.dto';
 
 @Component({
   selector: 'app-spotify',
@@ -108,20 +108,20 @@ export class SpotifyComponent implements OnInit {
     this.showName = true;
   }
 
-  public playlists: playlist[] = [];
+  public playlists: PlaylistDTO[] = [];
   public showPlaylists: boolean = true;
 
-  public async getPlaylists(): Promise<playlist[]> {
+  public async getPlaylists(): Promise<PlaylistDTO[]> {
 
     this.httpclient.get("http://localhost:3000/spotify-playlist/" + this.accessToken).toPromise().then(data => {
-      this.playlists = data as playlist[];
+      this.playlists = data as PlaylistDTO[];
     }
     )
     this.showPlaylist = true;
     return this.playlists
   }
 
-  public songs: song[] = [];
+  public songs: SongDTO[] = [];
   public showSongs: boolean = false;
 
   public async getSongs(id: string) {
@@ -130,7 +130,7 @@ export class SpotifyComponent implements OnInit {
       .set('token', this.accessToken);
     //console.log(params);
     await this.httpclient.get("http://localhost:3000/songs/" + id, { params }).toPromise().then(data => {
-      this.songs = data as song[];
+      this.songs = data as SongDTO[];
     })
     this.showPlaylists = false;
     this.showName = false;

@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as querystring from "query-string";
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
-import { song } from '../spotify/songs';
+import { SongDTO } from 'src/app/dto/song.dto';
 
 //import { first, map } from "rxjs/operators"
 
@@ -31,7 +31,7 @@ export class YtComponent implements OnInit {
   }
 
   public accessToken?: string = '';
-  public songs: song[] = [];
+  public songs: SongDTO[] = [];
 
   ngOnInit(): void {
     //console.log(this.test);
