@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { routingComponents } from './app-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
 
+// TODO: Create about page with listed technologies etc... (especially CockroachDB)
 
 @NgModule({
   declarations: [
