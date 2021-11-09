@@ -13,7 +13,7 @@ export class PlaylistYtService {
     const params = {
       "snippet": {
         "title": CreatePlaylistYtDto.playlistName,
-        "description": "Made by Robert"
+        "description": CreatePlaylistYtDto.description + "\n \nMade with Cockroach Converter by Robert and Cedric"
       },
       "status": {
         "privacyStatus": CreatePlaylistYtDto.status
@@ -30,7 +30,14 @@ export class PlaylistYtService {
     }
     const url = `https://youtube.googleapis.com/youtube/v3/playlists?part=snippet%2Cstatus&key=${process.env.YT_API_KEY}`
     return axios.post(url, params, config).then(data => {
-      console.log(data);
+      //console.log(data);
+      let res: ResultPlaylistYtDto = {
+        id: data.data.id,
+        title: data.data.snippet.title,
+        channelTitle: data.data.snippet.channelTitle,
+        status: data.data.status.privacyStatus
+      }
+      return res;
       //TODO:response for frontend
     }).catch((error) => {
       console.log(error.response)

@@ -1,7 +1,9 @@
 <body>
 
-    
-    <button class="bg-red-600 text-white text-center px-6 hover:bg-red-700 active:bg-red-800 inline-block" (click)="requestYoutubeGrantCode()"><i class="fab fa-youtube w-9"></i> Mit YouTube anmelden</button>
+
+    <button *ngIf="accessToken == ''"
+        class="bg-red-600 text-white text-center px-6 hover:bg-red-700 active:bg-red-800 inline-block"
+        (click)="requestYoutubeGrantCode()"><i class="fab fa-youtube w-9"></i> Mit YouTube anmelden</button>
     <br>
     <button *ngIf="songs.length" (click)="toggleSongs()" class="inline-block">Gefundene Lieder anzeigen </button> <br>
     <br>
@@ -21,10 +23,17 @@
 
     </div>
 
-    <form *ngIf="accessToken != ''" [formGroup]="plalistNameform" (ngSubmit)="onSubmitPlalistname()">
+    <form *ngIf="(accessToken != '') && (ytPlaylist == undefined)" [formGroup]="plalistNameform"
+        (ngSubmit)="onSubmitPlaylistname()">
         <label>
             Lege den Namen der Playlist fest:
-            <input type="text" formControlName="plalistName">
+            <input class="flex flex-wrap min-w-max" type="text" formControlName="plalistName" style=" width: 45rem;">
+        </label>
+        <br>
+        <label *ngIf="this.plalistNameform.value['plalistName']">
+            Lege die Beschreibung der Playlist fest (optional):
+            <input class="flex flex-wrap " type="text" formControlName="plalistDescription"
+                style="height:50px; width: 45rem;">
         </label>
         <br>
         <label *ngIf="this.plalistNameform.value['plalistName']">
@@ -36,9 +45,17 @@
             </select>
         </label>
         <br>
-        <button class="btn" type="submit" mat-stroked-button [disabled]="plalistNameform.invalid">Importieren!</button>
+        <button *ngIf="stopInPut" class="btn" type="submit" mat-stroked-button
+            [disabled]="plalistNameform.invalid">Importieren!</button>
         <br>
 
     </form>
+
+    <div *ngIf="ytPlaylist">
+        <p>"{{ytPlaylist.title}}" wurde erfolgreich für den Account "{{ytPlaylist.channelTitle}}" mit dem Status
+            "{{ytPlaylist.status}}" erstellt</p>
+
+    </div>
+
 
 </body>

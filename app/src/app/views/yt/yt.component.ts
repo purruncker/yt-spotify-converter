@@ -6,6 +6,7 @@ import * as querystring from "query-string";
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { SongDTO } from 'src/app/dto/song.dto';
+import { YtPlaylistDTO } from 'src/app/dto/ytPlaylist.dto';
 
 //import { first, map } from "rxjs/operators"
 
@@ -26,7 +27,8 @@ export class YtComponent implements OnInit {
   ) {
     this.plalistNameform = this.formbuilder.group({
       plalistName: formbuilder.control('', [Validators.required]),
-      status: formbuilder.control("unlisted", [Validators.required])
+      status: formbuilder.control("unlisted", [Validators.required]),
+      plalistDescription: formbuilder.control("", Validators.maxLength(99))
     })
   }
 
@@ -55,10 +57,9 @@ export class YtComponent implements OnInit {
       })
 
       this.requestYtAccessToken(grantCode).subscribe((access_token) => {
-
         //console.log(access_token)
         this.accessToken = access_token;
-        console.log(this.accessToken)
+        //console.log(this.accessToken)
       })
     }
     )
@@ -94,19 +95,23 @@ export class YtComponent implements OnInit {
     this.showSongs = !this.showSongs;
   }
 
-  public onSubmitPlalistname() {
+  public ytPlaylist: YtPlaylistDTO = undefined;
+  public stopInPut: boolean = true;
+  public onSubmitPlaylistname() {
+    this.stopInPut = !this.stopInPut;
     //console.log(this.plalistNameform.value['plalistName'])
     //console.log(this.plalistNameform.value['status'])
     const body = {
 
       playlistName: this.plalistNameform.value['plalistName'],
       acessToken: this.accessToken,
-      status: this.plalistNameform.value['status']
+      status: this.plalistNameform.value['status'],
+      description: this.plalistNameform.value['plalistDescription']
 
     }
     //console.log(body);
     this.httpclient.post("http://localhost:3000/playlist-yt", body).toPromise().then(data => {
-      console.log(data)
+      this.ytPlaylist = data;
     })
   }
 

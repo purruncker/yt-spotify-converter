@@ -5,7 +5,7 @@ import * as querystring from "query-string";
 import { Observable } from 'rxjs';
 
 import { first, map } from "rxjs/operators"
-import { PlaylistDTO } from 'src/app/dto/playlist.dto';
+import { SpotifyPlaylistDTO } from 'src/app/dto/spotifyPlaylist.dto';
 import { SongDTO } from 'src/app/dto/song.dto';
 
 @Component({
@@ -108,13 +108,13 @@ export class SpotifyComponent implements OnInit {
     this.showName = true;
   }
 
-  public playlists: PlaylistDTO[] = [];
+  public playlists: SpotifyPlaylistDTO[] = [];
   public showPlaylists: boolean = true;
 
-  public async getPlaylists(): Promise<PlaylistDTO[]> {
+  public async getPlaylists(): Promise<SpotifyPlaylistDTO[]> {
 
     this.httpclient.get("http://localhost:3000/spotify-playlist/" + this.accessToken).toPromise().then(data => {
-      this.playlists = data as PlaylistDTO[];
+      this.playlists = data as SpotifyPlaylistDTO[];
     }
     )
     this.showPlaylist = true;
