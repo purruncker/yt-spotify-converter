@@ -1,2 +1,2 @@
-# yt spotify converter 
+# Distributed by just two Cockroaches
  
