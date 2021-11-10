@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Observable, of } from 'rxjs';
+import { AsyncSubject, Observable, of, ReplaySubject } from 'rxjs';
 import { ErrorDTO } from '../dto/error.dto';
 
 @Injectable({
@@ -8,20 +8,26 @@ import { ErrorDTO } from '../dto/error.dto';
 export class HttpErrorService {
 
   constructor() { }
-  private error: ErrorDTO = undefined;
 
-  public createHttpError(msg: string, errCode: number) {
-    this.error = {
-      HttmlCode: errCode,
-      message: msg
+  public err: ErrorDTO = undefined;
+  public observer = Observable.create(observer => {
+    setInterval(() => {
+      observer.next(this.err)
+    }, 2000)
+  });
+
+  initError(): Observable<ErrorDTO> {
+    return this.observer
+  }
+  deleteError() {
+    this.err = undefined
+  }
+
+  createError(msg: string, loc: string, code: number) {
+    this.err = {
+      message: msg,
+      code: code,
+      locaition: loc
     }
-  }
-
-  public initError() {
-    return of(this.error)
-  }
-
-  public deleteError() {
-    this.error = undefined;
   }
 }

@@ -9,16 +9,17 @@ import { HttpErrorService } from 'src/app/services/http-error.service';
 })
 export class AlertModalComponent implements OnInit {
 
-  // @Input() error: ErrorDTO;
-  // @Output() deleteError: EventEmitter<any> = new EventEmitter();
-  public error: ErrorDTO;
-  constructor(errorService: HttpErrorService) { }
+  @Input() error: ErrorDTO;
+  @Output() deleteError: EventEmitter<any> = new EventEmitter();
+
+  constructor(private errService: HttpErrorService) { }
 
   ngOnInit(): void {
-
   }
 
-  // public initDeleteError() {
-  //   this.deleteError.emit()
-  // }
+  public initDeleteError() {
+    window.location.reload();
+    this.errService.deleteError()
+    // this.deleteError.emit()
+  }
 }

@@ -1,5 +1,5 @@
 <app-navbar></app-navbar>
 <router-outlet></router-outlet>
 <!--<app-alert-modal (deleteError)="deleteError()" [error]="error" *ngIf="error != undefined"></app-alert-modal>-->
-<app-alert-modal *ngIf="(error | async) != undefined"></app-alert-modal>
-<button (click)="createErr()">create err</button>
+<app-alert-modal [error]="error" *ngIf="error  != undefined"></app-alert-modal>
+<button (click)="createErr()">Create ERR</button>

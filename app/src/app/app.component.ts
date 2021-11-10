@@ -10,18 +10,19 @@ import { HttpErrorService } from './services/http-error.service';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private httpErrService: HttpErrorService) {
+  constructor(private errService: HttpErrorService) {
 
   }
-  public error: Observable<ErrorDTO> = undefined
+  public error: ErrorDTO = undefined;
 
   public async ngOnInit(): Promise<void> {
-    this.error = this.httpErrService.initError();
+    this.errService.initError().subscribe(data => {
+      this.error = data;
+    })
   }
-  public deleteError() {
 
-  }
-  public createErr() {
+  public async createErr() {
+    await this.errService.createError("test", "test app component", 404)
 
   }
 

@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { SongDTO } from 'src/app/dto/song.dto';
 import { YtPlaylistDTO } from 'src/app/dto/ytPlaylist.dto';
+import { HttpErrorService } from 'src/app/services/http-error.service';
 
 //import { first, map } from "rxjs/operators"
 
@@ -23,7 +24,8 @@ export class YtComponent implements OnInit {
     private currentRoute: ActivatedRoute,
     private httpclient: HttpClient,
     private router: Router,
-    private formbuilder: FormBuilder
+    private formbuilder: FormBuilder,
+    private errService: HttpErrorService
   ) {
     this.plalistNameform = this.formbuilder.group({
       plalistName: formbuilder.control('', [Validators.required, Validators.pattern('^[A-Za-zñÑáéíóúÁÉÍÓÚ ]+$')]),
@@ -114,7 +116,7 @@ export class YtComponent implements OnInit {
       this.ytPlaylist = data;
     }).catch((error) => {
       console.log(error);
-
+      this.errService.createError("playlist konnte nicht angelegt werden", "create YT playlist", error.code)
     })
   }
 

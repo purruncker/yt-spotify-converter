@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as querystring from "query-string";
 import { Observable } from 'rxjs';
@@ -14,6 +14,7 @@ import { SongDTO } from 'src/app/dto/song.dto';
   styleUrls: ['./spotify.component.scss']
 })
 export class SpotifyComponent implements OnInit {
+
   [x: string]: any;
 
   public title = 'app';
@@ -104,7 +105,10 @@ export class SpotifyComponent implements OnInit {
       this.name = data['display_name'];
       //console.log(this.name);
     }
-    )
+    ).catch((error) => {
+      console.log(error);
+      this.errService.createError("Dein Name konnten nicht abgerufen werden", "getUserInfo Spotify", error.code)
+    })
     this.showName = true;
   }
 
@@ -116,7 +120,10 @@ export class SpotifyComponent implements OnInit {
     this.httpclient.get("http://localhost:3000/spotify-playlist/" + this.accessToken).toPromise().then(data => {
       this.playlists = data as SpotifyPlaylistDTO[];
     }
-    )
+    ).catch((error) => {
+      console.log(error);
+      this.errService.createError("Deine Playlisten konnten nicht abgerufen werden", "getPlaylists Spotify", error.code)
+    })
     this.showPlaylist = true;
     return this.playlists
   }
@@ -131,6 +138,9 @@ export class SpotifyComponent implements OnInit {
     //console.log(params);
     await this.httpclient.get("http://localhost:3000/songs/" + id, { params }).toPromise().then(data => {
       this.songs = data as SongDTO[];
+    }).catch((error) => {
+      console.log(error);
+      this.errService.createError("Deine Songs konnten nicht abgerufen werden", "getSongs Spotify", error.code)
     })
     this.showPlaylists = false;
     this.showName = false;

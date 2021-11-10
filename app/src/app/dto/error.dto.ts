@@ -1,4 +1,5 @@
 export interface ErrorDTO {
     message?: string;
-    HttmlCode?: number;
+    code?: number;
+    locaition?: string;
 }
