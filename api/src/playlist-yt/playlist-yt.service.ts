@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { CreatePlaylistYtDto } from './dto/create-playlist-yt.dto';
 import { ResultPlaylistYtDto } from './dto/update-playlist-yt.dto';
@@ -40,8 +40,10 @@ export class PlaylistYtService {
       return res;
       //TODO:response for frontend
     }).catch((error) => {
+
       console.log(error.response)
       console.log(error.response.data.error.errors)
+      throw new HttpException(error.response.data.error.message, error.response.data.error.code)
     })
     return
   }

@@ -8,7 +8,9 @@ async function bootstrap() {
   // Prevent requests getting blocked by
   // CORS Policy by allowing every domain (origin)
   app.enableCors({ origin: "*" })
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(new ValidationPipe({
+    disableErrorMessages: true,
+  }));
   await app.listen(3000);
 }
 bootstrap();

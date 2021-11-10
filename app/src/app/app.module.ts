@@ -8,6 +8,7 @@ import { routingComponents } from './app-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { AboutComponent } from './views/about/about.component';
+import { AlertModalComponent } from './views/alert-modal/alert-modal.component';
 
 // TODO: Create about page with listed technologies etc... (especially CockroachDB)
 
@@ -17,6 +18,7 @@ import { AboutComponent } from './views/about/about.component';
     routingComponents,
     NavbarComponent,
     AboutComponent,
+    AlertModalComponent,
 
   ],
   imports: [

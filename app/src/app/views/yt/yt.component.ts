@@ -26,9 +26,9 @@ export class YtComponent implements OnInit {
     private formbuilder: FormBuilder
   ) {
     this.plalistNameform = this.formbuilder.group({
-      plalistName: formbuilder.control("", [Validators.required, Validators.maxLength(120)]),
-      status: formbuilder.control("unlisted", [Validators.required]),
-      plalistDescription: formbuilder.control("", Validators.maxLength(120))
+      plalistName: formbuilder.control('', [Validators.required, Validators.pattern('^[A-Za-zñÑáéíóúÁÉÍÓÚ ]+$')]),
+      status: formbuilder.control("unlisted", [Validators.required, Validators.pattern('^[A-Za-zñÑáéíóúÁÉÍÓÚ ]+$')]),
+      plalistDescription: formbuilder.control("", Validators.maxLength(99))
     })
   }
 
@@ -112,6 +112,9 @@ export class YtComponent implements OnInit {
     //console.log(body);
     this.httpclient.post("http://localhost:3000/playlist-yt", body).toPromise().then(data => {
       this.ytPlaylist = data;
+    }).catch((error) => {
+      console.log(error);
+
     })
   }
 
