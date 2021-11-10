@@ -1,0 +1,15 @@
+<div class="block w-full px-16 py-5">
+    <div class="flex content-center">
+        <div class="inline-flex items-center align-middle pr-4">
+            <img class="inline-block h-12 w-12 pr-2 align-middle" src="../../../assets/logo/cockroach.svg" /> 
+            <h4 class="inline-block font-bold align-middle">Cockroach Converter</h4>
+        </div>
+        <div class="inline-block align-middle h-full flex-grow pl-4">
+            <ul class="flex justify-end">
+                <li [routerLink]="['/spotify']" routerLinkActive="active"><span>Convert</span></li>
+                <li [routerLink]="['/']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}"><span>Features</span></li>
+                <li [routerLink]="['/']" routerLinkActive="active"  [routerLinkActiveOptions]="{exact: true}"><span>About</span></li>
+            </ul>
+        </div>
+    </div>
+</div>
