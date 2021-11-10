@@ -7,6 +7,7 @@ import { HttpClientModule } from '@angular/common/http';
 import { routingComponents } from './app-routing.module';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NavbarComponent } from './components/navbar/navbar.component';
+import { AboutComponent } from './views/about/about.component';
 
 // TODO: Create about page with listed technologies etc... (especially CockroachDB)
 
@@ -15,6 +16,7 @@ import { NavbarComponent } from './components/navbar/navbar.component';
     AppComponent,
     routingComponents,
     NavbarComponent,
+    AboutComponent,
 
   ],
   imports: [
