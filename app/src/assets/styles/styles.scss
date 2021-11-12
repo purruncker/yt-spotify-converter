@@ -18,6 +18,11 @@
 @import "fonts";
 
 /*
+[]=========== Buttons ===========[]
+*/
+@import "buttons";
+
+/*
 []=========== General Styling ===========[]
 */
 * {
@@ -71,6 +76,17 @@ h5 {
 }
 h6 {
     @apply text-lg;
+}
+
+/*
+[]=========== Horizontal Lines ===========[]
+*/
+hr {
+    appearance: none;
+    height: 2px;
+    border-radius: 1rem;
+    border: none;
+    @apply bg-white-darkest bg-opacity-20 my-12;
 }
 
 /*

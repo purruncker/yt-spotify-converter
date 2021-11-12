@@ -1,0 +1,22 @@
+<div class="w-full p-2">
+    <div class="flex justify-center content-center items-center">
+        <div class="w-18 text-center">
+            <img class="h-12 mx-auto" src="../../../../assets/icons/spotify.png" />
+        </div>
+    
+        <ul class="flex justify-center items-center flex-row mx-3">
+            <li class="bg-white-darkest rounded-full mx-1 w-2 h-2"></li>
+            <li class="bg-white-darkest rounded-full mx-1 w-2 h-2"></li>
+            <li class="bg-white-darkest rounded-full mx-1 w-2 h-2"></li>
+        </ul>
+    
+        <div class="w-20 text-center">
+            <img class="h-12 mx-auto" src="../../../../assets/icons/youtube.png" />
+        </div>
+    </div>
+
+    <div class="flex justify-center content-center items-center pointer-events-none" *ngIf="enableSwitcher">
+        <button class="btn-icon btn-md text-primary -ml-2.5 pointer-events-auto" (click)="switchFlow($event)"><i class="fas fa-exchange-alt text-primary opacity-30 hover:opacity-60 transition-all"></i></button>
+    </div>
+</div>
+
