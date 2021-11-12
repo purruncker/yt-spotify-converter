@@ -7,9 +7,9 @@ import { SpotifyComponent } from './views/spotify/spotify.component';
 import { YtComponent } from './views/yt/yt.component';
 
 const routes: Routes = [
+  { path: '', component: HomePageComponent},
   { path: 'yt', component: YtComponent },
   { path: 'spotify', component: SpotifyComponent },
-  { path: '', component: HomePageComponent},
   { path: 'about', component: AboutComponent},
   { path: '**', component: ErrorPageComponent}
 ];

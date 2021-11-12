@@ -1,12 +1,21 @@
 /* You can add global styles to this file, and also import other style files */
 
+/*
+[]=========== Tailwind Import ===========[]
+*/
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
 
+/*
+[]=========== Font-Awesome Import ===========[]
+*/
 @import "../../../node_modules/@fortawesome/fontawesome-free/css/all.min.css";
-@import "fonts";
 
+/*
+[]=========== Fonts ===========[]
+*/
+@import "fonts";
 
 /*
 []=========== General Styling ===========[]
@@ -27,6 +36,10 @@ body {
 
 button {
     @apply transition-all appearance-none bg-indigo-400 rounded-md py-2 px-4 text-sm text-white font-semibold hover:bg-indigo-500 active:bg-indigo-600;
+
+    &:active {
+        @apply transform-gpu scale-98;
+    }
 }
 
 .debug {
@@ -59,3 +72,8 @@ h5 {
 h6 {
     @apply text-lg;
 }
+
+/*
+[]=========== Forms ===========[]
+*/
+@import "forms";

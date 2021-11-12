@@ -24,7 +24,11 @@ module.exports = {
             DEFAULT: "#1d8954"
           }
         }
-      }
+      },
+      scale: {
+        96: '.96',
+        98: '.98',
+      },
     },
     container: {
       center: true,
