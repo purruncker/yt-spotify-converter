@@ -1,7 +1,37 @@
 <section class="w-full">
-    <div class="container block w-full md:w-5/6 mx-auto p-4">
 
-        <div class="block">
+    <div class="grid grid-cols-2 grid-rows-1">
+        <div class="h-full debug">
+            <h1>Your place for playlist conversion</h1>
+            <p>Move your playlists across platforms without a hassle.</p>
+        </div>
+        <div class="debug">
+            <div class="p-4 bg-white rounded-lg">
+                <img  class="block h-12 w-12 pr-2 align-middle cursor-pointer mx-auto" src="../../../assets/logo/cockroach.svg" />
+
+                <div class="bg-white-dark rounded-md py-3 px-4 my-4">
+                    <p class="text-white-darkest text-sm">Step 1</p>
+                    <h5 class="text-primary font-bold">Connect your Spotify Account</h5>
+                </div>
+
+                <div class="bg-white-dark rounded-md py-3 px-4 my-4">
+                    <p class="text-white-darkest text-sm">Step 2</p>
+                    <h5 class="text-primary font-bold">Connect your Spotify Account</h5>
+                </div>
+
+                <div class="bg-white-dark rounded-md py-3 px-4 my-4">
+                    <p class="text-white-darkest text-sm">Step 3</p>
+                    <h5 class="text-primary font-bold">Connect your Spotify Account</h5>
+                </div>
+
+                <div class="mt-16">
+                    <button class="w-full bg-spotify-green text-white text-center px-6 hover:bg-green-700 active:bg-green-800" (click)="requestSpotifyGrantCode()"><i class="fab fa-spotify w-9"></i> Mit Spotify anmelden</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+       <!--<div class="block">
             <div class="inline-block align-middle">
                 <img class="w-32" src="../../assets/logo/cockroach.jpeg" alt="Welcome">
             </div>
@@ -23,9 +53,6 @@
                 <span class=""><i class="fas fa-chevron-right text-sm"></i></span>
             </div>
             <div><i class="fab fa-youtube text-4xl text-red-600"></i></div>
-        </div>
-
-    </div>
+        </div>-->
 </section>
 
-<h1>At the moment you can only export spotify plalists with up to 100 Songs</h1>

@@ -12,10 +12,17 @@ module.exports = {
           DEFAULT: "#702BAA"
         },
         white: {
-          DEFAULT: "#FCFCFC"
+          DEFAULT: "#fcfcfc",
+          dark: "#f3f3f3",
+          darkest: "#C1C1C5"
         },
         primary: {
           DEFAULT: "#070221"
+        },
+        spotify: {
+          green: {
+            DEFAULT: "#1d8954"
+          }
         }
       }
     },
@@ -70,6 +77,22 @@ module.exports = {
         'monospace',
       ],
     },
+    fontSize: {
+      xs: ['0.78rem', { lineHeight: '1.1rem' }],
+      sm: ['0.88rem', { lineHeight: '1.25rem' }],
+      base: ['1rem', { lineHeight: '1.5rem' }],
+      lg: ['1.125rem', { lineHeight: '1.75rem' }],
+      xl: ['1.25rem', { lineHeight: '1.75rem' }],
+      '2xl': ['1.5rem', { lineHeight: '2rem' }],
+      '3xl': ['1.875rem', { lineHeight: '2.25rem' }],
+      '4xl': ['2.25rem', { lineHeight: '2.5rem' }],
+      '5xl': ['3rem', { lineHeight: '1' }]
+    },
+    fontWeight: {
+      normal: '400',
+      semibold: '500',
+      bold: '800'
+    }
   },
   variants: {
     extend: {},

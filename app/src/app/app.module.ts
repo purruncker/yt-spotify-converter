@@ -19,7 +19,6 @@ import { AlertModalComponent } from './views/alert-modal/alert-modal.component';
     NavbarComponent,
     AboutComponent,
     AlertModalComponent,
-
   ],
   imports: [
     BrowserModule,
