@@ -79,6 +79,17 @@ h6 {
 }
 
 /*
+[]=========== Horizontal Lines ===========[]
+*/
+hr {
+    appearance: none;
+    height: 2px;
+    border-radius: 1rem;
+    border: none;
+    @apply bg-white-darkest bg-opacity-20 my-12;
+}
+
+/*
 []=========== Forms ===========[]
 */
 @import "forms";
