@@ -1,0 +1,115 @@
+button {
+    @apply px-2 py-1 text-sm rounded-sm transition-all bg-primary-light hover:bg-primary active:bg-primary-dark relative border-2 border-transparent;
+    
+    &.btn-accent {
+        @apply bg-accent-light hover:bg-accent active:bg-accent-dark;
+    }
+
+    &.btn-youtube {
+        @apply bg-youtube-red-light hover:bg-youtube-red active:bg-youtube-red-dark;
+    }
+    &.btn-spotify {
+        @apply bg-spotify-green-light hover:bg-spotify-green active:bg-spotify-green-dark;
+    }
+    &.btn-success {
+        @apply bg-success-light hover:bg-success active:bg-success-dark;
+    }
+    &.btn-info {
+        @apply bg-info-light hover:bg-info active:bg-info-dark;
+    }
+    &.btn-warn {
+        @apply bg-warn-light hover:bg-warn active:bg-warn-dark;
+    }
+    &.btn-error {
+        @apply bg-error-light hover:bg-error active:bg-error-dark;
+    }
+    &:active {
+        transform: scale3d(0.94);
+    }
+    &.btn-md {
+        @apply px-4 py-2;
+    }
+    &.btn-lg {
+        @apply px-8 py-3;
+    }
+    
+    i {
+        @apply mr-1;
+    }
+}
+.btn-outlined {
+    @apply border-2 border-primary bg-opacity-0 hover:bg-opacity-25 active:bg-opacity-100;
+
+    &.btn-accent {
+        @apply border-accent bg-opacity-0 hover:bg-opacity-25 active:bg-opacity-100;
+    }
+    &.btn-spotify {
+        @apply border-youtube-red bg-opacity-0 hover:bg-opacity-25 active:bg-opacity-100;
+    }
+    &.btn-spotify {
+        @apply border-spotify-green bg-opacity-0 hover:bg-opacity-25 active:bg-opacity-100;
+    }
+    &.btn-success {
+        @apply border-success bg-opacity-0 hover:bg-opacity-25 active:bg-opacity-100;
+    }
+    &.btn-info {
+        @apply border-info bg-opacity-0 hover:bg-opacity-25 active:bg-opacity-100;
+    }
+    &.btn-warn {
+        @apply border-warn bg-opacity-0 hover:bg-opacity-25 active:bg-opacity-100;
+    }
+    &.btn-error {
+        @apply border-error bg-opacity-0 hover:bg-opacity-25 active:bg-opacity-100;
+    }
+}
+.btn-text {
+    @apply bg-opacity-0 hover:bg-opacity-40 active:bg-opacity-100;
+
+    &.btn-accent {
+        @apply bg-accent bg-opacity-0 hover:bg-opacity-40 active:bg-opacity-100;
+    }
+    &.btn-youtube {
+        @apply bg-youtube-red bg-opacity-0 hover:bg-opacity-40 active:bg-opacity-100;
+    }
+    &.btn-spotify {
+        @apply bg-spotify-green bg-opacity-0 hover:bg-opacity-40 active:bg-opacity-100;
+    }
+    &.btn-success {
+        @apply bg-success bg-opacity-0 hover:bg-opacity-40 active:bg-opacity-100;
+    }
+    &.btn-info {
+        @apply bg-info bg-opacity-0 hover:bg-opacity-40 active:bg-opacity-100;
+    }
+    &.btn-warn {
+        @apply bg-warn bg-opacity-0 hover:bg-opacity-40 active:bg-opacity-100;
+    }
+    &.btn-error {
+        @apply bg-error bg-opacity-0 hover:bg-opacity-40 active:bg-opacity-100;
+    }
+}
+.btn-full {
+    @apply w-full px-4 py-2;
+    
+    &:active {
+        transform: scale3d(0.99);
+    }
+}
+.btn-icon {
+    @apply bg-opacity-0 hover:bg-opacity-80 rounded-full text-center w-8 h-8 p-0 hover:bg-white-dark active:bg-white-darkest active:bg-opacity-30;
+    
+    i {
+        @apply m-0;
+    }
+    &.btn-md {
+        @apply w-10 h-10 p-0;
+        i {
+            @apply text-base;
+        }
+    }
+    &.btn-lg {
+        @apply w-12 h-12 p-0;
+        i {
+            @apply text-xl;
+        }
+    }
+}

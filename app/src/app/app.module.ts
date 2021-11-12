@@ -11,6 +11,7 @@ import { AboutComponent } from './views/about/about.component';
 import { AlertModalComponent } from './views/alert-modal/alert-modal.component';
 import { FlowItemComponent } from './components/flow/flow-item/flow-item.component';
 import { FlowListComponent } from './components/flow/flow-list/flow-list.component';
+import { FlowSelectComponent } from './components/flow/flow-select/flow-select.component';
 
 // TODO: Create about page with listed technologies etc... (especially CockroachDB)
 
@@ -23,6 +24,7 @@ import { FlowListComponent } from './components/flow/flow-list/flow-list.compone
     AlertModalComponent,
     FlowItemComponent,
     FlowListComponent,
+    FlowSelectComponent,
   ],
   imports: [
     BrowserModule,

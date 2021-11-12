@@ -7,9 +7,18 @@ module.exports = {
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
+      spacing: {
+        18: "4.1rem",
+        19: "4.7rem"
+      },
       colors: {
+        transparent: 'transparent',
+        current: 'currentColor',
+
         accent: {
-          DEFAULT: "#702BAA"
+          light: "#652799",
+          DEFAULT: "#702BAA",
+          dark: "#702baa"
         },
         white: {
           DEFAULT: "#fcfcfc",
@@ -17,12 +26,43 @@ module.exports = {
           darkest: "#C1C1C5"
         },
         primary: {
-          DEFAULT: "#070221"
+          light: "#201b37",
+          DEFAULT: "#070221",
+          dark: "#050117"
         },
         spotify: {
           green: {
-            DEFAULT: "#1d8954"
+            light: "#349565",
+            DEFAULT: "#1d8954",
+            dark: "#1a7b4c"
           }
+        },
+        youtube: {
+          red: {
+            light: "#ff3333",
+            DEFAULT: "#FF0000",
+            dark: "#ff3333"
+          }
+        },
+        error: {
+          light: "#D25D5D",
+          DEFAULT: "#c75151",
+          dark: "#B94848"
+        },
+        warn: {
+          light: "#FBC06E",
+          DEFAULT: "#f0ad4e",
+          dark: "#DE9939"
+        },
+        success: {
+          light: "#66A55B",
+          DEFAULT: "#538d4a",
+          dark: "#497E40"
+        },
+        info: {
+          light: "#378FC2",
+          DEFAULT: "#277cad",
+          dark: "#23719E"
         }
       },
       scale: {
