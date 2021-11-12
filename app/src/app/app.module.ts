@@ -9,6 +9,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { NavbarComponent } from './components/navbar/navbar.component';
 import { AboutComponent } from './views/about/about.component';
 import { AlertModalComponent } from './views/alert-modal/alert-modal.component';
+import { FlowItemComponent } from './components/flow/flow-item/flow-item.component';
+import { FlowListComponent } from './components/flow/flow-list/flow-list.component';
 
 // TODO: Create about page with listed technologies etc... (especially CockroachDB)
 
@@ -19,14 +21,14 @@ import { AlertModalComponent } from './views/alert-modal/alert-modal.component';
     NavbarComponent,
     AboutComponent,
     AlertModalComponent,
+    FlowItemComponent,
+    FlowListComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
     ReactiveFormsModule,
-
-
   ],
   providers: [],
   bootstrap: [AppComponent]

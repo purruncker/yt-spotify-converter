@@ -9,20 +9,7 @@
             <div class="p-4 bg-white rounded-lg">
                 <img  class="block h-12 w-12 pr-2 align-middle cursor-pointer mx-auto" src="../../../assets/logo/cockroach.svg" />
 
-                <div class="bg-white-dark rounded-md py-3 px-4 my-4">
-                    <p class="text-white-darkest text-sm">Step 1</p>
-                    <h5 class="text-primary font-bold">Connect your Spotify Account</h5>
-                </div>
-
-                <div class="bg-white-dark rounded-md py-3 px-4 my-4">
-                    <p class="text-white-darkest text-sm">Step 2</p>
-                    <h5 class="text-primary font-bold">Connect your Spotify Account</h5>
-                </div>
-
-                <div class="bg-white-dark rounded-md py-3 px-4 my-4">
-                    <p class="text-white-darkest text-sm">Step 3</p>
-                    <h5 class="text-primary font-bold">Connect your Spotify Account</h5>
-                </div>
+                <app-flow-list [flowList]="flowList"></app-flow-list>
 
                 <div class="mt-16">
                     <button class="w-full bg-spotify-green text-white text-center px-6 hover:bg-green-700 active:bg-green-800" (click)="requestSpotifyGrantCode()"><i class="fab fa-spotify w-9"></i> Mit Spotify anmelden</button>
