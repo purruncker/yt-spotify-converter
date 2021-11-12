@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import { ResponseSongsDto } from './dto/update-song.dto';
 import axios from 'axios';
 @Injectable()
@@ -39,7 +39,10 @@ export class SongsService {
       return res;
     }
     ).catch((error) => {
-      console.log(error);
+
+      console.log(error.response)
+      console.log(error.response.data.error.errors)
+      throw new HttpException(error.response.data.error.message, error.response.data.error.code)
     })
 
   }

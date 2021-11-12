@@ -1,12 +1,8 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import * as querystring from "query-string";
-import { Observable } from 'rxjs';
-import { playlist } from './spotify/playlist'
-
-import { first, map } from "rxjs/operators"
-
+import { Observable, Subject, Subscription } from 'rxjs';
+import { subscribeOn, take, takeUntil } from 'rxjs/operators';
+import { ErrorDTO } from './dto/error.dto';
+import { HttpErrorService } from './services/http-error.service';
 
 @Component({
   selector: 'app-root',
@@ -15,15 +11,24 @@ import { first, map } from "rxjs/operators"
 })
 export class AppComponent implements OnInit {
 
+  constructor(private errService: HttpErrorService) {
 
-  constructor(private currentRoute: ActivatedRoute, private httpclient: HttpClient, private router: Router) { }
+  }
+  public error: ErrorDTO = undefined;
+
 
   public async ngOnInit(): Promise<void> {
+    this.errService.initError().pipe(take(1000)).subscribe(data => {
+      this.error = data;
+      console.log(data);
+    })
+
+
   }
 
-  public async home() {
-    await window.location.reload()
-    // this.requestSpotifyGrantCode()
+  public async createErr() {
+    await this.errService.createError("test", "test app component", 404)
+
   }
 
 }

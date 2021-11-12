@@ -1,9 +1,8 @@
-<nav>
-    <a routerLink="/">Home</a>
-    <a routerLink="/spotify">Spotify Login</a>
-    <a routerLink="/yt">Youtube Login</a>
+<app-navbar></app-navbar>
 
-</nav>
-<br>
-<router-outlet></router-outlet>
+<div class="container">
+    <router-outlet></router-outlet>
 
+    <app-alert-modal [error]="error" *ngIf="error  != undefined"></app-alert-modal>
+    <button (click)="createErr()">Create ERR</button>
+</div>

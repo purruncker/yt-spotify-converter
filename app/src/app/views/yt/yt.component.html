@@ -1,0 +1,61 @@
+<body>
+
+
+    <button *ngIf="accessToken == ''"
+        class="bg-red-600 text-white text-center px-6 hover:bg-red-700 active:bg-red-800 inline-block"
+        (click)="requestYoutubeGrantCode()"><i class="fab fa-youtube w-9"></i> Mit YouTube anmelden</button>
+    <br>
+    <button *ngIf="songs.length" (click)="toggleSongs()" class="inline-block">Gefundene Lieder anzeigen </button> <br>
+    <br>
+    <div *ngIf="songs.length && showSongs">
+        <h2>Gefundene Lieder:</h2>
+        <br>
+        <tr>
+            <td>name</td>
+            <td>Artist</td>
+        </tr>
+        <tr *ngFor="let song of songs">
+            <td>{{song.name}}</td>
+            <td *ngFor="let artist of song['artists']">
+                <p>{{artist['name']}}</p>
+            </td>
+        </tr>
+
+    </div>
+
+    <form *ngIf="(accessToken != '') && (ytPlaylist == undefined)" [formGroup]="plalistNameform"
+        (ngSubmit)="onSubmitPlaylistname()">
+        <label>
+            Lege den Namen der Playlist fest:
+            <input class="flex flex-wrap min-w-max" type="text" formControlName="plalistName" style=" width: 45rem;">
+        </label>
+        <br>
+        <label *ngIf="this.plalistNameform.value['plalistName']">
+            Lege die Beschreibung der Playlist fest (optional):
+            <input class="flex flex-wrap " type="text" formControlName="plalistDescription"
+                style="height:50px; width: 45rem;">
+        </label>
+        <br>
+        <label *ngIf="this.plalistNameform.value['plalistName']">
+            Privacy status:
+            <select formControlName="status">
+                <option value="public">öffentlich</option>
+                <option value="private">privat</option>
+                <option selected="selected" value="unlisted">nicht gelistet</option>
+            </select>
+        </label>
+        <br>
+        <button *ngIf="stopInPut" class="btn" type="submit" mat-stroked-button
+            [disabled]="plalistNameform.invalid">Importieren!</button>
+        <br>
+
+    </form>
+
+    <div *ngIf="ytPlaylist">
+        <p>"{{ytPlaylist.title}}" wurde erfolgreich für den Account "{{ytPlaylist.channelTitle}}" mit dem Status
+            "{{ytPlaylist.status}}" erstellt</p>
+
+    </div>
+
+
+</body>

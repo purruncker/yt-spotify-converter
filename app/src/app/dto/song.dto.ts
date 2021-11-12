@@ -1,5 +1,5 @@
-export interface song {
-    //id?: string;
+export interface SongDTO {
+    id?: string;
     name?: string;
     artists?: string[];
 }

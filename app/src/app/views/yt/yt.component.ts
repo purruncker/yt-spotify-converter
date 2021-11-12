@@ -1,10 +1,13 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import * as querystring from "query-string";
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
-import { song } from '../spotify/songs';
+import { SongDTO } from 'src/app/dto/song.dto';
+import { YtPlaylistDTO } from 'src/app/dto/ytPlaylist.dto';
+import { HttpErrorService } from 'src/app/services/http-error.service';
 
 //import { first, map } from "rxjs/operators"
 
@@ -16,14 +19,27 @@ import { song } from '../spotify/songs';
 export class YtComponent implements OnInit {
 
   //@Input('testdata') public test;
-
-  constructor(private currentRoute: ActivatedRoute, private httpclient: HttpClient, private router: Router) { }
+  plalistNameform: FormGroup
+  constructor(
+    private currentRoute: ActivatedRoute,
+    private httpclient: HttpClient,
+    private router: Router,
+    private formbuilder: FormBuilder,
+    private errService: HttpErrorService
+  ) {
+    this.plalistNameform = this.formbuilder.group({
+      plalistName: formbuilder.control('', [Validators.required, Validators.pattern('^[A-Za-zñÑáéíóúÁÉÍÓÚ ]+$')]),
+      status: formbuilder.control("unlisted", [Validators.required, Validators.pattern('^[A-Za-zñÑáéíóúÁÉÍÓÚ ]+$')]),
+      plalistDescription: formbuilder.control("", Validators.maxLength(99))
+    })
+  }
 
   public accessToken?: string = '';
-  public songs: song[] = [];
+  public songs: SongDTO[] = [];
 
   ngOnInit(): void {
     //console.log(this.test);
+    //TODO: Localstorage for token
     if (localStorage.getItem('songs') != undefined) {
       this.songs = JSON.parse(localStorage.getItem('songs'))
 
@@ -43,16 +59,16 @@ export class YtComponent implements OnInit {
       })
 
       this.requestYtAccessToken(grantCode).subscribe((access_token) => {
-
         //console.log(access_token)
         this.accessToken = access_token;
+        //console.log(this.accessToken)
       })
     }
     )
   }
 
   private client_id_youtube: string = "429913780229-21c99v1n1uubuu22l2afvvmetio46ldp.apps.googleusercontent.com";
-  private scope_youtube: string = "https://www.googleapis.com/auth/youtube";
+  private scope_youtube: string = "https://www.googleapis.com/auth/youtube.force-ssl";
 
   public async requestYoutubeGrantCode(): Promise<void> {
     const data = {
@@ -68,15 +84,40 @@ export class YtComponent implements OnInit {
 
   public requestYtAccessToken(grantCode: string): Observable<string> {
     return this.httpclient.post<string>("http://localhost:3000/yt-auth", { grantCode }).pipe(
-      // Only get first
       first(),
 
-      // Extract accessToken from response and return only
-      // the value.
       map((value) => {
         return value["access_token"]
       })
     )
+  }
+
+  public showSongs: boolean = false;
+  public toggleSongs() {
+    this.showSongs = !this.showSongs;
+  }
+
+  public ytPlaylist: YtPlaylistDTO = undefined;
+  public stopInPut: boolean = true;
+  public onSubmitPlaylistname() {
+    this.stopInPut = !this.stopInPut;
+    //console.log(this.plalistNameform.value['plalistName'])
+    //console.log(this.plalistNameform.value['status'])
+    const body = {
+
+      playlistName: this.plalistNameform.value['plalistName'],
+      acessToken: this.accessToken,
+      status: this.plalistNameform.value['status'],
+      description: this.plalistNameform.value['plalistDescription']
+
+    }
+    //console.log(body);
+    this.httpclient.post("http://localhost:3000/playlist-yt", body).toPromise().then(data => {
+      this.ytPlaylist = data;
+    }).catch((error) => {
+      console.log(error);
+      this.errService.createError("playlist konnte nicht angelegt werden", "create YT playlist", error.code)
+    })
   }
 
 }

@@ -1,0 +1,13 @@
+label{
+    color: coral;
+}
+input{
+    background-color: lightgray;
+}
+button:disabled{
+    display: none;
+    color: red;
+}
+body{
+    margin-left: 5em;
+}

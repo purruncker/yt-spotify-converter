@@ -9,7 +9,7 @@ export class YtAuthController {
 
   @Post()
   create(@Body() createYtAuthDto: CreateYtAuthDto) {
-    console.log(createYtAuthDto)
+    //console.log(createYtAuthDto)
     return this.ytAuthService.create(createYtAuthDto);
   }
 

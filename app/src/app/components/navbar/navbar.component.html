@@ -1,0 +1,26 @@
+<div class="block w-full p-1">
+    <div class="container">
+        <p class="p-3 bg-red-400 rounded-md my-2 text-sm">At the moment you can only export spotify plalists with up to 100 Songs</p>
+    </div>
+    <div class="container">
+        <div class="flex content-center">
+            <div class="inline-flex items-center align-middle pr-4">
+                <div [routerLink]="['/']" class="cursor-pointer">
+                    <img  class="inline-block h-12 w-12 pr-2 align-middle cursor-pointer" src="../../../assets/logo/cockroach.svg" />
+                    <h6 routerLink="/" class="inline-block font-bold align-middle">Cockroach Converter</h6>
+                </div>
+            </div>
+            <div class="inline-block align-middle h-full flex-grow pl-4">
+                <ul class="flex justify-end">
+                    <li [routerLink]="['/spotify']" routerLinkActive="active"><span>Convert</span></li>
+                    <li [routerLink]="['/']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <span>Features</span>
+                    </li>
+                    <li [routerLink]="['/about']" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">
+                        <span>About</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>

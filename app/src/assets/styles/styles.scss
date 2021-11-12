@@ -1,0 +1,61 @@
+/* You can add global styles to this file, and also import other style files */
+
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+@import "../../../node_modules/@fortawesome/fontawesome-free/css/all.min.css";
+@import "fonts";
+
+
+/*
+[]=========== General Styling ===========[]
+*/
+* {
+    @apply text-white;
+}
+
+body {
+    height: 100vh;
+    width: 100vw;
+    background: linear-gradient(30deg, #190E4D 0%, #762EB0 100%);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+button {
+    @apply transition-all appearance-none bg-indigo-400 rounded-md py-2 px-4 text-sm text-white font-semibold hover:bg-indigo-500 active:bg-indigo-600;
+}
+
+.debug {
+    @apply border-2 border-red-700;
+}
+
+
+/*
+[]=========== Headlines ===========[]
+*/
+h1, h2, h3, h4, h5, h6 {
+    @apply font-sans font-bold;
+}
+
+h1 {
+    @apply text-5xl;
+}
+h2 {
+    @apply text-4xl;
+}
+h3 {
+    @apply text-3xl;
+}
+h4 {
+    @apply text-2xl;
+}
+h5 {
+    @apply text-xl;
+}
+h6 {
+    @apply text-lg;
+}

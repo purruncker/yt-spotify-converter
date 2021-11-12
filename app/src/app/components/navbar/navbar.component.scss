@@ -1,0 +1,51 @@
+
+li {
+    @apply border-2 border-transparent font-bold transition-all rounded-md text-sm py-1 px-4 ml-1 cursor-pointer;
+
+    span {
+        position: relative;
+        display: inline-block;
+        @apply transition-all;
+
+        &::after {
+            content: "";
+            position: absolute;
+            bottom: -0.3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            height: 6px;
+            width: 0px;
+            opacity: 0;
+            pointer-events: none;
+    
+            @apply bg-white rounded-full transition-all;
+        }
+    }
+
+    &:hover:not(.active) {
+        span {
+            &::after {
+                opacity: 1;
+                width: 100%;
+                height: 3px;
+                bottom: -0.6rem;
+            }
+        }
+    }
+
+    &:active:not(.active) {
+        span {
+            transform: scale(0.93);
+        }
+    }
+
+    &.active {
+        span {
+            &::after {
+                opacity: 1;
+                width: 6px;
+                bottom: -0.6rem;
+            }
+        }
+    }
+}

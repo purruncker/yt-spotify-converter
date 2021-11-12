@@ -4,24 +4,28 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { HttpClientModule } from '@angular/common/http';
-import { YtComponent } from './yt/yt.component';
-import { SpotifyComponent } from './spotify/spotify.component';
 import { routingComponents } from './app-routing.module';
-import { ErrorPageComponent } from './error-page/error-page.component';
-import { HomePageComponent } from './home-page/home-page.component'
+import { ReactiveFormsModule } from '@angular/forms';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { AboutComponent } from './views/about/about.component';
+import { AlertModalComponent } from './views/alert-modal/alert-modal.component';
 
+// TODO: Create about page with listed technologies etc... (especially CockroachDB)
 
 @NgModule({
   declarations: [
     AppComponent,
     routingComponents,
-    ErrorPageComponent,
-    HomePageComponent
+    NavbarComponent,
+    AboutComponent,
+    AlertModalComponent,
   ],
   imports: [
     BrowserModule,
     HttpClientModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule,
+
 
   ],
   providers: [],
