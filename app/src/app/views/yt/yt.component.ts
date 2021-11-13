@@ -6,7 +6,7 @@ import * as querystring from "query-string";
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { SongDTO } from 'src/app/dto/song.dto';
-import { YtPlaylistDTO } from 'src/app/dto/ytPlaylist.dto';
+import { FillYtPlaylist, YtPlaylistDTO } from 'src/app/dto/ytPlaylist.dto';
 import { HttpErrorService } from 'src/app/services/http-error.service';
 
 //import { first, map } from "rxjs/operators"
@@ -99,7 +99,7 @@ export class YtComponent implements OnInit {
 
   public ytPlaylist: YtPlaylistDTO = undefined;
   public stopInPut: boolean = true;
-  public onSubmitPlaylistname() {
+  public async onSubmitPlaylistname() {
     this.stopInPut = !this.stopInPut;
     //console.log(this.plalistNameform.value['plalistName'])
     //console.log(this.plalistNameform.value['status'])
@@ -112,12 +112,31 @@ export class YtComponent implements OnInit {
 
     }
     //console.log(body);
-    this.httpclient.post("http://localhost:3000/playlist-yt", body).toPromise().then(data => {
+    await this.httpclient.post("http://localhost:3000/playlist-yt", body).toPromise().then(data => {
       this.ytPlaylist = data;
     }).catch((error) => {
       console.log(error);
       this.errService.createError("playlist konnte nicht angelegt werden", "create YT playlist", error.code)
     })
   }
+
+  public fillPlaylist: FillYtPlaylist = undefined;
+  startInsertSongs(){
+
+
+    const body ={
+      accesToken: this.accessToken,
+      id: "PLjC_caSoMHYDUdYO8JiX8yBQKGOhNWAi0",
+      songs: this.songs
+    }
+
+    this.httpclient.post("http://localhost:3000/yt-songs", body).toPromise().then(data => {
+      console.log(data);
+    }).catch((error) => {
+      console.log(error);
+      this.errService.createError("playlist konnte nicht gefüllt werden", "fill YT playlist", error.code)
+    })
+   }
+  
 
 }
