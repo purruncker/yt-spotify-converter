@@ -7,18 +7,18 @@
         <div class="">
             <div class="p-12 bg-white rounded-xl shadow-2xl">
                 <div class="pt-6 pb-12">
-                    <app-flow-select ></app-flow-select>
+                    <app-flow-select [enableSwitcher]="false"></app-flow-select>
                 </div>
-                
+
                 <app-flow-list [flowList]="flowList"></app-flow-list>
 
                 <hr>
 
                 <div class="text-center">
-                    <button class="btn-full btn-lg btn-spotify" (click)="requestSpotifyGrantCode()"><i class="fab fa-spotify"></i>Start with login on Spotify</button>
+                    <button class="btn-full btn-lg btn-spotify" (click)="requestSpotifyGrantCode()"><i
+                            class="fab fa-spotify"></i>Start with login on Spotify</button>
                 </div>
             </div>
         </div>
     </div>
 </section>
-
