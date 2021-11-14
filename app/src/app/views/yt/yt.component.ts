@@ -95,7 +95,7 @@ export class YtComponent implements OnInit {
     )
   }
 
-  public showSongs: boolean = false;
+  public showSongs: boolean = true;
   public toggleSongs() {
     this.showSongs = !this.showSongs;
   }

@@ -11,13 +11,11 @@
     <tr>
         <td class="p-8"></td>
         <td class="p-8">name</td>
-        <td class="p-8">id</td>
         <td class="p-8">Anzahl Lieder</td>
     </tr>
     <tr *ngFor="let playlist of playlists">
         <td class="p-8"> <img src="{{playlist.imageHref}}"> </td>
         <td class="p-8">{{playlist.name}}</td>
-        <td class="p-8">{{playlist.id}}</td>
         <td class="p-8">{{playlist.count}}</td>
         <td class="p-8">
             <button (click)="getSongs(playlist.id)">exportieren</button> <br>
