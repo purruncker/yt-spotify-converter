@@ -89,7 +89,7 @@ export class SpotifyComponent implements OnInit {
     }
     ).catch((error) => {
       console.log(error);
-      this.errService.createError("Dein Name konnten nicht abgerufen werden", "getUserInfo Spotify", error.code)
+      this.errService.createError("Dein Name konnten nicht abgerufen werden", "getUserInfo Spotify", error.status)
     })
     this.showName = true;
   }
@@ -104,7 +104,7 @@ export class SpotifyComponent implements OnInit {
     }
     ).catch((error) => {
       console.log(error);
-      this.errService.createError("Deine Playlisten konnten nicht abgerufen werden", "getPlaylists Spotify", error.code)
+      this.errService.createError("Deine Playlisten konnten nicht abgerufen werden", "getPlaylists Spotify", error.status)
     })
     this.showPlaylist = true;
     return this.playlists
@@ -122,7 +122,7 @@ export class SpotifyComponent implements OnInit {
       this.songs = data as SongDTO[];
     }).catch((error) => {
       console.log(error);
-      this.errService.createError("Deine Songs konnten nicht abgerufen werden", "getSongs Spotify", error.code)
+      this.errService.createError("Deine Songs konnten nicht abgerufen werden", "getSongs Spotify", error.status)
     })
     this.showPlaylists = false;
     this.showName = false;
