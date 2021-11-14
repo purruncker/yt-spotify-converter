@@ -11,14 +11,17 @@
         <h2>Gefundene Lieder:</h2>
         <br>
         <tr>
+            <td></td>
             <td>name</td>
             <td>Artist</td>
         </tr>
         <tr *ngFor="let song of songs">
+            <td> <img src="{{song.imageHref}}"> </td>
             <td>{{song.name}}</td>
             <td *ngFor="let artist of song['artists']">
                 <p>{{artist['name']}}</p>
             </td>
+
         </tr>
 
     </div>

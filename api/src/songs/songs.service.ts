@@ -12,7 +12,7 @@ export class SongsService {
     //console.log(id, token);
 
     const params = new URLSearchParams()
-    params.append('fields', 'items(track.artists.name,track.name)')
+    params.append('fields', 'items(track.artists.name,track.name,track.album.images)')
     params.append('market', 'DE')
 
     const config = {
@@ -27,15 +27,18 @@ export class SongsService {
       let modifieddata = data.data.items.filter(function (val) {
         return val.track != null;
       })
-
+      //console.log(modifieddata)
       let res: ResponseSongsDto[] = modifieddata.map(val => {
+        console.log(val.track.album)
         return {
           name: val['track'].name,
-          artists: val['track'].artists
+          artists: val['track'].artists,
+          imageHref: val.track.album.images[2].url
         }
       })
 
-      //console.log(res);
+      // console.log(res);
+
       return res;
     }
     ).catch((error) => {

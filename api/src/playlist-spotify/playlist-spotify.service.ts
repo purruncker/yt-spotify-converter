@@ -20,16 +20,17 @@ export class PlaylistSpotifyService {
         return [];
       }
       //console.log(data['data']['items']);
+
       let res: CurrentUseresSpotifyPlaylistsDTO[] = data['data']['items'].map(val => {
         //console.log(val);
         return {
           id: val['id'],
           name: val['name'],
-          count: val['tracks']['total']
-
+          count: val['tracks']['total'],
         }
       })
       //console.log(res);
+
       return res;
     }).catch((error) => {
       console.log(error.response)
