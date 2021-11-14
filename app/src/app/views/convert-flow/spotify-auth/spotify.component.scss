@@ -1,0 +1,12 @@
+div > * {
+    @apply text-primary;
+}
+
+tr {
+    th {
+        @apply text-primary;
+    }
+    td {
+        @apply text-primary;
+    }
+}

@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { first, map } from "rxjs/operators"
 import { SpotifyPlaylistDTO } from 'src/app/dto/spotifyPlaylist.dto';
 import { SongDTO } from 'src/app/dto/song.dto';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
   selector: 'app-spotify',
@@ -20,20 +21,7 @@ export class SpotifyComponent implements OnInit {
   public parentdata: string = "test moin!";
   public accessToken?: string = '';
 
-  constructor(private currentRoute: ActivatedRoute, private httpclient: HttpClient, private router: Router) { }
-
-  public requestSpotifyAccessToken(grantCode: string): Observable<string> {
-    return this.httpclient.post<string>("http://localhost:3000/authentication", { grantCode }).pipe(
-      // Only get first
-      first(),
-
-      // Extract accessToken from response and return only
-      // the value.
-      map((value) => {
-        return value["access_token"]
-      })
-    )
-  }
+  constructor(private currentRoute: ActivatedRoute, private httpclient: HttpClient, private router: Router, private authService: AuthenticationService) { }
 
   public async ngOnInit(): Promise<void> {
     //console.log(this.accessToken);
@@ -59,11 +47,9 @@ export class SpotifyComponent implements OnInit {
       })
 
       // Request the access token
-      this.requestSpotifyAccessToken(grantCode).subscribe((access_token) => {
-        //console.log(access_token)
-
-        this.accessToken = access_token
-        //console.log(access_token);
+      // TODO: Create component with separate route to handle authentication processes in one place (e.g.: /authorize/:platform --> /authorize/spotify?code=...). This can be shown as component in the flow
+      this.authService.requestSpotifyAccessToken(grantCode).then((response) => {
+        console.log(response);
         this.hello()
         this.getPlaylists()
       })
@@ -80,7 +66,7 @@ export class SpotifyComponent implements OnInit {
       headers: new HttpHeaders({
         "Accept": "application/json",
         "Content-Type": "application/json",
-        "Authorization": "Bearer " + this.accessToken
+        "Authorization": "Bearer " + this.authService.getSessionSnap().accessToken
       })
     }
     this.httpclient.get("https://api.spotify.com/v1/me", opts).toPromise().then(data => {
@@ -99,7 +85,8 @@ export class SpotifyComponent implements OnInit {
 
   public async getPlaylists(): Promise<SpotifyPlaylistDTO[]> {
 
-    this.httpclient.get("http://localhost:3000/spotify-playlist/" + this.accessToken).toPromise().then(data => {
+    // TODO: Make access token a header and read it in nestjs
+    this.httpclient.get("http://localhost:3000/spotify-playlist/" + this.authService.getSessionSnap().accessToken).toPromise().then(data => {
       this.playlists = data as SpotifyPlaylistDTO[];
     }
     ).catch((error) => {
@@ -116,7 +103,7 @@ export class SpotifyComponent implements OnInit {
   public async getSongs(id: string) {
     //console.log(id);
     const params = new HttpParams()
-      .set('token', this.accessToken);
+      .set('token', this.authService.getSessionSnap().accessToken);
     //console.log(params);
     await this.httpclient.get("http://localhost:3000/songs/" + id, { params }).toPromise().then(data => {
       this.songs = data as SongDTO[];

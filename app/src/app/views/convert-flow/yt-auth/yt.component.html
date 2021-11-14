@@ -27,13 +27,13 @@
         (ngSubmit)="onSubmitPlaylistname()">
         <label>
             Lege den Namen der Playlist fest:
-            <input class="flex flex-wrap min-w-max" type="text" formControlName="plalistName" style=" width: 45rem;">
+            <input class="flex flex-wrap min-w-max" type="text" formControlName="plalistName" style=" width: 120px;">
         </label>
         <br>
         <label *ngIf="this.plalistNameform.value['plalistName']">
             Lege die Beschreibung der Playlist fest (optional):
             <input class="flex flex-wrap " type="text" formControlName="plalistDescription"
-                style="height:50px; width: 45rem;">
+                style="height:50px; width: 120px;">
         </label>
         <br>
         <label *ngIf="this.plalistNameform.value['plalistName']">
