@@ -30,7 +30,7 @@ export class YtComponent implements OnInit {
     this.plalistNameform = this.formbuilder.group({
       plalistName: formbuilder.control('', [Validators.required, Validators.pattern('^[A-Za-zñÑáéíóúÁÉÍÓÚ0-9]+$')]),
       status: formbuilder.control("unlisted", [Validators.required, Validators.pattern('^[A-Za-zñÑáéíóúÁÉÍÓÚ0-9]+$')]),
-      plalistDescription: formbuilder.control("", Validators.maxLength(99))
+      plalistDescription: formbuilder.control(" ", [Validators.maxLength(99), Validators.required])
     })
   }
 
