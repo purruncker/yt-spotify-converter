@@ -95,7 +95,7 @@ export class YtComponent implements OnInit {
     )
   }
 
-  public showSongs: boolean = true;
+  public showSongs: boolean = false;
   public toggleSongs() {
     this.showSongs = !this.showSongs;
   }
@@ -119,7 +119,7 @@ export class YtComponent implements OnInit {
       this.ytPlaylist = data;
     }).catch((error) => {
       console.log(error);
-      this.errService.createError("playlist konnte nicht angelegt werden", "create YT playlist", error.code)
+      this.errService.createError("playlist konnte nicht angelegt werden", "create YT playlist", error.status)
     })
   }
 
