@@ -22,14 +22,14 @@ export class PlaylistSpotifyService {
       //console.log(data['data']['items']);
 
       let res: CurrentUseresSpotifyPlaylistsDTO[] = data['data']['items'].map(val => {
-        //console.log(val);
+
         return {
           id: val['id'],
           name: val['name'],
           count: val['tracks']['total'],
+          imageHref: val.images[0].url
         }
       })
-      //console.log(res);
 
       return res;
     }).catch((error) => {

@@ -29,11 +29,10 @@ export class SongsService {
       })
       //console.log(modifieddata)
       let res: ResponseSongsDto[] = modifieddata.map(val => {
-        console.log(val.track.album)
         return {
           name: val['track'].name,
           artists: val['track'].artists,
-          imageHref: val.track.album.images[2].url
+          imageHref: val.track.album.images[0].url
         }
       })
 
