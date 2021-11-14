@@ -9,3 +9,7 @@ export class SongDTO {
     name: string;
     artists: string[];
 }
+
+export class SongsToInsertDTO {
+    id: string;
+}

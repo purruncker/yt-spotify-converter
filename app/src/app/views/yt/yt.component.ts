@@ -28,8 +28,8 @@ export class YtComponent implements OnInit {
     private errService: HttpErrorService
   ) {
     this.plalistNameform = this.formbuilder.group({
-      plalistName: formbuilder.control('', [Validators.required, Validators.pattern('^[A-Za-zñÑáéíóúÁÉÍÓÚ ]+$')]),
-      status: formbuilder.control("unlisted", [Validators.required, Validators.pattern('^[A-Za-zñÑáéíóúÁÉÍÓÚ ]+$')]),
+      plalistName: formbuilder.control('', [Validators.required, Validators.pattern('^[A-Za-zñÑáéíóúÁÉÍÓÚ0-9]+$')]),
+      status: formbuilder.control("unlisted", [Validators.required, Validators.pattern('^[A-Za-zñÑáéíóúÁÉÍÓÚ0-9]+$')]),
       plalistDescription: formbuilder.control("", Validators.maxLength(99))
     })
   }
@@ -47,6 +47,9 @@ export class YtComponent implements OnInit {
       //TODO: Remove after the export is done 
       //if (localStorage)
     }
+    // if (localStorage.getItem('ytSongs') != undefined) {
+    //   this.ytSongs = JSON.parse(localStorage.getItem('ytSongs'))
+    // }
 
     this.currentRoute.queryParams.subscribe((map) => {
       const grantCode = map.code;
@@ -122,24 +125,40 @@ export class YtComponent implements OnInit {
 
   public fillPlaylist: FillYtPlaylist = undefined;
   public ytSongs: IdsToInsertDTO[] = [];
-  startInsertSongs(){
+  public async getInsertSongs() {
 
 
-    const body ={
+    const body = {
       accesToken: this.accessToken,
       id: "PLjC_caSoMHYDUdYO8JiX8yBQKGOhNWAi0",
       songs: this.songs
     }
 
-    this.httpclient.post("http://localhost:3000/yt-songs", body).toPromise().then(data => {
+    await this.httpclient.post("http://localhost:3000/yt-songs", body).toPromise().then(data => {
       console.log(data);
       this.ytSongs = data as IdsToInsertDTO[];
+      localStorage.setItem('ytSongs', JSON.stringify(this.ytSongs));
       console.log(this.ytSongs)
     }).catch((error) => {
       console.log(error);
-      this.errService.createError("playlist konnte nicht gefüllt werden", "fill YT playlist", error.code)
+      this.errService.createError("Songs konnten nicht gefetcht werden (reached max export limit)", "get YT songIds", error.status)
     })
-   }
-  
+  }
 
+  public async excludeSong(id: string) {
+    const index = this.ytSongs.findIndex((song) => song.id == id);
+    this.ytSongs.splice(index, 1);
+    console.log(index, this.ytSongs)
+  }
+
+  public async startInsertSongs() {
+    const ids: string[] = this.ytSongs.map(song => song.id)
+
+    await this.httpclient.post("http://localhost:3000/yt-songs/insert/" + this.accessToken + "/" + this.ytPlaylist.id, ids).toPromise().then(data => {
+      console.log(data)
+    }).catch((error) => {
+      console.log(error);
+      this.errService.createError("playlist konnte nicht gefüllt werden", "fill YT playlist", error.status)
+    })
+  }
 }
