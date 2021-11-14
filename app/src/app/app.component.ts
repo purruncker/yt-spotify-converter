@@ -26,9 +26,6 @@ export class AppComponent implements OnInit {
 
   }
 
-  public async createErr() {
-    await this.errService.createError("test", "test app component", 404)
 
-  }
 
 }
