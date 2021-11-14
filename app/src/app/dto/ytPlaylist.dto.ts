@@ -11,3 +11,9 @@ export interface FillYtPlaylist{
     id?:string;
     songs?:SongDTO[];
 }
+
+export interface IdsToInsertDTO {
+    id?: string;
+    name?: string;
+    channelTitle?: string;
+}

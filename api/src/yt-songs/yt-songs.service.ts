@@ -1,12 +1,13 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, Injectable } from '@nestjs/common';
 import axios from 'axios';
+import { title } from 'process';
 import { CreateYtSongDto } from './dto/create-yt-song.dto';
-import { UpdateYtSongDto } from './dto/update-yt-song.dto';
+import { IdsToInsertDTO } from './dto/update-yt-song.dto';
 
 @Injectable()
 export class YtSongsService {
 
-  getSongs(YtSongDto :CreateYtSongDto){
+  public async getSongs(YtSongDto :CreateYtSongDto){
     
     const config = {
       headers: {
@@ -16,27 +17,33 @@ export class YtSongsService {
       }
     }
     const url =`https://youtube.googleapis.com/youtube/v3/search?`
-    let count = 0;
-    YtSongDto.songs.forEach(x =>{
-      let artists = ""
-      x.artists.forEach(y =>{
-        artists += y['name'] + " "
-      })
-      //console.log(artists)
 
-      axios.get(url + `part=snippet&maxResults=1&order=relevance&q=${artists}${x.name}&key=${process.env.YT_API_KEY}`,config)
+    let result : IdsToInsertDTO[] = [];
+
+     for (const x of YtSongDto.songs) {
+        const artists = x.artists.map(y =>{
+          return y['name']
+        }).join(' ')
+          
+    await axios.get(url + `part=snippet&maxResults=1&order=relevance&q=${artists}${x.name}&key=${process.env.YT_API_KEY}`,config)
       .then(data =>{
-        console.log(data['data']['items'])
-        console.log(data['data']['items'].id.videoId)
-        console.log(count++)
-
-        return
+        const item:IdsToInsertDTO ={
+          id: data['data']['items'][0].id.videoId,
+          name: data['data']['items'][0].snippet.title,
+          channelTitle: data['data']['items'][0].snippet.channelTitle
+        }
+        result.push(item);
+        console.log(result)
       }).catch(error =>{
         console.log(error['response']['data'])
-        console.log(count++)
+        throw new HttpException(error.response.data.error.message, error.response.data.error.code)
+
       })
-      
-// GET &order=relevance&q=Travis%20scott%20sicko%20mode&key=[YOUR_API_KEY] HTTP/1.1
-    })
+    }
+    
+    console.log(result, 'test')
+    return result;
+
   }
+  
 }

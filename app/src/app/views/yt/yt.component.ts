@@ -6,7 +6,7 @@ import * as querystring from "query-string";
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { SongDTO } from 'src/app/dto/song.dto';
-import { FillYtPlaylist, YtPlaylistDTO } from 'src/app/dto/ytPlaylist.dto';
+import { FillYtPlaylist, IdsToInsertDTO, YtPlaylistDTO } from 'src/app/dto/ytPlaylist.dto';
 import { HttpErrorService } from 'src/app/services/http-error.service';
 
 //import { first, map } from "rxjs/operators"
@@ -121,6 +121,7 @@ export class YtComponent implements OnInit {
   }
 
   public fillPlaylist: FillYtPlaylist = undefined;
+  public ytSongs: IdsToInsertDTO[] = [];
   startInsertSongs(){
 
 
@@ -132,6 +133,8 @@ export class YtComponent implements OnInit {
 
     this.httpclient.post("http://localhost:3000/yt-songs", body).toPromise().then(data => {
       console.log(data);
+      this.ytSongs = data as IdsToInsertDTO[];
+      console.log(this.ytSongs)
     }).catch((error) => {
       console.log(error);
       this.errService.createError("playlist konnte nicht gefüllt werden", "fill YT playlist", error.code)
