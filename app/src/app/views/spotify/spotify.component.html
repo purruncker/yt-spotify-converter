@@ -1,0 +1,25 @@
+<div *ngIf="accessToken == ''" class="p-4 text-center">
+    <button class="bg-green-600 text-white text-center px-6 hover:bg-green-700 active:bg-green-800"><i
+            class="fab fa-spotify w-9"></i> Mit Spotify anmelden</button>
+</div>
+
+<h1 class="text-2xl" *ngIf="name && showName"> Wilkommen {{name}}!</h1>
+<img src="{{userImage}}">
+<br>
+
+<div *ngIf="playlists.length && showPlaylists">
+    <h2>Gefundene Playlisten:</h2>
+    <tr>
+        <td class="p-8"></td>
+        <td class="p-8">name</td>
+        <td class="p-8">Anzahl Lieder</td>
+    </tr>
+    <tr *ngFor="let playlist of playlists">
+        <td class="p-8"> <img src="{{playlist.imageHref}}"> </td>
+        <td class="p-8">{{playlist.name}}</td>
+        <td class="p-8">{{playlist.count}}</td>
+        <td class="p-8">
+            <button (click)="getSongs(playlist.id)">exportieren</button> <br>
+        </td>
+    </tr>
+</div>
