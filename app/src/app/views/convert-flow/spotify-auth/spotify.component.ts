@@ -46,7 +46,7 @@ export class SpotifyComponent implements OnInit {
 
       // Request the access token
       // TODO: Create component with separate route to handle authentication processes in one place (e.g.: /authorize/:platform --> /authorize/spotify?code=...). This can be shown as component in the flow
-      
+
       this.hello();
       this.getPlaylists();
       /*this.authService.requestSpotifyAccessToken(grantCode).then((response) => {
@@ -60,6 +60,7 @@ export class SpotifyComponent implements OnInit {
 
   public name: String = "";
   public showName: Boolean = true;
+  public userImage: string = "";
 
   public async hello(): Promise<void> {
 
@@ -72,7 +73,12 @@ export class SpotifyComponent implements OnInit {
     }
     this.httpclient.get("https://api.spotify.com/v1/me", opts).toPromise().then(data => {
       this.name = data['display_name'];
-      //console.log(this.name);
+      if (typeof data['images'] !== 'undefined' && data['images'].length > 0) {
+        this.userImage = data['images'][0].url
+      }
+      else {
+        this.userImage = "app\src\assets\logo\cockroach.svg";
+      }
     }
     ).catch((error) => {
       console.log(error);
@@ -108,7 +114,7 @@ export class SpotifyComponent implements OnInit {
     //console.log(params);
     await this.httpclient.get("http://localhost:3000/songs/" + id, { params }).toPromise().then(data => {
       this.songs = data as SongDTO[];
-      
+
     }).catch((error) => {
       console.log(error);
       this.errService.createError("Deine Songs konnten nicht abgerufen werden", "getSongs Spotify", error.status)

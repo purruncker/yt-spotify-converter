@@ -5,9 +5,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as querystring from "query-string";
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
-import { SongDTO } from 'src/app/dto/song.dto';
-import { FillYtPlaylist, IdsToInsertDTO, YtPlaylistDTO } from 'src/app/dto/ytPlaylist.dto';
-import { HttpErrorService } from 'src/app/services/http-error.service';
+import { SongDTO } from '../../../dto/song.dto';
+import { FillYtPlaylist, IdsToInsertDTO, YtPlaylistDTO } from '../../../dto/ytPlaylist.dto';
+import { HttpErrorService } from '../../../services/http-error.service';
 
 //import { first, map } from "rxjs/operators"
 
