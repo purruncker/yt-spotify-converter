@@ -10,7 +10,6 @@ export class CreatePlaylistYtDto {
     @IsNotEmpty()
     @IsString()
     status: string;
-    @IsNotEmpty()
     @IsString()
     description: string;
 }

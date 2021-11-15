@@ -19,12 +19,10 @@ export class SpotifyComponent implements OnInit {
 
   public title = 'app';
   public parentdata: string = "test moin!";
-  public accessToken?: string = '';
 
   constructor(private currentRoute: ActivatedRoute, private httpclient: HttpClient, private router: Router, private authService: AuthenticationService) { }
 
   public async ngOnInit(): Promise<void> {
-    //console.log(this.accessToken);
     //TODO: Localstorage for token
     this.currentRoute.queryParams.subscribe((map) => {
       // TODO: Create route (e.g.: /authenticate) to receive login attempt
@@ -48,11 +46,14 @@ export class SpotifyComponent implements OnInit {
 
       // Request the access token
       // TODO: Create component with separate route to handle authentication processes in one place (e.g.: /authorize/:platform --> /authorize/spotify?code=...). This can be shown as component in the flow
-      this.authService.requestSpotifyAccessToken(grantCode).then((response) => {
+
+      this.hello();
+      this.getPlaylists();
+      /*this.authService.requestSpotifyAccessToken(grantCode).then((response) => {
         console.log(response);
         this.hello()
         this.getPlaylists()
-      })
+      })*/
 
     })
   }
@@ -60,6 +61,7 @@ export class SpotifyComponent implements OnInit {
   public name: String = "";
   public showName: Boolean = true;
   public userImage: string = "";
+
   public async hello(): Promise<void> {
 
     const opts = {
@@ -71,14 +73,16 @@ export class SpotifyComponent implements OnInit {
     }
     this.httpclient.get("https://api.spotify.com/v1/me", opts).toPromise().then(data => {
       this.name = data['display_name'];
-      console.log(data)
+
       if (typeof data['images'] !== 'undefined' && data['images'].length > 0) {
         this.userImage = data['images'][0].url
       }
       else {
         this.userImage = "../../../assets/logo/cockroach.png";
       }
-      //console.log(this.name);
+
+        this.userImage = "app\src\assets\logo\cockroach.svg";
+      }
     }
     ).catch((error) => {
       console.log(error);
@@ -114,6 +118,7 @@ export class SpotifyComponent implements OnInit {
     //console.log(params);
     await this.httpclient.get("http://localhost:3000/songs/" + id, { params }).toPromise().then(data => {
       this.songs = data as SongDTO[];
+
     }).catch((error) => {
       console.log(error);
       this.errService.createError("Deine Songs konnten nicht abgerufen werden", "getSongs Spotify", error.status)

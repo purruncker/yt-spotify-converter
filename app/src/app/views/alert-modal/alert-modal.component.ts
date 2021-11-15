@@ -18,7 +18,6 @@ export class AlertModalComponent implements OnInit {
   }
 
   public initDeleteError() {
-    window.location.reload();
     this.errService.deleteError()
     // this.deleteError.emit()
   }

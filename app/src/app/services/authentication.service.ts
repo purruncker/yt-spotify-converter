@@ -27,8 +27,7 @@ export class AuthenticationService {
           response_type: 'code',
           client_id: this.CLIENT_ID_SPOTIFY,
           scope: this.SPOTIFY_SCOPES,
-          // TODO: Change to http://localhost:4200/authorize/spotify
-          redirect_uri: "http://localhost:4200/spotify",
+          redirect_uri: "http://localhost:4200/authorize/spotify",
           state: "veryRandomString123"
         }
     
