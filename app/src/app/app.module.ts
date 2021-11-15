@@ -11,6 +11,8 @@ import { AboutComponent } from './views/about/about.component';
 import { AlertModalComponent } from './views/alert-modal/alert-modal.component';
 import { FlowItemComponent } from './components/flow/flow-item/flow-item.component';
 import { FlowSelectComponent } from './components/flow/flow-select/flow-select.component';
+import { LoadingBarComponent } from './components/loading-bar/loading-bar.component';
+import { interceptorProvider } from './interceptors/interceptors';
 
 // TODO: Create about page with listed technologies etc... (especially CockroachDB)
 
@@ -23,6 +25,7 @@ import { FlowSelectComponent } from './components/flow/flow-select/flow-select.c
     AlertModalComponent,
     FlowItemComponent,
     FlowSelectComponent,
+    LoadingBarComponent,
   ],
   imports: [
     BrowserModule,
@@ -30,7 +33,7 @@ import { FlowSelectComponent } from './components/flow/flow-select/flow-select.c
     AppRoutingModule,
     ReactiveFormsModule
   ],
-  providers: [],
+  providers: [interceptorProvider],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
