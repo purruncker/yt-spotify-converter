@@ -107,6 +107,7 @@ export class SpotifyComponent implements OnInit {
     //console.log(params);
     await this.httpclient.get("http://localhost:3000/songs/" + id, { params }).toPromise().then(data => {
       this.songs = data as SongDTO[];
+      
     }).catch((error) => {
       console.log(error);
       this.errService.createError("Deine Songs konnten nicht abgerufen werden", "getSongs Spotify", error.status)
