@@ -6,8 +6,11 @@
         </div>
         <div class="">
             <div class="p-12 bg-white rounded-xl shadow-2xl overflow-hidden">
-                <div class="pt-2 pb-6" [ngClass]="{'pt-6 pb-12 border-2 border-red-700': ((flowService.$selectedFlow | async).currentStep.id <= 0) }">
+                <div class="pt-2 pb-4" [ngClass]="{'pt-6 pb-12 border-2 border-red-700': ((flowService.$selectedFlow | async).currentStep.id <= 0) }">
                     <app-flow-select [enableSwitcher]="false"></app-flow-select>
+                </div>
+                <div class="pb-6">
+                    <app-profile-bar></app-profile-bar>
                 </div>
 
                 <router-outlet></router-outlet>

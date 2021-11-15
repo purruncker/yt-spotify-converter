@@ -1,0 +1,7 @@
+<div *ngIf="(authService.$session | async).user" class="w-full text-center">
+    <div class="inline-block">
+        <img class="inline-block w-7 h-7 rounded-full" src="{{ (authService.$session | async).user?.avatarUrl }}">
+        <span class="text-base ml-2 text-primary text-left font-bold text-opacity-80 text-sm">{{ (authService.$session | async).user?.name }}</span>
+        <span><button class="btn btn-icon btn-sm text-primary"><i class="fas fa-chevron-down text-primary"></i></button></span>
+    </div>
+</div>

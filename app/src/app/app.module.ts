@@ -14,6 +14,8 @@ import { FlowSelectComponent } from './components/flow/flow-select/flow-select.c
 import { LoadingBarComponent } from './components/loading-bar/loading-bar.component';
 import { interceptorProvider } from './interceptors/interceptors';
 import { AuthHandlerComponent } from './views/convert-flow/auth-handler/auth-handler.component';
+import { ProfileBarComponent } from './components/profile-bar/profile-bar.component';
+import { PlaylistItemComponent } from './components/playlist-item/playlist-item.component';
 
 // TODO: Create about page with listed technologies etc... (especially CockroachDB)
 
@@ -28,6 +30,8 @@ import { AuthHandlerComponent } from './views/convert-flow/auth-handler/auth-han
     FlowSelectComponent,
     LoadingBarComponent,
     AuthHandlerComponent,
+    ProfileBarComponent,
+    PlaylistItemComponent,
   ],
   imports: [
     BrowserModule,
