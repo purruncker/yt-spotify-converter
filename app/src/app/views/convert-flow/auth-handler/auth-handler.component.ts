@@ -26,7 +26,7 @@ export class AuthHandlerComponent implements OnInit {
               console.log(token)
               this.authService.createSpotifyOrientedSession(token).then((session) => {
                 console.log(session)
-                this.router.navigate(["/spotify"])
+                this.router.navigate(["/choose-playlist"])
               })
           })          
         } else {

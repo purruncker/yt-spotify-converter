@@ -16,6 +16,7 @@ import { interceptorProvider } from './interceptors/interceptors';
 import { AuthHandlerComponent } from './views/convert-flow/auth-handler/auth-handler.component';
 import { ProfileBarComponent } from './components/profile-bar/profile-bar.component';
 import { PlaylistItemComponent } from './components/playlist-item/playlist-item.component';
+import { ChoosePlaylistComponent } from './views/convert-flow/choose-playlist/choose-playlist.component';
 
 // TODO: Create about page with listed technologies etc... (especially CockroachDB)
 
@@ -32,6 +33,7 @@ import { PlaylistItemComponent } from './components/playlist-item/playlist-item.
     AuthHandlerComponent,
     ProfileBarComponent,
     PlaylistItemComponent,
+    ChoosePlaylistComponent,
   ],
   imports: [
     BrowserModule,

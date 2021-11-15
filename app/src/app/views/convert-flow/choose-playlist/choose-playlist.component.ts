@@ -1,22 +1,20 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { from, Observable } from 'rxjs';
-
-import { first, map } from "rxjs/operators"
-import { SpotifyPlaylistDTO } from 'src/app/dto/spotifyPlaylist.dto';
+import { Router } from '@angular/router';
 import { SongDTO } from 'src/app/dto/song.dto';
-import { AuthenticationService } from 'src/app/services/authentication.service';
-import { Playlist } from 'src/app/model/playlist.model';
+import { SpotifyPlaylistDTO } from 'src/app/dto/spotifyPlaylist.dto';
 import { Platform } from 'src/app/model/platform.model';
+import { Playlist } from 'src/app/model/playlist.model';
+import { AuthenticationService } from 'src/app/services/authentication.service';
 
 @Component({
-  selector: 'app-spotify',
-  templateUrl: './spotify.component.html',
-  styleUrls: ['./spotify.component.scss']
+  selector: 'app-choose-playlist',
+  templateUrl: './choose-playlist.component.html',
+  styleUrls: ['./choose-playlist.component.scss']
 })
-export class SpotifyComponent implements OnInit {
+export class ChoosePlaylistComponent implements OnInit {
 
+  
   [x: string]: any;
 
   public title = 'app';
