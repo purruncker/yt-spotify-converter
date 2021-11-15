@@ -70,7 +70,7 @@
             <td>{{song.channelTitle}} </td>
             <td> <button (click)="excludeSong(song.id)"> Abwählen</button> </td>
         </tr>
-        <button *ngIf="accessToken != ''" (click)="startInsertSongs()">Fill Playlist</button>
+        <button *ngIf="accessToken != '' && showExport" (click)="startInsertSongs()">Fill Playlist</button>
     </div>
 
 

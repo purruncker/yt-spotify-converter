@@ -5,15 +5,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as querystring from "query-string";
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
-<<<<<<< HEAD
 import { SongDTO } from '../../../dto/song.dto';
 import { FillYtPlaylist, IdsToInsertDTO, YtPlaylistDTO } from '../../../dto/ytPlaylist.dto';
 import { HttpErrorService } from '../../../services/http-error.service';
-=======
-import { SongDTO } from 'src/app/dto/song.dto';
-import { FillYtPlaylist, IdsToInsertDTO, YtPlaylistDTO } from 'src/app/dto/ytPlaylist.dto';
-import { HttpErrorService } from 'src/app/services/http-error.service';
->>>>>>> a5c8c65287b692036625b78a233bc325d7f9240a
 
 //import { first, map } from "rxjs/operators"
 
@@ -156,8 +150,10 @@ export class YtComponent implements OnInit {
     this.ytSongs.splice(index, 1);
     console.log(index, this.ytSongs)
   }
+  public showExport: boolean = true;
 
   public async startInsertSongs() {
+    this.showExport = false;
     const ids: string[] = this.ytSongs.map(song => song.id)
 
     await this.httpclient.post("http://localhost:3000/yt-songs/insert/" + this.accessToken + "/" + this.ytPlaylist.id, ids).toPromise().then(data => {

@@ -1,15 +1,15 @@
-
 <div *ngIf="playlists.length && showPlaylists" class="text-primary">
     <h6>Hey, {{ name }}</h6>
+    <img src="{{userImage}}">
     <h4 class="font-bold">We could find following playlists on your account:</h4>
     <tr>
+        <td class="p-4"></td>
         <td class="p-4">name</td>
-        <td class="p-4">id</td>
         <td class="p-4">Anzahl Lieder</td>
     </tr>
     <tr *ngFor="let playlist of playlists">
+        <td class="p-4"><img src="{{playlist.imageHref}}"></td>
         <td class="p-4">{{playlist.name}}</td>
-        <td class="p-4">{{playlist.id}}</td>
         <td class="p-4">{{playlist.count}}</td>
         <td class="p-4">
             <button (click)="getSongs(playlist.id)">exportieren</button> <br>
