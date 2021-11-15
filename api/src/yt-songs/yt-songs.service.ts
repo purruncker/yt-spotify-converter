@@ -31,7 +31,7 @@ export class YtSongsService {
             channelTitle: data['data']['items'][0].snippet.channelTitle
           }
           result.push(item);
-          console.log(result)
+          //console.log(result)
         }).catch(error => {
           console.log(error['response']['data'])
           throw new HttpException(error.response.data.error.message, error.response.data.error.code)

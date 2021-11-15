@@ -10,7 +10,6 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { AboutComponent } from './views/about/about.component';
 import { AlertModalComponent } from './views/alert-modal/alert-modal.component';
 import { FlowItemComponent } from './components/flow/flow-item/flow-item.component';
-import { FlowListComponent } from './components/flow/flow-list/flow-list.component';
 import { FlowSelectComponent } from './components/flow/flow-select/flow-select.component';
 import { LoadingBarComponent } from './components/loading-bar/loading-bar.component';
 import { interceptorProvider } from './interceptors/interceptors';
@@ -25,7 +24,6 @@ import { interceptorProvider } from './interceptors/interceptors';
     AboutComponent,
     AlertModalComponent,
     FlowItemComponent,
-    FlowListComponent,
     FlowSelectComponent,
     LoadingBarComponent,
   ],
@@ -33,7 +31,7 @@ import { interceptorProvider } from './interceptors/interceptors';
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    ReactiveFormsModule,
+    ReactiveFormsModule
   ],
   providers: [interceptorProvider],
   bootstrap: [AppComponent]
