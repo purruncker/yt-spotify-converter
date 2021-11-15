@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpErrorService } from 'src/app/services/http-error.service';
 
 @Component({
   selector: 'app-error-page',
@@ -11,5 +12,6 @@ export class ErrorPageComponent implements OnInit {
 
   ngOnInit(): void {
   }
+
 
 }

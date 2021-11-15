@@ -7,10 +7,12 @@ import { SpotifyComponent } from './views/convert-flow/spotify-auth/spotify.comp
 import { YtComponent } from './views/convert-flow/yt-auth/yt.component';
 import { FlowListComponent } from './views/convert-flow/flow-list/flow-list.component';
 import { UserCanActivateFlowRoute } from './guards/canActivate.guard';
+import { AuthHandlerComponent } from './views/convert-flow/auth-handler/auth-handler.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent, children: [
     { path: "", component: FlowListComponent },
+    { path: "authorize/:platform", component: AuthHandlerComponent },
     { path: 'yt', component: YtComponent },
     { path: 'spotify', component: SpotifyComponent },
   ], canActivateChild: [ UserCanActivateFlowRoute ]},
