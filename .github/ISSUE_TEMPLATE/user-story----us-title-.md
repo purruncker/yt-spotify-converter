@@ -1,5 +1,5 @@
 ---
-name: User Story - <US title>
+name: User Story
 about: Suggest an idea for this project
 title: "[US]"
 labels: enhancement
@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-## User Story 2
+## User Story - <title>
 ---
 
 Quick links: [Summary](#summary) | [Description](#description) | [Notes](#notes) | [Example](#example) | [Resources](#resources)
