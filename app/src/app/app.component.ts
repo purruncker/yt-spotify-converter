@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { subscribeOn, take, takeUntil } from 'rxjs/operators';
 import { ErrorDTO } from './dto/error.dto';
 import { HttpErrorService } from './services/http-error.service';
@@ -16,11 +16,9 @@ export class AppComponent implements OnInit {
   }
   public error: ErrorDTO = undefined;
 
-
   public async ngOnInit(): Promise<void> {
-    this.errService.initError().pipe(take(1000)).subscribe(data => {
+    this.errService.initError().subscribe(data => {
       this.error = data;
-      console.log(data);
     })
 
 
