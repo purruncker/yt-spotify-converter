@@ -19,12 +19,10 @@ export class SpotifyComponent implements OnInit {
 
   public title = 'app';
   public parentdata: string = "test moin!";
-  public accessToken?: string = '';
 
   constructor(private currentRoute: ActivatedRoute, private httpclient: HttpClient, private router: Router, private authService: AuthenticationService) { }
 
   public async ngOnInit(): Promise<void> {
-    //console.log(this.accessToken);
     //TODO: Localstorage for token
     this.currentRoute.queryParams.subscribe((map) => {
       // TODO: Create route (e.g.: /authenticate) to receive login attempt
@@ -48,11 +46,14 @@ export class SpotifyComponent implements OnInit {
 
       // Request the access token
       // TODO: Create component with separate route to handle authentication processes in one place (e.g.: /authorize/:platform --> /authorize/spotify?code=...). This can be shown as component in the flow
-      this.authService.requestSpotifyAccessToken(grantCode).then((response) => {
+      
+      this.hello();
+      this.getPlaylists();
+      /*this.authService.requestSpotifyAccessToken(grantCode).then((response) => {
         console.log(response);
         this.hello()
         this.getPlaylists()
-      })
+      })*/
 
     })
   }

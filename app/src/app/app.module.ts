@@ -13,6 +13,7 @@ import { FlowItemComponent } from './components/flow/flow-item/flow-item.compone
 import { FlowSelectComponent } from './components/flow/flow-select/flow-select.component';
 import { LoadingBarComponent } from './components/loading-bar/loading-bar.component';
 import { interceptorProvider } from './interceptors/interceptors';
+import { AuthHandlerComponent } from './views/convert-flow/auth-handler/auth-handler.component';
 
 // TODO: Create about page with listed technologies etc... (especially CockroachDB)
 
@@ -26,6 +27,7 @@ import { interceptorProvider } from './interceptors/interceptors';
     FlowItemComponent,
     FlowSelectComponent,
     LoadingBarComponent,
+    AuthHandlerComponent,
   ],
   imports: [
     BrowserModule,
