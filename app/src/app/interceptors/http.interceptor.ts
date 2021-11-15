@@ -27,7 +27,9 @@ export class HttpInterceptorOwn implements HttpInterceptor {
       tap(
         (event) => {
           if (event instanceof HttpResponse) {
-            this.loadingBarService.requestEnded()
+            setTimeout(() => {
+              this.loadingBarService.requestEnded()
+            }, 800)
           }
         },
         (error: HttpErrorResponse) => {
