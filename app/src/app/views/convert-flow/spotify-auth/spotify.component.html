@@ -1,18 +1,5 @@
 <div *ngIf="playlists.length && showPlaylists" class="text-primary">
-    <h6>Hey, {{ (authService.$session | async).user?.name }}</h6>
-    <img src="{{ (authService.$session | async).user?.avatarUrl }}">
-    <h4 class="font-bold">We could find following playlists on your account:</h4>
-    <tr>
-        <td class="p-4"></td>
-        <td class="p-4">name</td>
-        <td class="p-4">Anzahl Lieder</td>
-    </tr>
-    <tr *ngFor="let playlist of playlists">
-        <td class="p-8"> <img src="{{playlist.imageHref}}"> </td>
-        <td class="p-4">{{playlist.name}}</td>
-        <td class="p-4">{{playlist.count}}</td>
-        <td class="p-4">
-            <button (click)="getSongs(playlist.id)">exportieren</button> <br>
-        </td>
-    </tr>
+    <label>Please select one of the playlists below:</label>
+
+    <app-playlist-item *ngFor="let playlist of playlists" [playlist]="playlist" (selected)="selectPlaylist($event)"></app-playlist-item>
 </div>

@@ -7,6 +7,8 @@ import { first, map } from "rxjs/operators"
 import { SpotifyPlaylistDTO } from 'src/app/dto/spotifyPlaylist.dto';
 import { SongDTO } from 'src/app/dto/song.dto';
 import { AuthenticationService } from 'src/app/services/authentication.service';
+import { Playlist } from 'src/app/model/playlist.model';
+import { Platform } from 'src/app/model/platform.model';
 
 @Component({
   selector: 'app-spotify',
@@ -20,6 +22,10 @@ export class SpotifyComponent implements OnInit {
   public title = 'app';
   public parentdata: string = "test moin!";
 
+  public showName: Boolean = true;
+  public playlists: Playlist[] = [];
+  public showPlaylists: boolean = true;
+
   constructor(
     private httpclient: HttpClient, 
     private router: Router, 
@@ -30,15 +36,23 @@ export class SpotifyComponent implements OnInit {
     this.getPlaylists();
   }
 
-  public showName: Boolean = true;
-  public playlists: SpotifyPlaylistDTO[] = [];
-  public showPlaylists: boolean = true;
+  public selectPlaylist(playlist: Playlist): void {
+    this.getSongs(playlist.id)
+  }
 
   public async getPlaylists(): Promise<SpotifyPlaylistDTO[]> {
 
     // TODO: Make access token a header and read it in nestjs
-    this.httpclient.get("http://localhost:3000/spotify-playlist/" + this.authService.getSessionSnap().accessToken).toPromise().then(data => {
-      this.playlists = data as SpotifyPlaylistDTO[];
+    this.httpclient.get<SpotifyPlaylistDTO[]>("http://localhost:3000/spotify-playlist/" + this.authService.getSessionSnap().accessToken).toPromise().then(data => {
+      this.playlists = data.map((val) => {
+        return {
+          id: val.id,
+          title: val.name,
+          songsCount: val.count,
+          type: Platform.SPOTIFY,
+          coverUrl: val.imageHref
+        }
+      })
     }
     ).catch((error) => {
       console.log(error);
