@@ -1,0 +1,3 @@
+<div *ngIf="($flow | async)">
+    <app-flow-item *ngFor="let step of ($flow | async).list" [flowStep]="step"></app-flow-item>
+</div>

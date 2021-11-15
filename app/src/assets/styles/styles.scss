@@ -29,6 +29,14 @@
     @apply text-white;
 }
 
+html, body {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
 body {
     height: 100vh;
     width: 100vw;

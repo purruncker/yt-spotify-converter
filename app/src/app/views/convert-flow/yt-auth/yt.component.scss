@@ -1,0 +1,14 @@
+label{
+    color: coral;
+}
+input{
+    background-color: lightgray;
+}
+button:disabled{
+    display: none;
+    color: red;
+}
+td{
+    padding:1em;
+    margin: 1em;
+}
