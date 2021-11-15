@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { from, Observable } from 'rxjs';
 
 import { first, map } from "rxjs/operators"
 import { SpotifyPlaylistDTO } from 'src/app/dto/spotifyPlaylist.dto';
@@ -73,7 +73,7 @@ export class SpotifyComponent implements OnInit {
 
   public name: String = "";
   public showName: Boolean = true;
-
+  public userImage: string = "";
   public async hello(): Promise<void> {
 
     const opts = {
@@ -85,6 +85,13 @@ export class SpotifyComponent implements OnInit {
     }
     this.httpclient.get("https://api.spotify.com/v1/me", opts).toPromise().then(data => {
       this.name = data['display_name'];
+      console.log(data)
+      if (typeof data['images'] !== 'undefined' && data['images'].length > 0) {
+        this.userImage = data['images'][0].url
+      }
+      else {
+        this.userImage = "../../../assets/logo/cockroach.png";
+      }
       //console.log(this.name);
     }
     ).catch((error) => {
