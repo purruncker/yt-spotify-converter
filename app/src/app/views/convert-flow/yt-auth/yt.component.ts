@@ -150,8 +150,10 @@ export class YtComponent implements OnInit {
     this.ytSongs.splice(index, 1);
     console.log(index, this.ytSongs)
   }
+  public showExport: boolean = true;
 
   public async startInsertSongs() {
+    this.showExport = false;
     const ids: string[] = this.ytSongs.map(song => song.id)
 
     await this.httpclient.post("http://localhost:3000/yt-songs/insert/" + this.accessToken + "/" + this.ytPlaylist.id, ids).toPromise().then(data => {
