@@ -38,9 +38,10 @@ export class FlowService {
 
     public async selectDefaultFlow() {
         this._selectedFlowSubject.next(new Flow([
-            { id: 1, title: "Connect with Spotify", allowBack: false, allowNext: false },
-            { id: 2, title: "Choose your playlist", allowBack: false, allowNext: true },
-            { id: 3, title: "Connect to YouTube", allowBack: false, allowNext: true }
+            { id: 1, title: "Connect with Spotify", allowBack: false, allowNext: false, isListed: true },
+            { id: 2, title: "Choose your playlist", allowBack: false, allowNext: true, isListed: true },
+            { id: 3, title: "Choose songs", allowBack: false, allowNext: true, isListed: false },
+            { id: 4, title: "Connect to YouTube", allowBack: false, allowNext: true, isListed: true }
         ]));
     }
 

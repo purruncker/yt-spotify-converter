@@ -8,12 +8,14 @@ import { FlowListComponent } from './views/convert-flow/flow-list/flow-list.comp
 import { UserCanActivateFlowRoute } from './guards/canActivate.guard';
 import { AuthHandlerComponent } from './views/convert-flow/auth-handler/auth-handler.component';
 import { ChoosePlaylistComponent } from './views/convert-flow/choose-playlist/choose-playlist.component';
+import { ChooseSongsComponent } from './views/convert-flow/choose-songs/choose-songs.component';
 
 const routes: Routes = [
   { path: '', component: HomePageComponent, children: [
     { path: "", component: FlowListComponent },
     { path: "authorize/:platform", component: AuthHandlerComponent },
     { path: "choose-playlist", component: ChoosePlaylistComponent },
+    { path: "choose-songs", component: ChooseSongsComponent },
     { path: 'yt', component: YtComponent },
   ], canActivateChild: [ UserCanActivateFlowRoute ]},
   { path: 'about', component: AboutComponent},
@@ -26,4 +28,4 @@ const routes: Routes = [
   providers: [ UserCanActivateFlowRoute ]
 })
 export class AppRoutingModule { }
-export const routingComponents = [YtComponent, ErrorPageComponent,HomePageComponent, FlowListComponent, ChoosePlaylistComponent]
+export const routingComponents = [YtComponent, ErrorPageComponent,HomePageComponent, FlowListComponent, ChoosePlaylistComponent, ChooseSongsComponent]

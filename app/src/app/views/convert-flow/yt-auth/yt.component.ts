@@ -5,6 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as querystring from "query-string";
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
+import { PlaylistService } from 'src/app/services/playlist.service';
 import { SongDTO } from '../../../dto/song.dto';
 import { FillYtPlaylist, IdsToInsertDTO, YtPlaylistDTO } from '../../../dto/ytPlaylist.dto';
 import { HttpErrorService } from '../../../services/http-error.service';
@@ -25,7 +26,8 @@ export class YtComponent implements OnInit {
     private httpclient: HttpClient,
     private router: Router,
     private formbuilder: FormBuilder,
-    private errService: HttpErrorService
+    private errService: HttpErrorService,
+    private playlistService: PlaylistService
   ) {
     this.plalistNameform = this.formbuilder.group({
       plalistName: formbuilder.control('', [Validators.required, Validators.pattern('^[A-Za-zñÑáéíóúÁÉÍÓÚ0-9]+$')]),
@@ -40,7 +42,19 @@ export class YtComponent implements OnInit {
   ngOnInit(): void {
     //console.log(this.test);
     //TODO: Localstorage for token
-    if (localStorage.getItem('songs') != undefined) {
+
+    if(this.playlistService.getSelectedSongsSnap()) {
+      this.songs = this.playlistService.getSelectedSongsSnap().map((song) => {
+        return {
+          id: song.id,
+          artists: song.artists.map((artist) => artist.name),
+          imageHref: song.coverUrl,
+          name: song.title
+        } as SongDTO;
+      })
+    }
+
+    if (sessionStorage.getItem('songs') != undefined) {
       this.songs = JSON.parse(localStorage.getItem('songs'))
 
       //localStorage.getItem('songs')

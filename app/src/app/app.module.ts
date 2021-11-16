@@ -17,6 +17,9 @@ import { AuthHandlerComponent } from './views/convert-flow/auth-handler/auth-han
 import { ProfileBarComponent } from './components/profile-bar/profile-bar.component';
 import { PlaylistItemComponent } from './components/playlist-item/playlist-item.component';
 import { ChoosePlaylistComponent } from './views/convert-flow/choose-playlist/choose-playlist.component';
+import { ChooseSongsComponent } from './views/convert-flow/choose-songs/choose-songs.component';
+import { SongItemComponent } from './components/song-item/song-item.component';
+import { ArtistsToStringPipe } from './pipes/artists.pipe';
 
 // TODO: Create about page with listed technologies etc... (especially CockroachDB)
 
@@ -33,7 +36,10 @@ import { ChoosePlaylistComponent } from './views/convert-flow/choose-playlist/ch
     AuthHandlerComponent,
     ProfileBarComponent,
     PlaylistItemComponent,
+    SongItemComponent,
     ChoosePlaylistComponent,
+    ChooseSongsComponent,
+    ArtistsToStringPipe
   ],
   imports: [
     BrowserModule,
