@@ -1,7 +1,8 @@
+import { Artist } from "./artist.dto"
 
 export class ResponseSongsDto {
-    public artists: string[];
-    public name: number;
-    public imageHref: string;
     public id: string;
+    public artists: Artist[];
+    public title: string;
+    public coverUrl: string;
 }

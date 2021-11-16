@@ -55,11 +55,9 @@ export class PlaylistService {
         }).then((songs) => {
             if (!songs) return [];
 
-            const songsRemapped = songs as Song[];
-
             // TODO: Should implement subscriber for this, so that every time the selectedSongs change we save it in the current browsers session storage
-            sessionStorage.setItem('songs', JSON.stringify(songsRemapped));
-            return songsRemapped;
+            sessionStorage.setItem('songs', JSON.stringify(songs));
+            return songs;
         })
     }
 
