@@ -6,6 +6,7 @@ export class FlowStep {
     public title: string;
     public data?: Record<string, any> = {};
     public isActive?: boolean = false;
+    public isListed: boolean = true;
 
     public allowBack?: boolean = false;
     public allowNext?: boolean = true;

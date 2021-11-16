@@ -1,0 +1,14 @@
+<div class="flex justify-center items-center content-center transition-all bg-white-dark rounded-md p-3 my-2 border border-white-darkest border-opacity-20 w-full cursor-pointer hover:border-accent hover:bg-accent hover:bg-opacity-5 hover:border-opacity-40 transform-gpu active:scale-98" (click)="selectPlaylist()">
+    <div class="align-middle whitespace-nowrap w-full max-w-16">
+        <img class="w-14 h-14 rounded-lg shadow-pl-items" src="{{ playlist.coverUrl }}" />
+    </div>
+    <div class="align-middle px-2 text-left whitespace-nowrap overflow-hidden w-full flex-grow">
+        <h5 class="text-primary font-bold max-w-full overflow-hidden overflow-ellipsis">{{ playlist.title }}</h5>
+        <p class="text-primary text-opacity-60 text-sm font-bold" [ngClass]="{ 'text-accent-dark text-opacity-70 font-semibold': isSelected }">{{ playlist.songsCount }} {{ playlist.songsCount == 1 ? "Lied" : "Lieder" }} </p>
+    </div>
+    <!--<div class="align-middle w-full max-w-12 whitespace-nowrap">
+        <div class="flex justify-center items-center h-full">
+            <input type="radio">
+        </div>
+    </div>-->
+</div>

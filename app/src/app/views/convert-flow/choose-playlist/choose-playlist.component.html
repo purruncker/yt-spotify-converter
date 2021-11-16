@@ -1,0 +1,8 @@
+<div class="text-primary">
+    <label class="text-accent-dark">Please select one of the playlists below:</label>
+
+    <div *ngIf="playlists.length <= 0">
+        <p class="text-primary">Sorry, but there seems to be no playlist on your spotify account</p>
+    </div>
+    <app-playlist-item *ngFor="let playlist of playlists" [playlist]="playlist" (selected)="selectPlaylist($event)"></app-playlist-item>
+</div>
