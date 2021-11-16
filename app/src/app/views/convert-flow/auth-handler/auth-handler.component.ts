@@ -25,19 +25,18 @@ export class AuthHandlerComponent implements OnInit {
       
       if(platform == "spotify") {
         const grantCode = this.route.snapshot.queryParamMap.get("code")
+        this.platformName = platform;
 
         if(grantCode) {
-          this.platformName = platform;
           this.authService.requestSpotifyAccessToken(grantCode).then((token) => {
               console.log(token)
               this.authService.createSpotifyOrientedSession(token).then((session) => {
                 console.log(session)
                 this.flowService.nextStep();
-                this.router.navigate(["/choose-playlist"])
               })
-          })          
+          }).catch(() => {})          
         } else {
-          // TODO: Show error --> no grant code
+          this.authService.requestSpotifyGrantCode()
         }
       } else {
         // TODO: Show error --> platform name not found, therefor not supported

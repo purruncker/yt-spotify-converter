@@ -1,1 +1,1 @@
-<button class="btn btn-lg btn-accent mt-8 w-full" [ngClass]="options.class" *ngIf="options"><i [ngClass]="options.icon" class="mr-2" *ngIf="options.icon"></i>{{ options.text }}</button>
+<button class="btn btn-lg btn-accent mt-8 w-full" [ngClass]="options.class" *ngIf="options" (click)="clickEvent()"><i [ngClass]="options.icon" class="mr-2" *ngIf="options.icon"></i>{{ options.text }}</button>

@@ -26,4 +26,8 @@ export class FlowButtonComponent implements OnInit {
     this.flowService.backStep();
   }
 
+  public clickEvent() {
+    if(this.options?.onClick) this.options.onClick(this.flowService)
+  }
+
 }

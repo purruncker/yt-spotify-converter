@@ -11,7 +11,7 @@ export class HomePageComponent implements OnInit {
 
   constructor(
     public flowService: FlowService, 
-    private authService: AuthenticationService
+    public authService: AuthenticationService
   ) { }
 
   public ngOnInit(): void {

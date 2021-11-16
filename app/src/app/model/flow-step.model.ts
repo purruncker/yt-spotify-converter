@@ -6,6 +6,7 @@ export class FlowButtonOptions {
     public text: string;
     public icon?: string;
     public class?: string;
+    public onClick?: Function;
 }
 
 export class FlowStep {
@@ -25,5 +26,10 @@ export class FlowStep {
     public backRoute?: FlowRoute;
 
     public customNextButton?: FlowButtonOptions;
+
+    /**
+     * Used to define the little label text.
+     */
+    public flowLabel?: string;
 
 }

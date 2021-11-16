@@ -1,10 +1,10 @@
 import { Injectable, OnInit } from "@angular/core";
+import { FormBuilder } from "@angular/forms";
 import { Router } from "@angular/router";
 import { BehaviorSubject, Observable } from "rxjs";
 import { FlowStep } from "../model/flow-step.model";
-import { Flow } from "../model/flow.model";
-
-export const FLOW_SESSIONSTORAGE_KEY = "currentFlow";
+import { Flow, FLOW_SESSIONSTORAGE_KEY } from "../model/flow.model";
+import { FlowBuilder } from "../utils/flow.builder";
 
 @Injectable({
     providedIn: 'root'
@@ -26,6 +26,7 @@ export class FlowService implements OnInit {
     }
 
     public async startFlow() {
+        console.log("starting flow...")
         const flow = this._selectedFlowSubject.getValue();
         flow.start();
 
@@ -56,15 +57,7 @@ export class FlowService implements OnInit {
     }
 
     public async selectDefaultFlow() {
-        this._selectedFlowSubject.next(new Flow([
-            { id: 1, title: "Overview", allowBack: false, allowNext: false, isListed: false, nextRoute: { path: "/authorize/spotify" }, customNextButton: { text: "Start with connecting to Spotify", class: "btn-spotify", icon: "fab fa-spotify" }},
-            { id: 2, title: "Connect with Spotify", allowBack: false, allowNext: true, isListed: true, nextRoute: { path: "/choose-songs" } },
-            { id: 3, title: "Choose your playlist", allowBack: false, allowNext: true, isListed: true, nextRoute: { path: "/choose-songs" } },
-            { id: 4, title: "Choose songs", allowBack: false, allowNext: true, isListed: false, nextRoute: { path: "/yt" } },
-            { id: 5, title: "Connect to YouTube", allowBack: false, allowNext: false, isListed: true },
-            { id: 6, title: "Create playlist", allowBack: false, allowNext: true, isListed: false },
-            { id: 7, title: "Move playlist to YouTube", allowBack: true, allowNext: true, isListed: false }
-        ], this.router));
+        this._selectedFlowSubject.next(FlowBuilder.buildSpotifyFirstFlow(this.router));
     }
 
     public hasActiveFlow(): boolean {
@@ -72,14 +65,10 @@ export class FlowService implements OnInit {
     }
 
     public async persistFlow() {
-        // TODO: Save to sessionStorage
-        if(!!sessionStorage) {
-            sessionStorage.setItem(FLOW_SESSIONSTORAGE_KEY, JSON.stringify(this._selectedFlowSubject.getValue()))
-        }
+        this._selectedFlowSubject.getValue().persist();
     }
 
     public async restoreFlow() {
-        // TODO: Restore from sessionStorage
         if(!!sessionStorage) {
             this._selectedFlowSubject.next(JSON.parse(sessionStorage.getItem(FLOW_SESSIONSTORAGE_KEY)));
         }
