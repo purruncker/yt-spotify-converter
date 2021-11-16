@@ -23,4 +23,12 @@ export class HomePageComponent implements OnInit {
     this.authService.requestSpotifyGrantCode();
   }
 
+  public nextStepInFlow() {
+    // TODO: this.flowService.nextStep()
+  }
+
+  public backStepInFlow() {
+    // TODO: this.flowService.nextStep()
+  }
+
 }

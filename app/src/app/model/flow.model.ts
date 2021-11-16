@@ -1,3 +1,4 @@
+import { Router } from "@angular/router";
 import { FlowStep } from "./flow-step.model";
 
 export class Flow {
@@ -8,7 +9,7 @@ export class Flow {
     public list: FlowStep[] = [];
     public hasStarted: boolean = false;
 
-    constructor(list: FlowStep[]) {
+    constructor(list: FlowStep[], private router: Router) {
         this.list = list;
         this.currentStep = list[0];
         this.hasStarted = false;
@@ -17,6 +18,7 @@ export class Flow {
     public start(): void {
         this.hasStarted = true;
         this.currentStep.isActive = true;
+        this.next();
     }
 
     public abort(): void {
@@ -31,6 +33,18 @@ export class Flow {
         this.currentStep.isActive = false;
         this.currentStep = this.list[this.currentStep.id || 0];
         this.currentStep.isActive = true;
+        
+        this.router.navigateByUrl(this.currentStep.nextRoute.path)
+    }
+
+    public back(): void {
+        if(!this.currentStep) this.currentStep = this.list[0];
+
+        this.currentStep.isActive = false;
+        this.currentStep = this.list[this.currentStep.id - 1 || 0];
+        this.currentStep.isActive = true;
+        
+        this.router.navigateByUrl(this.currentStep.nextRoute.path)
     }
 
 }

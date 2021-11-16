@@ -1,4 +1,12 @@
-import { Route } from "@angular/router";
+export class FlowRoute {
+    public path: string;
+}
+
+export class FlowButtonOptions {
+    public text: string;
+    public icon?: string;
+    public class?: string;
+}
 
 export class FlowStep {
 
@@ -13,7 +21,9 @@ export class FlowStep {
 
     // TODO: Implement routing
 
-    public nextRoute?: Route;
-    public backRoute?: Route;
+    public nextRoute?: FlowRoute;
+    public backRoute?: FlowRoute;
+
+    public customNextButton?: FlowButtonOptions;
 
 }

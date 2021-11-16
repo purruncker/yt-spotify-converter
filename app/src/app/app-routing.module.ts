@@ -9,8 +9,9 @@ import { UserCanActivateFlowRoute } from './guards/canActivate.guard';
 import { AuthHandlerComponent } from './views/convert-flow/auth-handler/auth-handler.component';
 import { ChoosePlaylistComponent } from './views/convert-flow/choose-playlist/choose-playlist.component';
 import { ChooseSongsComponent } from './views/convert-flow/choose-songs/choose-songs.component';
+import { FlowRoute } from './model/flow-step.model';
 
-const routes: Routes = [
+const routes: Routes | FlowRoute[] = [
   { path: '', component: HomePageComponent, children: [
     { path: "", component: FlowListComponent },
     { path: "authorize/:platform", component: AuthHandlerComponent },
@@ -19,7 +20,7 @@ const routes: Routes = [
     { path: 'yt', component: YtComponent },
   ], canActivateChild: [ UserCanActivateFlowRoute ]},
   { path: 'about', component: AboutComponent},
-  { path: '**', component: ErrorPageComponent}
+  { path: '**', component: ErrorPageComponent},
 ];
 
 @NgModule({

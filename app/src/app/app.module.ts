@@ -20,6 +20,9 @@ import { ChoosePlaylistComponent } from './views/convert-flow/choose-playlist/ch
 import { ChooseSongsComponent } from './views/convert-flow/choose-songs/choose-songs.component';
 import { SongItemComponent } from './components/song-item/song-item.component';
 import { ArtistsToStringPipe } from './pipes/artists.pipe';
+import { CreatePlaylistComponent } from './views/convert-flow/create-playlist/create-playlist.component';
+import { FillPlaylistComponent } from './views/convert-flow/fill-playlist/fill-playlist.component';
+import { FlowButtonComponent } from './components/flow/flow-button/flow-button.component';
 
 // TODO: Create about page with listed technologies etc... (especially CockroachDB)
 
@@ -39,7 +42,10 @@ import { ArtistsToStringPipe } from './pipes/artists.pipe';
     SongItemComponent,
     ChoosePlaylistComponent,
     ChooseSongsComponent,
-    ArtistsToStringPipe
+    ArtistsToStringPipe,
+    CreatePlaylistComponent,
+    FillPlaylistComponent,
+    FlowButtonComponent
   ],
   imports: [
     BrowserModule,
