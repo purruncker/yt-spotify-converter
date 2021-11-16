@@ -14,7 +14,8 @@ export class AuthenticationService {
       // see: https://developer.spotify.com/documentation/general/guides/authorization/code-flow/
       const params = new URLSearchParams()
       params.append('grant_type', createAuthenticationDto.grantType)
-      params.append('code', createAuthenticationDto.grantCode)
+      if(createAuthenticationDto.grantType == "authorization_code") params.append('code', createAuthenticationDto.grantCode)
+      if(createAuthenticationDto.grantType == "refresh_token") params.append('refresh_token', createAuthenticationDto.grantCode)
       params.append('redirect_uri', 'http://localhost:4200/authorize/spotify')
 
       // Define headers
