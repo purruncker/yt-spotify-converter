@@ -3,7 +3,7 @@ import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { config } from "../config";
 import { SongDTO } from "../dto/song.dto";
-import { SpotifyPlaylistDTO } from "../dto/spotifyPlaylist.dto";
+import { PlaylistDTO } from "../dto/playlist.dto";
 import { Artist } from "../model/artist.model";
 import { Platform } from "../model/platform.model";
 import { Playlist } from "../model/playlist.model";
@@ -30,25 +30,18 @@ export class PlaylistService {
         private httpClient: HttpClient,
         public authService: AuthenticationService,
         private errorService: HttpErrorService
-    ) {}
+    ) { }
 
     public async findPlaylists(): Promise<Playlist[]> {
         // TODO: Change with Playlist as soon as it is changed in BE
         // TODO: Make access token a header and read it in nestjs
-        return this.httpClient.get<SpotifyPlaylistDTO[]>(config.apiBaseUrl + "/spotify-playlist/" + this.authService.getSessionSnap().accessToken).toPromise().catch((error) => {
+        return this.httpClient.get<PlaylistDTO[]>(config.apiBaseUrl + "/spotify-playlist/" + this.authService.getSessionSnap().accessToken).toPromise().catch((error) => {
             console.log(error);
             this.errorService.createError("Deine Playlisten konnten nicht abgerufen werden", "getPlaylists Spotify", error.status)
         }).then((playlists) => {
-            if(!playlists) return [];
-            return playlists.map((playlist) => {
-                return {
-                    id: playlist.id,
-                    title: playlist.name,
-                    songsCount: playlist.count,
-                    type: Platform.SPOTIFY,
-                    coverUrl: playlist.imageHref
-                } as Playlist
-            })
+            if (!playlists) return [];
+            return playlists as Playlist[]
+
         })
     }
 
@@ -60,17 +53,9 @@ export class PlaylistService {
             console.log(error);
             this.errorService.createError("Deine Songs konnten nicht abgerufen werden", "getSongs Spotify", error.status)
         }).then((songs) => {
-            if(!songs) return [];
+            if (!songs) return [];
 
-            const songsRemapped = songs.map((song) => {
-                return {
-                    id: uuidv4(),
-                    type: Platform.SPOTIFY,
-                    artists: song.artists as unknown[],
-                    title: song.name,
-                    coverUrl: song.imageHref
-                } as Song
-            })
+            const songsRemapped = songs as Song[];
 
             // TODO: Should implement subscriber for this, so that every time the selectedSongs change we save it in the current browsers session storage
             sessionStorage.setItem('songs', JSON.stringify(songsRemapped));

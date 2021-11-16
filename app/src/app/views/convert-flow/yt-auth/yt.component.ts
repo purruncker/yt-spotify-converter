@@ -43,7 +43,7 @@ export class YtComponent implements OnInit {
     //console.log(this.test);
     //TODO: Localstorage for token
 
-    if(this.playlistService.getSelectedSongsSnap()) {
+    if (this.playlistService.getSelectedSongsSnap()) {
       this.songs = this.playlistService.getSelectedSongsSnap().map((song) => {
         return {
           id: song.id,
