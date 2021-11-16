@@ -1,8 +1,10 @@
-<app-navbar></app-navbar>
+<div class="grid grid-rows-2-auto grid-cols-1 w-full h-full overflow-hidden relative">
+    <app-navbar></app-navbar>
 
-<div class="container">
-    <router-outlet></router-outlet>
-    <app-loading-bar></app-loading-bar>
-    <app-alert-modal [error]="error" *ngIf="error != undefined"></app-alert-modal>
-    <button (click)="getuserInfo()">Userinfo</button>
+    <div class="w-full h-full overflow-hidden overflow-y-auto">
+        <div class="container h-full"><router-outlet></router-outlet></div>
+        
+        <app-loading-bar></app-loading-bar>
+        <app-alert-modal [error]="error" *ngIf="error != undefined"></app-alert-modal>
+    </div>
 </div>
