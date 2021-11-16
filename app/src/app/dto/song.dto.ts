@@ -1,8 +1,10 @@
+import { Artist } from "../model/artist.model";
+import { Platform } from "../model/platform.model";
 
-// TODO: Change in backend so that it looks like song.model.ts
-export interface SongDTO {
-    id?: string;
-    name?: string;
-    artists?: string[];
-    imageHref?: string;
+export class SongDTO {
+    public id: string;
+    public title: string;
+    public artists: Artist[];
+    public coverUrl: string;
+    public type: Platform | string;
 }

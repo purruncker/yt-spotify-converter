@@ -12,7 +12,7 @@ export class SongsService {
     //console.log(id, token);
 
     const params = new URLSearchParams()
-    params.append('fields', 'items(track.artists.name,track.name,track.album.images)')
+    params.append('fields', 'items(track.id,track.artists.name,track.name,track.album.images)')
     params.append('market', 'DE')
 
     const config = {
@@ -32,11 +32,12 @@ export class SongsService {
         return {
           name: val['track'].name,
           artists: val['track'].artists,
-          imageHref: val.track.album.images[0].url
+          imageHref: val.track.album.images[0].url,
+          id: val.track.id
         }
       })
 
-      // console.log(res);
+      //console.log(res);
 
       return res;
     }

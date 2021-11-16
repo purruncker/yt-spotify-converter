@@ -1,5 +1,5 @@
 import { HttpException, Injectable } from '@nestjs/common';
-import { CurrentUseresSpotifyPlaylistsDTO } from './dto/playlist-spotify.dto';
+import { CurrentUseresSpotifyPlaylistsDTO, SpotifyPlaylistDTO } from './dto/playlist-spotify.dto';
 import axios from 'axios';
 
 @Injectable()
@@ -21,13 +21,14 @@ export class PlaylistSpotifyService {
       }
       //console.log(data['data']['items']);
 
-      let res: CurrentUseresSpotifyPlaylistsDTO[] = data['data']['items'].map(val => {
+      let res: SpotifyPlaylistDTO[] = data['data']['items'].map(val => {
 
         return {
           id: val['id'],
-          name: val['name'],
-          count: val['tracks']['total'],
-          imageHref: val.images[0].url
+          title: val['name'],
+          songsCount: val['tracks']['total'],
+          coverUrl: val.images[0].url,
+          type: 'spotify'
         }
       })
 

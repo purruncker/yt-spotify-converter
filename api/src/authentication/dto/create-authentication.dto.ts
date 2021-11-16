@@ -5,3 +5,4 @@ export class CreateAuthenticationDto {
     @IsString()
     public grantCode: string;
 }
+
