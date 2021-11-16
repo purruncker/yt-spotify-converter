@@ -69,6 +69,19 @@ module.exports = {
         96: '.96',
         98: '.98',
       },
+      gridTemplateColumns: {
+        "3-auto": 'auto auto auto',
+      },
+      gridTemplateRows: {
+        "2-auto": 'auto minmax(0, 1fr)',
+        "3-auto": 'auto minmax(0, 1fr) auto',
+      },
+      maxWidth: (theme) => ({
+        ...theme('spacing'),
+      }),
+      boxShadow: {
+        "pl-items": "0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.15)"
+      }
     },
     container: {
       center: true,

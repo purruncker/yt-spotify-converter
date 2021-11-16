@@ -1,5 +1,6 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
-import { Observable, Subject, Subscription } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, Subscription } from 'rxjs';
 import { subscribeOn, take, takeUntil } from 'rxjs/operators';
 import { ErrorDTO } from './dto/error.dto';
 import { HttpErrorService } from './services/http-error.service';
@@ -11,21 +12,27 @@ import { HttpErrorService } from './services/http-error.service';
 })
 export class AppComponent implements OnInit {
 
-  constructor(private errService: HttpErrorService) {
+  constructor(private errService: HttpErrorService, private httpclient: HttpClient) {
 
   }
   public error: ErrorDTO = undefined;
 
-
   public async ngOnInit(): Promise<void> {
-    this.errService.initError().pipe(take(1000)).subscribe(data => {
+    this.errService.initError().subscribe(data => {
       this.error = data;
-      console.log(data);
     })
-
-
   }
 
+  getuserInfo() {
+    const opts = {
+      headers: new HttpHeaders({
+
+        "Authorization": "Bearer " + "token123 "
+      })
+    }
+
+    this.httpclient.get("http://localhost:3000/user-info", opts).toPromise().then(data => console.log(data))
+  }
 
 
 }

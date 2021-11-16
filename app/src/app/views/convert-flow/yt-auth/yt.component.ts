@@ -5,9 +5,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import * as querystring from "query-string";
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
-import { SongDTO } from 'src/app/dto/song.dto';
-import { FillYtPlaylist, IdsToInsertDTO, YtPlaylistDTO } from 'src/app/dto/ytPlaylist.dto';
-import { HttpErrorService } from 'src/app/services/http-error.service';
+import { PlaylistService } from 'src/app/services/playlist.service';
+import { SongDTO } from '../../../dto/song.dto';
+import { FillYtPlaylist, IdsToInsertDTO, YtPlaylistDTO } from '../../../dto/ytPlaylist.dto';
+import { HttpErrorService } from '../../../services/http-error.service';
 
 //import { first, map } from "rxjs/operators"
 
@@ -25,12 +26,13 @@ export class YtComponent implements OnInit {
     private httpclient: HttpClient,
     private router: Router,
     private formbuilder: FormBuilder,
-    private errService: HttpErrorService
+    private errService: HttpErrorService,
+    private playlistService: PlaylistService
   ) {
     this.plalistNameform = this.formbuilder.group({
       plalistName: formbuilder.control('', [Validators.required, Validators.pattern('^[A-Za-zñÑáéíóúÁÉÍÓÚ0-9]+$')]),
       status: formbuilder.control("unlisted", [Validators.required, Validators.pattern('^[A-Za-zñÑáéíóúÁÉÍÓÚ0-9]+$')]),
-      plalistDescription: formbuilder.control(" ", Validators.maxLength(99))
+      plalistDescription: formbuilder.control("", Validators.maxLength(99))
     })
   }
 
@@ -155,8 +157,10 @@ export class YtComponent implements OnInit {
     this.ytSongs.splice(index, 1);
     console.log(index, this.ytSongs)
   }
+  public showExport: boolean = true;
 
   public async startInsertSongs() {
+    this.showExport = false;
     const ids: string[] = this.ytSongs.map(song => song.id)
 
     await this.httpclient.post("http://localhost:3000/yt-songs/insert/" + this.accessToken + "/" + this.ytPlaylist.id, ids).toPromise().then(data => {

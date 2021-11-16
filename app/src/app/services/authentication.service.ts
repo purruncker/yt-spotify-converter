@@ -1,10 +1,11 @@
-import { HttpClient } from "@angular/common/http";
+import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import * as querystring from "query-string";
 import { BehaviorSubject, Observable } from "rxjs";
-import { first, map } from "rxjs/operators";
 import { SpotifyTokenDTO } from "../dto/spotifyToken.dto";
 import { Session, SessionType } from "../model/session.model";
+import { User } from "../model/user.model";
+import { HttpErrorService } from "./http-error.service";
 
 @Injectable({
     providedIn: 'root'
@@ -20,7 +21,7 @@ export class AuthenticationService {
     private _sessionSubject: BehaviorSubject<Session> = new BehaviorSubject(null);
     public $session: Observable<Session> = this._sessionSubject.asObservable();
 
-    constructor(private httpclient: HttpClient) { }
+    constructor(private httpclient: HttpClient, private errorService: HttpErrorService) { }
 
     public async requestSpotifyGrantCode(): Promise<void> {
         const data = {
@@ -47,12 +48,45 @@ export class AuthenticationService {
         })
       }
 
-    public async createSpotifyOrientedSession(data: SpotifyTokenDTO) {
-        this._sessionSubject.next({
+    public async createSpotifyOrientedSession(data: SpotifyTokenDTO): Promise<Session> {
+        const session: Session = {
             type: SessionType.SESSION_SPOTIFY,
             accessToken: data.accessToken,
             expiresAt: data.expiresAt,
             refreshToken: data.refreshToken
+        }
+
+        // Push session, so we can request user info
+        this._sessionSubject.next(session);
+
+        // Request user info
+        const user: User = await this.findUser("spotify");
+        session.user = user;
+        
+        // Push new session, but with user's data
+        this._sessionSubject.next(session);
+        return session;
+    }
+
+    public async findUser(platform: "spotify" | "youtube"): Promise<User> {
+        // TODO: return this.httpclient.get<User>(`http://localhost:3000/users/${platform}`).toPromise();
+        
+        const opts = {
+            headers: new HttpHeaders({
+              "Accept": "application/json",
+              "Content-Type": "application/json",
+              "Authorization": "Bearer " + this.getSessionSnap().accessToken
+            })
+        }
+
+        return this.httpclient.get<User>("https://api.spotify.com/v1/me", opts).toPromise().catch((reason) => {
+            console.log(reason);
+            this.errorService.createError("Dein Name konnten nicht abgerufen werden", "getUserInfo Spotify", reason.status)
+        }).then(data => {
+            return {
+                name: data['display_name'],
+                avatarUrl: data['images'][0]?.url || "app/src/assets/logo/cockroach.svg"
+            }
         })
     }
 

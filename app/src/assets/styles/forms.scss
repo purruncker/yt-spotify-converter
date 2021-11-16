@@ -1,3 +1,8 @@
 label {
-    @apply inline-block text-white-dark opacity-60 px-1 text-sm my-1;
+    @apply inline-block text-primary opacity-70 px-1 text-sm my-1 font-bold;
+}
+
+input:not([type=radio]):not([type=checkbox]) {
+    appearance: none;
+    @apply bg-white-dark text-primary font-bold rounded-md p-2 px-3 outline-none border-2 border-transparent focus:border-accent focus:border-opacity-50 transition-all;
 }

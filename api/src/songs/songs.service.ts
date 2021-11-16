@@ -13,7 +13,7 @@ export class SongsService {
     //console.log(id, token);
 
     const params = new URLSearchParams()
-    params.append('fields', 'items(track.artists.name,track.name,track.album.images)')
+    params.append('fields', 'items(track.id,track.artists.name,track.name,track.album.images)')
     params.append('market', 'DE')
 
     const config = {
@@ -38,7 +38,7 @@ export class SongsService {
         }
       })
 
-      // console.log(res);
+      //console.log(res);
 
       return res;
     }

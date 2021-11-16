@@ -1,20 +1,34 @@
-<section class="w-full py-4">
-    <div class="grid grid-cols-2 grid-rows-1">
+<section class="w-full py-4 h-full ">
+    <div class="grid grid-cols-2 grid-rows-1 h-full">
         <div class="h-full flex justify-center items-center content-center flex-col">
             <h1 class="text-center text-5xl font-bold">Your place for playlist <br>conversion</h1>
             <p class="mt-7 opacity-50 font-normal">Move your playlists across platforms without a hassle.</p>
         </div>
-        <div class="">
-            <div class="p-12 bg-white rounded-xl shadow-2xl overflow-hidden">
-                <div class="pt-2 pb-6" [ngClass]="{'pt-6 pb-12 border-2 border-red-700': ((flowService.$selectedFlow | async).currentStep.id <= 0) }">
-                    <app-flow-select [enableSwitcher]="false"></app-flow-select>
+        <div class="bg-white rounded-xl shadow-2xl overflow-hidden h-full">
+            <div class="grid grid-rows-3-auto w-full h-full">
+                <!-- Flow-Header -->
+                <div class="w-full p-12">
+                    <div class="pb-4">
+                        <app-flow-select [enableSwitcher]="false"></app-flow-select>
+                    </div>
+                    <div>
+                        <app-profile-bar></app-profile-bar>
+                    </div>
+                </div>
+                
+                <!-- Flow-Body -->
+                <div class="w-full px-12 overflow-x-hidden overflow-y-auto">
+                    <router-outlet></router-outlet>
                 </div>
 
-                <router-outlet></router-outlet>
-
-                <hr>
-                <div class="text-center">
-                    <button class="btn-full btn-lg btn-spotify" (click)="startFlow()"><i class="fab fa-spotify"></i>Start with login on Spotify</button>
+                <!-- Flow-Footer -->
+                <div class="w-full px-12 pb-12">
+                    <!-- //TODO: Implement together with FlowService custom buttons that can be configured (especially the next or back buttons) -->
+                    <!-- <p class="text-primary">{{ (flowService.$selectedFlow | async).currentStep.id }} - {{ (flowService.$selectedFlow | async).currentStep.title }}</p> -->
+                    <div class="text-center" *ngIf="!(flowService.$selectedFlow | async) || (flowService.$selectedFlow | async).currentStep.id <= 1">
+                        <hr class="my-4">
+                        <button class="btn-full btn-lg btn-spotify" (click)="startFlow()"><i class="fab fa-spotify"></i>Start with login on Spotify</button>
+                    </div>
                 </div>
             </div>
         </div>

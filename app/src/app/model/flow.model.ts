@@ -2,8 +2,10 @@ import { FlowStep } from "./flow-step.model";
 
 export class Flow {
 
+    // TODO: Create data object, that holds the keys of stepIds and the data object as values. Inside these objects all the states will be saved an accessed from other steps
+
     public currentStep?: FlowStep;
-    public readonly list: FlowStep[] = [];
+    public list: FlowStep[] = [];
     public hasStarted: boolean = false;
 
     constructor(list: FlowStep[]) {
@@ -27,7 +29,7 @@ export class Flow {
         if(!this.currentStep) this.currentStep = this.list[0];
 
         this.currentStep.isActive = false;
-        this.currentStep = this.list[this.currentStep.id + 1 || 0];
+        this.currentStep = this.list[this.currentStep.id || 0];
         this.currentStep.isActive = true;
     }
 
