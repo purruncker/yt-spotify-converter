@@ -43,15 +43,8 @@ export class YtComponent implements OnInit {
     //console.log(this.test);
     //TODO: Localstorage for token
 
-    if(this.playlistService.getSelectedSongsSnap()) {
-      this.songs = this.playlistService.getSelectedSongsSnap().map((song) => {
-        return {
-          id: song.id,
-          artists: song.artists.map((artist) => artist.name),
-          imageHref: song.coverUrl,
-          name: song.title
-        } as SongDTO;
-      })
+    if (this.playlistService.getSelectedSongsSnap()) {
+      this.songs = this.playlistService.getSelectedSongsSnap()
     }
 
     if (sessionStorage.getItem('songs') != undefined) {

@@ -1,6 +1,7 @@
 import { HttpException, Injectable } from '@nestjs/common';
 import { ResponseSongsDto } from './dto/update-song.dto';
 import axios from 'axios';
+import { Artist } from './dto/artist.dto';
 @Injectable()
 export class SongsService {
 
@@ -12,7 +13,7 @@ export class SongsService {
     //console.log(id, token);
 
     const params = new URLSearchParams()
-    params.append('fields', 'items(track.artists.name,track.name,track.album.images)')
+    params.append('fields', 'items(track.id,track.artists.name,track.name,track.album.images)')
     params.append('market', 'DE')
 
     const config = {
@@ -30,13 +31,14 @@ export class SongsService {
       //console.log(modifieddata)
       let res: ResponseSongsDto[] = modifieddata.map(val => {
         return {
-          name: val['track'].name,
-          artists: val['track'].artists,
-          imageHref: val.track.album.images[0].url
+          title: val['track'].name,
+          artists: val['track'].artists as Artist[],
+          coverUrl: val.track.album.images[0].url,
+          id: val.track.id
         }
       })
 
-      // console.log(res);
+      //console.log(res);
 
       return res;
     }
