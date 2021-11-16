@@ -11,7 +11,7 @@
                     <div class="pb-4">
                         <app-flow-select [enableSwitcher]="false"></app-flow-select>
                     </div>
-                    <div *ngIf="!!(authService.$session | async)?.user">
+                    <div *ngIf="!!(authService.$user | async)">
                         <app-profile-bar></app-profile-bar>
                     </div>
                     <label class="text-accent-dark" *ngIf="(flowService.$selectedFlow | async)?.currentStep?.flowLabel">{{ (flowService.$selectedFlow | async)?.currentStep?.flowLabel }}</label>

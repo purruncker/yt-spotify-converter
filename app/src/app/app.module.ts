@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { CookieModule, CookieService } from 'ngx-cookie';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -51,9 +52,10 @@ import { FlowButtonComponent } from './components/flow/flow-button/flow-button.c
     BrowserModule,
     HttpClientModule,
     AppRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CookieModule.forRoot()
   ],
-  providers: [interceptorProvider],
+  providers: [interceptorProvider, CookieService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
