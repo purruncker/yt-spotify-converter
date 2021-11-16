@@ -72,6 +72,10 @@ module.exports = {
       gridTemplateColumns: {
         "3-auto": 'auto auto auto',
       },
+      gridTemplateRows: {
+        "2-auto": 'auto minmax(0, 1fr)',
+        "3-auto": 'auto minmax(0, 1fr) auto',
+      },
       maxWidth: (theme) => ({
         ...theme('spacing'),
       }),
