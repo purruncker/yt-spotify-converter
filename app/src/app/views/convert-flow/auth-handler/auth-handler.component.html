@@ -1,4 +1,10 @@
-<section>
-    <h2 class="text-primary">Logging you in to {{ platformName }}</h2>
-    <p class="text-primary">//TODO: Show loader here</p>
+<section class="flex justify-center content-center items-center h-full flex-col">
+    <div *ngIf="isCheckingSession" class="text-center">
+        <h5 class="text-primary">Checking your session</h5>
+    </div>
+    <div *ngIf="!isCheckingSession">
+        <h5 class="text-primary">Logging you in</h5>
+    </div>
+
+    <ng-lottie class="mx-auto inline-block" [options]="ngLottieAnimOptions" [styles]="{ width: '3rem', height: '3rem' }"></ng-lottie>
 </section>
