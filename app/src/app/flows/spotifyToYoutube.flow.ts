@@ -15,6 +15,7 @@ export const SpotifyToYoutubeFlow: FlowStep[] = [
     { 
         id: 1, 
         title: "Overview", 
+        displayId: 1,
         allowBack: false, 
         allowNext: false, 
         isListed: false, 
@@ -26,6 +27,7 @@ export const SpotifyToYoutubeFlow: FlowStep[] = [
     { 
         id: 2, 
         title: "Connect with Spotify", 
+        displayId: 1,
         allowBack: false, 
         allowNext: true, 
         isListed: true, 
@@ -36,6 +38,7 @@ export const SpotifyToYoutubeFlow: FlowStep[] = [
     { 
         id: 3, 
         title: "Choose your playlist", 
+        displayId: 2,
         allowBack: false, 
         allowNext: true, 
         isListed: true, 
@@ -47,6 +50,7 @@ export const SpotifyToYoutubeFlow: FlowStep[] = [
     { 
         id: 4, 
         title: "Choose songs", 
+        displayId: 2,
         allowBack: false, 
         allowNext: true, 
         isListed: false, 
@@ -58,6 +62,7 @@ export const SpotifyToYoutubeFlow: FlowStep[] = [
     { 
         id: 5, 
         title: "Connect to YouTube", 
+        displayId: 3,
         allowBack: false, 
         allowNext: false, 
         isListed: true
@@ -65,6 +70,7 @@ export const SpotifyToYoutubeFlow: FlowStep[] = [
     { 
         id: 6, 
         title: "Create playlist", 
+        displayId: 3,
         allowBack: false, 
         allowNext: true, 
         isListed: false, 
@@ -73,6 +79,7 @@ export const SpotifyToYoutubeFlow: FlowStep[] = [
     { 
         id: 7, 
         title: "Move playlist to YouTube", 
+        displayId: 3,
         allowBack: true, 
         allowNext: true, 
         isListed: false

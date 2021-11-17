@@ -13,6 +13,7 @@ export class FlowStep {
 
     public id: number;
     public title: string;
+    public displayId: number;
     public data?: Record<string, any> = {};
     public isActive?: boolean = false;
     public isListed: boolean = true;
