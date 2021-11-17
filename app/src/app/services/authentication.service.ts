@@ -7,6 +7,7 @@ import { SpotifyTokenDTO } from "../dto/spotifyToken.dto";
 import { Platform } from "../model/platform.model";
 import { Session, SessionType } from "../model/session.model";
 import { User } from "../model/user.model";
+import { FlowService } from "./flow.service";
 import { HttpErrorService } from "./http-error.service";
 
 export const USER_LOCALSTORAGE_ITEM = "cc-user";
@@ -36,7 +37,8 @@ export class AuthenticationService {
     constructor(
         private httpclient: HttpClient, 
         private errorService: HttpErrorService,
-        private cookieService: CookieService
+        private cookieService: CookieService,
+        private flowService: FlowService
     ) { 
         // Notify application that session 
         // and user data is being fetched and initialized
@@ -78,6 +80,7 @@ export class AuthenticationService {
 
     public requestSpotifyAccessToken(grantCode: string, grantType: "authorization_code" | "refresh_token" = "authorization_code"): Promise<SpotifyTokenDTO> {
         return this.httpclient.post<SpotifyTokenDTO>("http://localhost:3000/authentication", { grantCode, grantType }).toPromise().then((response) => {
+            console.log("got token: ", response)
             const data: SpotifyTokenDTO = {
                 accessToken: response["access_token"],
                 expiresAt: new Date(Date.now() + 1000 * Number(response["expires_in"])),
@@ -121,6 +124,8 @@ export class AuthenticationService {
         }
 
         return this.httpclient.get<User>("https://api.spotify.com/v1/me", opts).toPromise().catch((reason) => {
+            // Reasons: Access token expired
+            this.logout()
             console.log(reason);
             this.errorService.createError("Dein Name konnten nicht abgerufen werden", "getUserInfo Spotify", reason.status)
         }).then(data => {
@@ -144,7 +149,9 @@ export class AuthenticationService {
         const session: Session = this._sessionSubject.getValue()
         if(session.refreshToken) this.cookieService.put(REFRESHTOKEN_COOKIE_NAME, session.refreshToken, { expires: new Date(Date.now() + 1000 * 60 * 60 * 7) })
         if(session.type) this.cookieService.put(SESSIONTYPE_COOKIE_NAME, session.type, { expires: new Date(Date.now() + 1000 * 60 * 60 * 7) })
-        if(session.accessToken) this.cookieService.put(ACCESSTOKEN_COOKIE_NAME, session.accessToken, { expires: session.expiresAt })
+
+        // TODO: Check why expiresAt does not exists sometime?
+        if(session.accessToken) this.cookieService.put(ACCESSTOKEN_COOKIE_NAME, session.accessToken, { expires: session.expiresAt?.toUTCString() })
     }
 
     public async persistUser(): Promise<void> {
@@ -153,7 +160,7 @@ export class AuthenticationService {
         if(!!localStorage) localStorage.setItem(USER_LOCALSTORAGE_ITEM, JSON.stringify(user));
     }
 
-    public async restoreSession(): Promise<Session> {
+    private async restoreSession(): Promise<Session> {
         const sessionType = this.cookieService.hasKey(ACCESSTOKEN_COOKIE_NAME) ? this.cookieService.get(SESSIONTYPE_COOKIE_NAME) as Platform : SessionType.SESSION_ANONYMOUS
         const session: Session = {
             type: sessionType,
@@ -199,15 +206,21 @@ export class AuthenticationService {
         }
     }
 
-    public async restoreUser(): Promise<User> {
+    private async restoreUser(): Promise<User> {
         return new Promise((resolve) => {
             setTimeout(() => {
                 if(!localStorage) resolve(null);
 
                 const user: User = JSON.parse(localStorage.getItem(USER_LOCALSTORAGE_ITEM)) as User;
                 this._userSubject?.next(user);
-                resolve(user)
-            }, 5000)
+                
+                this.findUser(Platform.SPOTIFY).then((user) => {
+                    if(!user) this.logout();
+                    else this._userSubject?.next(user)
+                })
+
+                resolve(user);
+            }, 3000)
         })
     }
 
@@ -215,6 +228,8 @@ export class AuthenticationService {
         this.cookieService.removeAll();
         if(!!localStorage) localStorage.clear();
         if(!!sessionStorage) sessionStorage.clear();
+
+        this.flowService.abort();
     }
 
 }
