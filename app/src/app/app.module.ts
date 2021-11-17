@@ -25,7 +25,15 @@ import { CreatePlaylistComponent } from './views/convert-flow/create-playlist/cr
 import { FillPlaylistComponent } from './views/convert-flow/fill-playlist/fill-playlist.component';
 import { FlowButtonComponent } from './components/flow/flow-button/flow-button.component';
 
+// Lottie animations library
+import { LottieModule } from 'ngx-lottie';
+import player from 'lottie-web';
+
 // TODO: Create about page with listed technologies etc... (especially CockroachDB)
+
+export function usePlayerFactory() {
+  return player;
+}
 
 @NgModule({
   declarations: [
@@ -53,7 +61,8 @@ import { FlowButtonComponent } from './components/flow/flow-button/flow-button.c
     HttpClientModule,
     AppRoutingModule,
     ReactiveFormsModule,
-    CookieModule.forRoot()
+    CookieModule.forRoot(),
+    LottieModule.forRoot({ player: usePlayerFactory })
   ],
   providers: [interceptorProvider, CookieService],
   bootstrap: [AppComponent]
