@@ -26,13 +26,14 @@
                 <div class="w-full px-12 pb-12 shadow-sm">
                     <!-- //TODO: Implement together with FlowService custom buttons that can be configured (especially the next or back buttons) -->
                     <!-- <p class="text-primary">{{ (flowService.$selectedFlow | async).currentStep.id }} - {{ (flowService.$selectedFlow | async).currentStep.title }}</p> -->
-                    <div class="text-center" *ngIf="!(flowService.$selectedFlow | async) || (flowService.$selectedFlow | async)?.currentStep?.id <= 1">
+                    <div class="text-center">
                         <hr class="my-4">
-                        <button class="btn btn-lg mt-8 w-full btn-text text-primary hover:text-white-dark active:text-white-dark" (click)="backStepInFlow()" *ngIf="(flowService.$selectedFlow | async).currentStep.allowBack">Back</button>
+                        <!--<button class="btn btn-lg mt-8 w-full btn-text text-primary hover:text-white-dark active:text-white-dark" (click)="backStepInFlow()" *ngIf="(flowService.$selectedFlow | async).currentStep.allowBack">Back</button>
                         <button class="btn btn-lg btn-accent mt-8 w-full" (click)="nextStepInFlow()" *ngIf="(flowService.$selectedFlow | async).currentStep?.allowNext">Next</button>
 
-                        <app-flow-button *ngIf="(flowService.$selectedFlow | async).currentStep?.customNextButton" [options]="(flowService.$selectedFlow | async).currentStep.customNextButton"></app-flow-button>
-                        
+                        <app-flow-button *ngIf="$currentStep?.buttons.start" [options]="(flowService.$selectedFlow | async).currentStep.customNextButton"></app-flow-button>
+                        <app-flow-button *ngIf="$currentStep?.buttons" [options]="(flowService.$selectedFlow | async).currentStep.customNextButton"></app-flow-button>-->
+
                     </div>
                 </div>
             </div>

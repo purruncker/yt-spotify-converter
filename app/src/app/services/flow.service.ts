@@ -1,28 +1,30 @@
-import { Injectable, OnInit } from "@angular/core";
-import { FormBuilder } from "@angular/forms";
+import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { BehaviorSubject, Observable } from "rxjs";
+import { filter } from "rxjs/operators";
+import { SpotifyToYoutubeFlow } from "../flows/spotifyToYoutube.flow";
 import { FlowStep } from "../model/flow-step.model";
-import { Flow, FLOW_SESSIONSTORAGE_KEY } from "../model/flow.model";
-import { FlowBuilder } from "../utils/flow.builder";
+import { Flow, FLOW_SESSIONSTORAGE_KEY, PersistableFlow } from "../model/flow.model";
 
 @Injectable({
     providedIn: 'root'
 })
-export class FlowService implements OnInit {
+export class FlowService {
 
-    private readonly _currentStepSubject: BehaviorSubject<FlowStep> = new BehaviorSubject(null);
-    private readonly _selectedFlowSubject: BehaviorSubject<Flow> = new BehaviorSubject(null);
+    private _currentStepSubject: BehaviorSubject<FlowStep> = new BehaviorSubject(null);
+    private _selectedFlowSubject: BehaviorSubject<Flow> = new BehaviorSubject(null);
 
     public $currentStep: Observable<FlowStep> = this._currentStepSubject.asObservable();
-    public $selectedFlow: Observable<Flow> = this._selectedFlowSubject.asObservable();
+    public $selectedFlow: Observable<Flow> = this._selectedFlowSubject.asObservable().pipe(filter((flow) => { console.log("pushing: ", flow, !!flow); return !!flow }));
 
-    constructor(private router: Router) {}
+    constructor(private router: Router) {
+        this.restoreFlow().then((flow) => {
+            console.log("setting flow after init: ", flow)
+            this._selectedFlowSubject.next(flow);
 
-    public ngOnInit(): void {
-        this.restoreFlow();
-        // Save flow to sessionStorage, if it updates
-        this.$selectedFlow.subscribe(async() => this.persistFlow())
+            // Save flow to sessionStorage, if it updates
+            this.$selectedFlow.subscribe(async() => this.persistFlow())
+        });
     }
 
     public async startFlow() {
@@ -34,6 +36,7 @@ export class FlowService implements OnInit {
     }
 
     public async nextStep() {
+        console.log("triggering next step...")
         const flow = this._selectedFlowSubject.getValue();
         flow.next();
 
@@ -47,31 +50,57 @@ export class FlowService implements OnInit {
         this._selectedFlowSubject.next(flow);
     }
 
-    public async abort() {
-        const flow = this._selectedFlowSubject.getValue();
-        flow.next();
-
-        this._selectedFlowSubject.next(flow);
+    public async abort(routeToHome: boolean = true) {
+        console.log("aborting flow..")
         sessionStorage.clear();
-        this.selectDefaultFlow();
+        // this.selectDefaultFlow();
+        if(routeToHome) this.router.navigate(["/"])
     }
 
     public async selectDefaultFlow() {
-        this._selectedFlowSubject.next(FlowBuilder.buildSpotifyFirstFlow(this.router));
+        const flow = this.createDefaultFlow();
+        this._selectedFlowSubject.next(flow);
+        return flow;
     }
 
     public hasActiveFlow(): boolean {
-        return this._selectedFlowSubject.getValue().hasStarted
+        return this._selectedFlowSubject.getValue()?.hasStarted
     }
 
     public async persistFlow() {
-        this._selectedFlowSubject.getValue().persist();
+        if(this._selectedFlowSubject?.getValue()) {
+            this._selectedFlowSubject.getValue().persist();
+        }
     }
 
-    public async restoreFlow() {
+    public createDefaultFlow(): Flow {
+        return new Flow(SpotifyToYoutubeFlow, this.router)
+    }
+
+    public async restoreFlow(): Promise<Flow> {
         if(!!sessionStorage) {
-            this._selectedFlowSubject.next(JSON.parse(sessionStorage.getItem(FLOW_SESSIONSTORAGE_KEY)));
+            console.log("restoring flow")
+            const persistedFlow: PersistableFlow = JSON.parse(sessionStorage.getItem(FLOW_SESSIONSTORAGE_KEY)) as PersistableFlow;
+
+            if(persistedFlow) {
+                const restoredFlow = new Flow(SpotifyToYoutubeFlow, this.router);
+                restoredFlow.srcPlatform = persistedFlow.srcPlatform;
+                restoredFlow.destPlatform = persistedFlow.destPlatform;
+                restoredFlow.hasStarted = persistedFlow.hasStarted;
+                restoredFlow.setStepById(persistedFlow.currentStepId);
+    
+                this._selectedFlowSubject.next(restoredFlow);
+    
+                return restoredFlow;
+            }
         }
+
+        console.log("no flow to restore, selecting default...")
+        return this.createDefaultFlow();
+    }
+
+    public getFlow(): Flow {
+        return this._selectedFlowSubject.getValue();
     }
 
 }

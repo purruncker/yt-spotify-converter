@@ -1,87 +1,100 @@
 import { FlowButtonOptions, FlowStep } from "../model/flow-step.model";
-import { FlowService } from "../services/flow.service";
 
 const startFlowButton: FlowButtonOptions = {
     text: "Start with connecting to Spotify",
     class: "btn-spotify",
-    icon: "fab fa-spotify",
-    onClick: (flowService: FlowService) => {
-        console.log("start button clicked")
-        flowService.startFlow();
-    }
+    icon: "fab fa-spotify"
 }
 
 export const SpotifyToYoutubeFlow: FlowStep[] = [
     { 
-        id: 1, 
+        id: "index", 
         title: "Overview", 
         displayId: 1,
-        allowBack: false, 
-        allowNext: false, 
         isListed: false, 
-        nextRoute: { 
-            path: "/authorize/spotify" 
-        }, 
-        customNextButton: startFlowButton
+        route: {
+            path: "/"
+        },
+        navigation: {
+            nextId: "connect-spotify"
+        },
+        buttons: {
+            start: startFlowButton
+        }
     },
     { 
-        id: 2, 
+        id: "connect-spotify", 
         title: "Connect with Spotify", 
         displayId: 1,
-        allowBack: false, 
-        allowNext: true, 
-        isListed: true, 
-        nextRoute: { 
-            path: "/choose-songs" 
-        } 
+        isListed: true,
+        route: {
+            path: "/authorize/spotify"
+        },
+        navigation: {
+            nextId: "choose-playlist"
+        }
     },
     { 
-        id: 3, 
+        id: "choose-playlist", 
         title: "Choose your playlist", 
         displayId: 2,
-        allowBack: false, 
-        allowNext: true, 
-        isListed: true, 
-        nextRoute: { 
-            path: "/choose-songs" 
-        }, 
-        flowLabel: "Please select one of the playlists below:" 
+        isListed: true,
+        flowLabel: "Please select one of the playlists below:",
+        route: {
+            path: "/choose-playlist"
+        },
+        navigation: {
+            nextId: "choose-songs"
+        }
     },
     { 
-        id: 4, 
+        id: "choose-songs", 
         title: "Choose songs", 
         displayId: 2,
-        allowBack: false, 
-        allowNext: true, 
         isListed: false, 
-        nextRoute: { 
-            path: "/yt" 
-        }, 
-        flowLabel: "Please select which songs you want to include:" 
+        flowLabel: "Please select which songs you want to include:",
+        route: {
+            path: "/choose-songs"
+        },
+        navigation: {
+            nextId: "yt"
+        }
     },
     { 
-        id: 5, 
+        id: "yt", 
         title: "Connect to YouTube", 
         displayId: 3,
-        allowBack: false, 
-        allowNext: false, 
-        isListed: true
+        isListed: true,
+        route: {
+            path: "/yt"
+        },
+        navigation: {
+            // TODO
+        }
     },
     { 
-        id: 6, 
+        id: "create-playlist", 
         title: "Create playlist", 
         displayId: 3,
-        allowBack: false, 
-        allowNext: true, 
         isListed: false, 
-        flowLabel: "You can now setup the playlist:" 
+        flowLabel: "You can now setup the playlist:",
+        route: {
+            path: null
+        },
+        navigation: {
+            // TODO
+        }
     },
     { 
-        id: 7, 
+        id: "convert-playlist", 
         title: "Move playlist to YouTube", 
         displayId: 3,
-        allowBack: true, 
-        allowNext: true, 
-        isListed: false
+        isListed: false,
+        route: {
+            path: null
+        },
+        navigation: {
+            // TODO
+        }
     }
 ]

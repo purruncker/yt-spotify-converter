@@ -3,6 +3,7 @@ import { Injectable } from "@angular/core";
 import { CookieService } from "ngx-cookie";
 import * as querystring from "query-string";
 import { BehaviorSubject, Observable } from "rxjs";
+import { filter } from "rxjs/operators";
 import { SpotifyTokenDTO } from "../dto/spotifyToken.dto";
 import { Platform } from "../model/platform.model";
 import { Session, SessionType } from "../model/session.model";
@@ -26,13 +27,13 @@ export class AuthenticationService {
     private CLIENT_ID_SPOTIFY: string = "155c517b9e2548f0805bbc3b30896d63";
     private SPOTIFY_SCOPES: string = "playlist-read-private playlist-read-collaborative user-read-private user-read-email"
 
-    private _sessionSubject: BehaviorSubject<Session>;
-    private _userSubject: BehaviorSubject<User>;
-    private _readySubject: BehaviorSubject<boolean>;
+    private readonly _sessionSubject: BehaviorSubject<Session> = new BehaviorSubject(null);
+    private readonly _userSubject: BehaviorSubject<User> = new BehaviorSubject(null);
+    private readonly _readySubject: BehaviorSubject<boolean> = new BehaviorSubject(false);
 
-    public $session: Observable<Session>;
-    public $user: Observable<User>;
-    public $ready: Observable<boolean>;
+    public readonly $session: Observable<Session> = this._sessionSubject.asObservable().pipe(filter((session) => !!session));
+    public readonly $user: Observable<User> = this._userSubject.asObservable();
+    public readonly $ready: Observable<boolean> = this._readySubject.asObservable();
 
     constructor(
         private httpclient: HttpClient, 
@@ -42,20 +43,13 @@ export class AuthenticationService {
     ) { 
         // Notify application that session 
         // and user data is being fetched and initialized
-        this._readySubject = new BehaviorSubject(false);
-        this.$ready = this._readySubject.asObservable();
+        this._readySubject.next(false)
 
         // Restore user session and data asynchronously 
         // and subscribe after that
         this.restoreSession()
-        .then((session: Session) => {
-            this._sessionSubject = new BehaviorSubject(session);
-            this.$session = this._sessionSubject.asObservable();
-            return this.restoreUser()
-        })
+        .then(() => this.restoreUser())
         .then((user: User) => {
-            this._userSubject = new BehaviorSubject(user);
-            this.$user = this._userSubject.asObservable();
 
             // Subscribe to session changes to instantly 
             // persist them in cookie etc.
@@ -156,8 +150,10 @@ export class AuthenticationService {
 
     public async persistUser(): Promise<void> {
         const user: User = this._userSubject.getValue()
-        console.log("persisting user...", user)
-        if(!!localStorage) localStorage.setItem(USER_LOCALSTORAGE_ITEM, JSON.stringify(user));
+        if(!!localStorage && !!user) {
+            console.log("persisting user...", user)
+            localStorage.setItem(USER_LOCALSTORAGE_ITEM, JSON.stringify(user));
+        }
     }
 
     private async restoreSession(): Promise<Session> {
@@ -209,14 +205,23 @@ export class AuthenticationService {
     private async restoreUser(): Promise<User> {
         return new Promise((resolve) => {
             setTimeout(() => {
-                if(!localStorage) resolve(null);
+                if(!localStorage) {
+                    resolve(null);
+                    return;
+                }
+
+                if(!this.hasValidSession()) {
+                    resolve(null)
+                    this.logout();
+                    return;
+                }
 
                 const user: User = JSON.parse(localStorage.getItem(USER_LOCALSTORAGE_ITEM)) as User;
-                this._userSubject?.next(user);
+                this._userSubject.next(user);
                 
                 this.findUser(Platform.SPOTIFY).then((user) => {
                     if(!user) this.logout();
-                    else this._userSubject?.next(user)
+                    else this._userSubject.next(user)
                 })
 
                 resolve(user);
@@ -229,7 +234,10 @@ export class AuthenticationService {
         if(!!localStorage) localStorage.clear();
         if(!!sessionStorage) sessionStorage.clear();
 
-        this.flowService.abort();
+        if(this.flowService.hasActiveFlow()) {
+            this.flowService.abort();
+        }
+        
     }
 
 }

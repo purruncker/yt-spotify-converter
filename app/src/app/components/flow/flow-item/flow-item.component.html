@@ -1,4 +1,4 @@
-<div class="bg-white-dark rounded-md p-4 my-6 border border-white-darkest border-opacity-20" [ngClass]="{ 'border-accent bg-accent bg-opacity-5 border-opacity-40': flowStep.isActive }">
-    <p class="text-white-darkest text-sm" [ngClass]="{ 'text-accent-dark text-opacity-70 font-semibold': flowStep.isActive }" *ngIf="flowStep.displayId">Step {{ flowStep.displayId }}</p>
+<div class="bg-white-dark rounded-md p-4 my-6 border border-white-darkest border-opacity-20" [ngClass]="{ 'border-accent bg-accent bg-opacity-5 border-opacity-40': flowStep }">
+    <p class="text-white-darkest text-sm" [ngClass]="{ 'text-accent-dark text-opacity-70 font-semibold': flowStep }" *ngIf="flowStep.displayId">Step {{ flowStep.displayId }}</p>
     <h5 class="text-primary font-bold">{{ flowStep.title }}</h5>
 </div>

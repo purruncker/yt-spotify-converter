@@ -1,8 +1,8 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AnimationOptions } from 'ngx-lottie';
-import { concat, forkJoin, merge, of, Subscription, zip } from 'rxjs';
-import { filter, map, mergeMap, take } from 'rxjs/operators';
+import { Subscription, zip } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { FlowService } from 'src/app/services/flow.service';
 
@@ -39,8 +39,9 @@ export class AuthHandlerComponent implements OnInit, OnDestroy {
     // Authservice ready is filtered, so that only true values come through, so that this observable only emits if auth service is actually ready, causing
     // the whole observable (zip) to hold until this one is ready.
     // The map at the end maps all the values from zip() into an object
-    zip(this.authService.$ready.pipe(filter((ready) => ready)), this.route.paramMap, this.flowService.$selectedFlow).pipe(map(([ready, params, flow]) => ({ ready, params, flow }))).subscribe((result) => {
+    zip(this.authService.$ready.pipe(filter((ready) => ready)), this.route.paramMap, this.flowService.$selectedFlow.pipe(filter((flow) => !!flow))).pipe(map(([ready, params, flow]) => ({ ready, params, flow }))).subscribe((result) => {
       if(!result.ready) return;
+      if(!result.flow.hasStarted) this.flowService.abort();
       this.isCheckingSession = false;
 
       if(this.authService.hasValidSession()) {
