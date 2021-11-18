@@ -22,7 +22,7 @@ export class UserCanActivateFlowRoute implements CanActivateChild {
         
         // Because it is possible that the flow is not ready when guard 
         // is triggered, we have to wait a bit for it to be available
-        return zip(this.flowService.$selectedFlow.pipe(filter((flow) => !!flow)), this.authService.$session.pipe(filter((session) => session.type != SessionType.SESSION_ANONYMOUS))).pipe(map(() => {
+        return zip(this.flowService.$selectedFlow.pipe(filter((flow) => !!flow)), this.authService.$session).pipe(map(() => {
             console.log("flow and session ready")
             // Check if route belongs to flow or is index route.
             // If not, abort and clear flow and allow routing
