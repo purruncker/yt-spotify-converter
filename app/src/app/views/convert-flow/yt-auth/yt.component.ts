@@ -110,7 +110,7 @@ export class YtComponent implements OnInit {
   public ytPlaylist: YtPlaylistDTO = undefined;
   public stopInPut: boolean = true;
   public async onSubmitPlaylistname() {
-    this.stopInPut = !this.stopInPut;
+    //this.stopInPut = !this.stopInPut;
     //console.log(this.plalistNameform.value['plalistName'])
     //console.log(this.plalistNameform.value['status'])
     const body = {

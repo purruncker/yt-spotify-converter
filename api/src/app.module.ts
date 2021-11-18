@@ -10,6 +10,7 @@ import { YtAuthModule } from './yt-auth/yt-auth.module';
 import { PlaylistYtModule } from './playlist-yt/playlist-yt.module';
 import { YtSongsModule } from './yt-songs/yt-songs.module';
 import { UserInfoModule } from './user-info/user-info.module';
+import { RecommendationModule } from './recommendation/recommendation.module';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { UserInfoModule } from './user-info/user-info.module';
         '.env.dev',
         '.env'
       ]
-    }), PlaylistSpotifyModule, SongsModule, YtAuthModule, PlaylistYtModule, YtSongsModule, UserInfoModule
+    }), PlaylistSpotifyModule, SongsModule, YtAuthModule, PlaylistYtModule, YtSongsModule, UserInfoModule, RecommendationModule
   ],
   controllers: [AppController],
   providers: [AppService],

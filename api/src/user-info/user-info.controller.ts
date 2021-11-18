@@ -9,7 +9,6 @@ export class UserInfoController {
   @Get('spotify')
   getUserInfo(@Headers() headers, @Body() createUserInfoDto: CreateUserInfoDto,
   ) {
-    console.log('test')
     return this.userInfoService.getUserInfo(createUserInfoDto, headers.authorization);
   }
 

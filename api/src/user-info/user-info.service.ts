@@ -4,7 +4,15 @@ import { CreateUserInfoDto } from './dto/create-user-info.dto';
 import { ResponseUserDTO } from './dto/update-user-info.dto';
 
 @Injectable()
+
 export class UserInfoService {
+  /**
+   * 
+   * @param createUserInfoDto 
+   * @param accessToken 
+   * @returns 
+   */
+
   getUserInfo(createUserInfoDto: CreateUserInfoDto, accessToken: string) {
     const opts = {
       headers: {

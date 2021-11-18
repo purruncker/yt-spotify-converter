@@ -9,7 +9,10 @@ async function bootstrap() {
   // CORS Policy by allowing every domain (origin)
   app.enableCors({ origin: "*" })
   app.useGlobalPipes(new ValidationPipe({
+    errorHttpStatusCode: 400,
     disableErrorMessages: true,
+
+    dismissDefaultMessages: true
   }));
   await app.listen(3000);
 }
