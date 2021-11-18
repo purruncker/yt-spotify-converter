@@ -42,7 +42,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   }
 
   public nextStepInFlow() {
-    // TODO: this.flowService.nextStep()
+    this.flowService.nextStep()
   }
 
   public backStepInFlow() {

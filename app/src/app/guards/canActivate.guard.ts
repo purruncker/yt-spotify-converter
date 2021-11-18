@@ -1,10 +1,29 @@
 import { Injectable } from "@angular/core";
-import { ActivatedRouteSnapshot, CanActivateChild, Router, RouterStateSnapshot, UrlTree } from "@angular/router";
-import { Observable, of, zip } from "rxjs";
+import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot, UrlTree } from "@angular/router";
+import { Observable, zip } from "rxjs";
 import { filter, map } from "rxjs/operators";
-import { SessionType } from "../model/session.model";
 import { AuthenticationService } from "../services/authentication.service";
 import { FlowService } from "../services/flow.service";
+
+export class CanActivateRoute implements CanActivate {
+
+    constructor(private flowService: FlowService) {}
+
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
+        return this.flowService.$selectedFlow.pipe(filter((flow) => !!flow), map(() => {
+            if(!this.flowService.getFlow().list.existsByRoute(state.url)) {
+                if(this.flowService.hasActiveFlow()) {
+                    this.flowService.abort(false);
+                }
+                return true;
+            }
+            
+            this.flowService.getFlow().navigateToCurrentStep();
+            return false;
+        }))
+    }
+
+}
 
 @Injectable({
     providedIn: "root"
@@ -28,6 +47,7 @@ export class UserCanActivateFlowRoute implements CanActivateChild {
             // If not, abort and clear flow and allow routing
             if(!this.flowService.getFlow().list.existsByRoute(routeState.url) || this.flowService.getFlow().list.findByRoute(routeState.url).id == "index") {
                 this.flowService.abort(false);
+                console.log("route neither belongs to flow or is the index of the flow")
                 return true;
             }
 

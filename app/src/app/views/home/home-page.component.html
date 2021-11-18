@@ -14,6 +14,7 @@
                     <div *ngIf="!!(authService.$user | async)">
                         <app-profile-bar></app-profile-bar>
                     </div>
+                    <p class="text-primary text-center">{{ (flowService.$selectedFlow | async).currentStep.id }} - {{ (flowService.$selectedFlow | async).currentStep.title }}</p>
                     <label class="text-accent-dark" *ngIf="(flowService.$selectedFlow | async)?.currentStep?.flowLabel">{{ (flowService.$selectedFlow | async)?.currentStep?.flowLabel }}</label>
                 </div>
                 
@@ -33,6 +34,19 @@
 
                         <app-flow-button *ngIf="$currentStep?.buttons.start" [options]="(flowService.$selectedFlow | async).currentStep.customNextButton"></app-flow-button>
                         <app-flow-button *ngIf="$currentStep?.buttons" [options]="(flowService.$selectedFlow | async).currentStep.customNextButton"></app-flow-button>-->
+
+                        <!-- TODO: Fix not showing custom start button -->
+                        <div *ngIf="currentStep?.buttons?.start">
+                            <app-flow-button [options]="(flowService.$selectedFlow | async).currentStep.buttons.next"></app-flow-button>
+                        </div>
+                        <div *ngIf="!currentStep?.buttons?.start">
+                            <p class="text-primary">No custom start button</p>
+                            <button class="btn btn-lg btn-spotify mt-8 w-full" (click)="nextStepInFlow()"><i class="fab fa-spotify"></i>Start now with connecting to Spotify</button>
+                        </div>
+
+                        <!--<app-flow-button *ngIf="$currentStep?.buttons.start" [options]="(flowService.$selectedFlow | async).currentStep.customNextButton"></app-flow-button>
+                        <app-flow-button *ngIf="$currentStep?.buttons.start" [options]="(flowService.$selectedFlow | async).currentStep.customNextButton"></app-flow-button>
+                        <app-flow-button *ngIf="$currentStep?.buttons.start" [options]="(flowService.$selectedFlow | async).currentStep.customNextButton"></app-flow-button>-->
 
                     </div>
                 </div>

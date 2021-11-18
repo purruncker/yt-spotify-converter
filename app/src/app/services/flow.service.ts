@@ -15,7 +15,7 @@ export class FlowService {
     private _selectedFlowSubject: BehaviorSubject<Flow> = new BehaviorSubject(null);
 
     public $currentStep: Observable<FlowStep> = this._currentStepSubject.asObservable();
-    public $selectedFlow: Observable<Flow> = this._selectedFlowSubject.asObservable().pipe(filter((flow) => { console.log("pushing: ", flow, !!flow); return !!flow }));
+    public $selectedFlow: Observable<Flow> = this._selectedFlowSubject.asObservable().pipe(filter((flow) => !!flow));
 
     constructor(private router: Router) {
         this.restoreFlow().then((flow) => {
