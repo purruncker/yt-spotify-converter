@@ -7,6 +7,7 @@ export class FlowList {
 
     constructor(list: FlowStep[]) {
         this._list = new Map(list.map((value) => [value.id, value]));
+        console.log(this._list)
         this._paths = new Map(list.map((value) => [value.route.path, value]));
     }
 
@@ -15,7 +16,7 @@ export class FlowList {
     }
 
     public findDisplayableSteps(): FlowStep[] {
-        return Object.values(this._list).filter((value: FlowStep) => value.isListed);
+        return Array.from(this._list.values()).filter((value: FlowStep) => value.isListed);
     }
 
     public existsByRoute(path: string): boolean {

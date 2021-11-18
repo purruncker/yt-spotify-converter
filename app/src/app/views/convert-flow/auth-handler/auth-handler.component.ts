@@ -61,7 +61,7 @@ export class AuthHandlerComponent implements OnInit, OnDestroy {
               console.log(token)
               this.authService.createSpotifyOrientedSession(token).then((session) => {
                 console.log(session)
-                setTimeout(() => this.flowService.nextStep(), 500)
+                // setTimeout(() => this.flowService.nextStep(), 500)
               })
           }).catch(() => {})          
         } else {

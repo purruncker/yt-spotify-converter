@@ -43,7 +43,8 @@ export class Flow implements PersistableFlow {
 
     public abort(): void {
         this.hasStarted = false;
-        this.currentStep = this.list[0];
+        this.currentStep = this.list.find("index");
+        this.currentStepId = this.currentStep.id;
         this.clearPersistedData()
     }
 
@@ -60,13 +61,13 @@ export class Flow implements PersistableFlow {
     public setStepById(id: string) {
         this.currentStep = this.list.find(id);
         this.currentStepId = this.currentStep.id;
-        console.log("routing to flow: ", id)
+        console.log("routing to flow: ", id, " on route ", this.currentStep.route.path)
         this.navigateToCurrentStep();
         this.persist();
     }
 
     public navigateToCurrentStep() {
-        this.router.navigateByUrl(this.currentStep?.id)
+        this.router.navigateByUrl(this.currentStep?.route?.path || "/")
     }
 
     public back(): void {

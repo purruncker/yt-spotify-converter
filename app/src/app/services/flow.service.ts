@@ -51,9 +51,7 @@ export class FlowService {
     }
 
     public async abort(routeToHome: boolean = true) {
-        console.log("aborting flow..")
-        sessionStorage.clear();
-        // this.selectDefaultFlow();
+        this.getFlow().abort()
         if(routeToHome) this.router.navigate(["/"])
     }
 

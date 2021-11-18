@@ -1,9 +1,10 @@
-import { FlowButtonOptions, FlowStep } from "../model/flow-step.model";
+import { FlowButtonOptions, FlowButtonType, FlowStep } from "../model/flow-step.model";
 
 const startFlowButton: FlowButtonOptions = {
     text: "Start with connecting to Spotify",
     class: "btn-spotify",
-    icon: "fab fa-spotify"
+    icon: "fab fa-spotify",
+    type: FlowButtonType.START
 }
 
 export const SpotifyToYoutubeFlow: FlowStep[] = [
@@ -31,7 +32,7 @@ export const SpotifyToYoutubeFlow: FlowStep[] = [
             path: "/authorize/spotify"
         },
         navigation: {
-            nextId: "choose-playlist"
+            nextId: "choose-playlist",
         }
     },
     { 

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { FlowButtonOptions, FlowStep } from 'src/app/model/flow-step.model';
+import { FlowButtonOptions, FlowButtonType, FlowStep } from 'src/app/model/flow-step.model';
 import { FlowService } from 'src/app/services/flow.service';
 
 @Component({
@@ -27,7 +27,28 @@ export class FlowButtonComponent implements OnInit {
   }
 
   public clickEvent() {
-    if(this.options?.onClick) this.options.onClick(this.flowService)
+    const options: FlowButtonOptions = this.options;
+
+    if(options) {
+      switch (options.type) {
+        case FlowButtonType.START:
+          this.flowService.startFlow();
+          break;
+        case FlowButtonType.ABORT:
+          this.flowService.abort();
+          break;
+        case FlowButtonType.END:
+          // TODO
+          break;
+        case FlowButtonType.BACK:
+          this.flowService.backStep();
+          break;
+      
+        default:
+          this.flowService.nextStep();
+          break;
+      }
+    }
   }
 
 }

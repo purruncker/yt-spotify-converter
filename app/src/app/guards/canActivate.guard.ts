@@ -1,3 +1,4 @@
+import { state } from "@angular/animations";
 import { Injectable } from "@angular/core";
 import { ActivatedRouteSnapshot, CanActivate, CanActivateChild, Router, RouterStateSnapshot, UrlTree } from "@angular/router";
 import { Observable, zip } from "rxjs";
@@ -35,32 +36,33 @@ export class UserCanActivateFlowRoute implements CanActivateChild {
 
     constructor(private router: Router, private authService: AuthenticationService, private flowService: FlowService){ }
 
-    canActivateChild(childRoute: ActivatedRouteSnapshot, routeState: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-        console.log("can activate guard")
-
-        // Fix guard not routing
-        // Problem: console.log not even executed
-        // Suspected: Somehow the session is not pushed, because selectedFlow has proven that it is pushed correctly.
+    canActivateChild(childRoute: ActivatedRouteSnapshot, routeState: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {     
+        console.log("routing to path: ", routeState.url)
         
         // Because it is possible that the flow is not ready when guard 
         // is triggered, we have to wait a bit for it to be available
         return zip(this.flowService.$selectedFlow.pipe(filter((flow) => !!flow)), this.authService.$session).pipe(map(() => {
+            return true;
+            
             console.log("flow and session ready")
             // Check if route belongs to flow or is index route.
             // If not, abort and clear flow and allow routing
             if(!this.flowService.getFlow().list.existsByRoute(routeState.url) || this.flowService.getFlow().list.findByRoute(routeState.url).id == "index") {
                 this.flowService.abort(false);
-                console.log("route neither belongs to flow or is the index of the flow")
+                console.log("route neither belongs to flow or is the index of the flow");
                 return true;
             }
 
             // Check if session is valid when routing to steps
-            if(!this.authService.hasValidSession()) {
-                this.flowService.abort(true);
+            if(!this.authService.hasValidSession() && !routeState.url.includes("authorize")) {
+                console.log("no valid session, aborting")
+                this.flowService.abort(false);
                 this.authService.logout();
                 return false;
             }
 
+            // TODO: Test: Route to correct step
+            // this.flowService.getFlow().navigateToCurrentStep();
             return true;
         }));
 

@@ -8,11 +8,19 @@ export interface FlowRoute {
     path: string;
 }
 
+export enum FlowButtonType {
+    START = "start",
+    NEXT = "next",
+    BACK = "back",
+    END = "end",
+    ABORT = "abort"
+}
+
 export interface FlowButtonOptions {
     text: string;
     icon?: string;
     class?: string;
-    onClick?: Function;
+    type: FlowButtonType;
 }
 
 export interface FlowStepButtons {

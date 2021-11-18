@@ -20,6 +20,8 @@ export class FlowListComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this._flowSub = this.flowService.$selectedFlow.subscribe((flow) => {
       this.list = flow.list.findDisplayableSteps();
+      console.log("found flow to display in list: ", flow)
+      console.log("found steps to display: ", this.list)
     });
   }
 
