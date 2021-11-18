@@ -12,11 +12,13 @@ export class RecommendationService {
         'Authorization': token
       }
     }
-    await axios.get(`http://localhost:3000/songs/3tFkTwB1YPDYpAmQhMloIf/header`, config).then(data =>
-      res = data.data)
+    await axios.get(`http://localhost:3000/songs/3tFkTwB1YPDYpAmQhMloIf/header`, config)
+      .then(data =>
+        res = data.data)
 
-    await axios.get(`http://localhost:3000/songs/44ECJdoVs1i8KaJiNHIDUq/header`, config).then(data =>
-      res.concat(data.data))
+    await axios.get(`http://localhost:3000/songs/44ECJdoVs1i8KaJiNHIDUq/header`, config)
+      .then(data =>
+        res.concat(data.data))
 
     const index = Math.floor(Math.random() * res.length)
 
