@@ -26,7 +26,7 @@ const routes: Routes | FlowRoute[] = [
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
   exports: [RouterModule],
-  providers: [ UserCanActivateFlowRoute ]
+  providers: [ UserCanActivateFlowRoute, CanActivateRoute ]
 })
 export class AppRoutingModule { }
 export const routingComponents = [YtComponent, ErrorPageComponent,HomePageComponent, FlowListComponent, ChoosePlaylistComponent, ChooseSongsComponent]

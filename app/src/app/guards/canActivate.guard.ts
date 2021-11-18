@@ -5,6 +5,9 @@ import { filter, map } from "rxjs/operators";
 import { AuthenticationService } from "../services/authentication.service";
 import { FlowService } from "../services/flow.service";
 
+@Injectable({
+    providedIn: "root"
+})
 export class CanActivateRoute implements CanActivate {
 
     constructor(private flowService: FlowService) {}
