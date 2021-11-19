@@ -1,25 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { Url } from 'src/enums/url.model';
+import { SongsService } from 'src/songs/songs.service';
 import { ResponseSongsDto } from './dto/update-recommendation.dto';
 
 @Injectable()
 export class RecommendationService {
+  constructor(private readonly songsService: SongsService) { }
+
   async getSpotifyRecomendaition(token: string) {
+
     let res: ResponseSongsDto[] = [];
 
-    const config = {
-      headers: {
-        'Authorization': token
-      }
-    }
-    await axios.get(`${Url.OWN}/songs/3tFkTwB1YPDYpAmQhMloIf/header`, config)
-      .then(data =>
-        res = data.data)
+    await this.songsService.getSongsFromPlaylist2("3tFkTwB1YPDYpAmQhMloIf", token)
+      .then(data => res = data);
 
-    await axios.get(`${Url.OWN}/songs/44ECJdoVs1i8KaJiNHIDUq/header`, config)
-      .then(data =>
-        res.concat(data.data))
+    await this.songsService.getSongsFromPlaylist2("44ECJdoVs1i8KaJiNHIDUq", token)
+      .then(data => { res = res.concat(data) });
 
     const index = Math.floor(Math.random() * res.length)
 
