@@ -14,6 +14,7 @@ export class CanActivateRoute implements CanActivate {
     constructor(private flowService: FlowService) {}
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
+        console.log("default can activate route")
         return this.flowService.$currentFlow.pipe(filter((flow) => !!flow), map(() => {
             if(!this.flowService.getFlow().list.existsByRoute(state.url)) {
                 if(this.flowService.hasActiveFlow()) {

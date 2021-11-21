@@ -1,5 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
+import { filter } from 'rxjs/operators';
 import { FlowButtonOptions, FlowStep, FlowStepButtons } from 'src/app/model/flow-step.model';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { FlowService } from 'src/app/services/flow.service';
@@ -22,9 +23,15 @@ export class HomePageComponent implements OnInit, OnDestroy {
   ) {}
 
   public ngOnInit(): void {
-    this._currentStepSub = this.flowService.$currentStep.subscribe((flowStep) => {
+    this._currentStepSub = this.flowService.$currentStep.pipe(filter((flow) => !!flow)).subscribe((flowStep) => {
       this.currentStep = flowStep;
-      this.currentStepButtons = Object.values(flowStep.buttons);
+
+      if(flowStep.buttons) {
+        this.currentStepButtons = Object.values(flowStep.buttons);
+      } else {
+        this.currentStepButtons = []
+      }
+      
     })
 
     // this.flowService.selectDefaultFlow();

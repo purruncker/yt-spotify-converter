@@ -42,6 +42,7 @@ export class Flow implements PersistableFlow {
     }
 
     public abort(): void {
+        console.log("aborting flow...")
         this.currentStep = this.list.find("index");
         this.currentStepId = this.currentStep.id;
         this.clearPersistedData()
@@ -62,7 +63,6 @@ export class Flow implements PersistableFlow {
         this.currentStepId = this.currentStep.id;
         console.log("routing to flow: ", id, " on route ", this.currentStep.route.path)
         this.navigateToCurrentStep();
-        this.persist();
     }
 
     public navigateToCurrentStep() {
@@ -82,7 +82,7 @@ export class Flow implements PersistableFlow {
     }
 
     public async persist() {
-        if(!!sessionStorage && this.currentStepId) {
+        if(!!localStorage && this.currentStepId) {
             if(!this.isActive) return;
 
             const persistableFlow: PersistableFlow = {
@@ -93,14 +93,14 @@ export class Flow implements PersistableFlow {
 
             console.log("persisting flow...", persistableFlow)
 
-            sessionStorage.setItem(FLOW_SESSIONSTORAGE_KEY, JSON.stringify(persistableFlow))
+            localStorage.setItem(FLOW_SESSIONSTORAGE_KEY, JSON.stringify(persistableFlow))
         }
     }
 
     public async clearPersistedData() {
-        if(!!sessionStorage) {
+        if(!!localStorage) {
             console.log("clearing persisted flow...")
-            sessionStorage.removeItem(FLOW_SESSIONSTORAGE_KEY)
+            localStorage.removeItem(FLOW_SESSIONSTORAGE_KEY)
         }
     }
 

@@ -39,7 +39,6 @@ export class AuthenticationService {
         private httpclient: HttpClient, 
         private errorService: HttpErrorService,
         private cookieService: CookieService,
-        private flowService: FlowService
     ) { 
         // Notify application that session 
         // and user data is being fetched and initialized
@@ -165,8 +164,12 @@ export class AuthenticationService {
         }
         
         if(!this.cookieService.hasKey(ACCESSTOKEN_COOKIE_NAME)) {
+            console.warn("[SESSION] No session cookie found: Session expired")
+
             // Access token expired
             if(!this.cookieService.hasKey(REFRESHTOKEN_COOKIE_NAME)) {
+                console.warn("[SESSION] No refresh token cookie found: Session is dead, can't be refreshed")
+
                 // Refresh token is also expired
                 this.logout();
                 this._sessionSubject?.next(session)
@@ -206,13 +209,19 @@ export class AuthenticationService {
         return new Promise((resolve) => {
             setTimeout(() => {
                 if(!localStorage) {
+                    console.error("[USER] LocalStorage is not supported by Browser")
                     resolve(null);
                     return;
                 }
 
                 if(!this.hasValidSession()) {
-                    resolve(null)
-                    this.logout();
+                    console.warn("[USER] Cannot request user data: Session invalid.")
+
+                    if(this._sessionSubject.getValue().type != SessionType.SESSION_ANONYMOUS) {
+                        console.warn("[USER] Logging at. No user data could be requested.")
+                        resolve(null)
+                        this.logout();
+                    }
                     return;
                 }
 
@@ -220,24 +229,45 @@ export class AuthenticationService {
                 this._userSubject.next(user);
                 
                 this.findUser(Platform.SPOTIFY).then((user) => {
-                    if(!user) this.logout();
-                    else this._userSubject.next(user)
+                    console.log("[USER] Reloaded user data in background.")
+                    // if(!user) this.logout();
+                    // else this._userSubject.next(user)
+                    // TODO: Maybe check status code to check if the service is currently unavailable, or user account does not exist
+                    // After checking this and the result is user account does not exists --> logout, otherwise continue as session is still working
+                    this._userSubject.next(user)
                 })
 
+                console.log("[USER] Restored user data from localStorage: ", user)
                 resolve(user);
-            }, 3000)
+            }, 1000)
         })
     }
 
     public async logout() {
+        console.log("logging out...")
+
         this.cookieService.removeAll();
         if(!!localStorage) localStorage.clear();
         if(!!sessionStorage) sessionStorage.clear();
-
-        if(this.flowService.hasActiveFlow()) {
-            this.flowService.abort();
-        }
         
+        this.setAnonymous();
+    }
+
+    public setTentative() {
+        this._sessionSubject.next({
+            accessToken: undefined,
+            refreshToken: undefined,
+            type: SessionType.SESSION_TENTATIVE
+        })
+    }
+
+    public setAnonymous() {
+        // Create anonymous session
+        this._sessionSubject.next({
+            accessToken: undefined,
+            refreshToken: undefined,
+            type: SessionType.SESSION_ANONYMOUS
+        })
     }
 
 }

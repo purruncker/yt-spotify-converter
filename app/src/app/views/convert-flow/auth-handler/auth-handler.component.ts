@@ -40,7 +40,31 @@ export class AuthHandlerComponent implements OnInit, OnDestroy {
     // the whole observable (zip) to hold until this one is ready.
     // The map at the end maps all the values from zip() into an object
     zip(this.authService.$ready.pipe(filter((ready) => ready)), this.route.paramMap, this.flowService.$currentFlow.pipe(filter((flow) => !!flow))).pipe(map(([ready, params, flow]) => ({ ready, params, flow }))).subscribe((result) => {
+      
+
+      // Only proceed if session init and so on is ready
       if(!result.ready) return;
+      console.log(result.flow)
+      
+      // Turn off loader in the component
+      this.isCheckingSession = false;
+
+      const platform = result.params.get("platform");
+      const grantCode = this.route.snapshot.queryParamMap.get("code")
+
+      if(!grantCode) {
+        // This step was accessed by flow itself 
+        // Redirect to platform authorize window.
+        console.log(`[AUTH-HANDLER] [${platform.toUpperCase()}] Found no grantCode in url: Redirecting to '${platform}' login`);
+        this.authService.requestSpotifyGrantCode()
+      } else {
+        // Handle login etc
+        console.log(`[AUTH-HANDLER] [${platform.toUpperCase()}] Found grantCode: Requesting accessToken and user data...`);
+
+        console.log("user got redirected, platform: ", platform, " with code ", grantCode)
+      }
+
+      /*if(!result.ready) return;
       if(!result.flow.isActive) this.flowService.abort();
       this.isCheckingSession = false;
 
@@ -69,7 +93,7 @@ export class AuthHandlerComponent implements OnInit, OnDestroy {
         }
       } else {
         // TODO: Show error --> platform name not found, therefor not supported
-      }
+      }*/
     })
   }
 
