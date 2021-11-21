@@ -1,4 +1,4 @@
-import { HttpClient, HttpParams } from "@angular/common/http";
+import { HttpClient, HttpHeaders, HttpParams } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { BehaviorSubject, Observable } from "rxjs";
 import { config } from "../config";
@@ -49,7 +49,14 @@ export class PlaylistService {
         // TODO: Make access token a header and read it in nestjs
         const params = new HttpParams().set('token', this.authService.getSessionSnap().accessToken);
 
-        return this.httpClient.get<SongDTO[]>(`${config.apiBaseUrl}/songs/${playlistId}`, { params }).toPromise().catch((error) => {
+        let token = ""
+        await this.authService.$session.subscribe(data => token = data.accessToken)
+        const opts = {
+            headers: new HttpHeaders({
+                "Authorization": "Bearer " + token
+            })
+        }
+        return this.httpClient.get<SongDTO[]>(`${config.apiBaseUrl}/v1/songs/${playlistId}`, opts).toPromise().catch((error) => {
             console.log(error);
             this.errorService.createError("Deine Songs konnten nicht abgerufen werden", "getSongs Spotify", error.status)
         }).then((songs) => {

@@ -25,13 +25,13 @@ export class AuthenticationService {
 
     public async requestSpotifyGrantCode(): Promise<void> {
         const data = {
-          response_type: 'code',
-          client_id: this.CLIENT_ID_SPOTIFY,
-          scope: this.SPOTIFY_SCOPES,
-          redirect_uri: "http://localhost:4200/authorize/spotify",
-          state: "veryRandomString123"
+            response_type: 'code',
+            client_id: this.CLIENT_ID_SPOTIFY,
+            scope: this.SPOTIFY_SCOPES,
+            redirect_uri: "http://localhost:4200/authorize/spotify",
+            state: "veryRandomString123"
         }
-    
+
         window.location.href = "https://accounts.spotify.com/authorize?" + querystring.stringify(data);
     }
 
@@ -46,7 +46,7 @@ export class AuthenticationService {
             this.createSpotifyOrientedSession(data)
             return data;
         })
-      }
+    }
 
     public async createSpotifyOrientedSession(data: SpotifyTokenDTO): Promise<Session> {
         const session: Session = {
@@ -62,7 +62,7 @@ export class AuthenticationService {
         // Request user info
         const user: User = await this.findUser("spotify");
         session.user = user;
-        
+
         // Push new session, but with user's data
         this._sessionSubject.next(session);
         return session;
@@ -70,12 +70,12 @@ export class AuthenticationService {
 
     public async findUser(platform: "spotify" | "youtube"): Promise<User> {
         // TODO: return this.httpclient.get<User>(`http://localhost:3000/users/${platform}`).toPromise();
-        
+
         const opts = {
             headers: new HttpHeaders({
-              "Accept": "application/json",
-              "Content-Type": "application/json",
-              "Authorization": "Bearer " + this.getSessionSnap().accessToken
+                "Accept": "application/json",
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + this.getSessionSnap().accessToken
             })
         }
 
@@ -85,7 +85,7 @@ export class AuthenticationService {
         }).then(data => {
             return {
                 name: data['display_name'],
-                avatarUrl: data['images'][0]?.url || "app/src/assets/logo/cockroach.svg"
+                avatarUrl: data['images'][0]?.url || 'app/src/assets/logo/cockroach.svg'
             }
         })
     }
@@ -96,7 +96,7 @@ export class AuthenticationService {
 
     public hasValidSession(): boolean {
         const session = this._sessionSubject.getValue();
-        if(!session) return false;
+        if (!session) return false;
         return session.accessToken && (session.expiresAt?.getTime() || 0) > Date.now();
     }
 

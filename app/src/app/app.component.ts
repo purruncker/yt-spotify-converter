@@ -37,4 +37,16 @@ export class AppComponent implements OnInit {
   }
 
 
+  async getSongs() {
+    let token = ""
+    await this.as.$session.subscribe(data => token = data.accessToken)
+    const opts = {
+      headers: new HttpHeaders({
+        "Authorization": "Bearer " + token
+      })
+    }
+
+    this.httpclient.get("http://localhost:3000/v1/songs/5j2zHJVYBzbqVebj6O0jq8", opts).toPromise().then(data => console.log(data))
+  }
 }
+
