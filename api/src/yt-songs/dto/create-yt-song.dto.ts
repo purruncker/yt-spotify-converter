@@ -1,4 +1,4 @@
-import { IsArray, IsNotEmpty, IsString } from "class-validator";
+import { ArrayMaxSize, ArrayNotEmpty, IsArray, IsNotEmpty, IsString } from "class-validator";
 
 export class CreateYtSongDto {
 
@@ -8,8 +8,9 @@ export class CreateYtSongDto {
     @IsNotEmpty()
     @IsString()
     id: string;
-    @IsNotEmpty()
+    @ArrayNotEmpty()
     @IsArray()
+    @ArrayMaxSize(90)
     songs: SongDTO[];
 }
 
