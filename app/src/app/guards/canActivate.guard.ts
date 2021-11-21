@@ -14,7 +14,7 @@ export class CanActivateRoute implements CanActivate {
     constructor(private flowService: FlowService) {}
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-        return this.flowService.$selectedFlow.pipe(filter((flow) => !!flow), map(() => {
+        return this.flowService.$currentFlow.pipe(filter((flow) => !!flow), map(() => {
             if(!this.flowService.getFlow().list.existsByRoute(state.url)) {
                 if(this.flowService.hasActiveFlow()) {
                     this.flowService.abort(false);
@@ -41,7 +41,7 @@ export class UserCanActivateFlowRoute implements CanActivateChild {
         
         // Because it is possible that the flow is not ready when guard 
         // is triggered, we have to wait a bit for it to be available
-        return zip(this.flowService.$selectedFlow.pipe(filter((flow) => !!flow)), this.authService.$session).pipe(map(() => {
+        return zip(this.flowService.$currentFlow.pipe(filter((flow) => !!flow)), this.authService.$session).pipe(map(() => {
             return true;
             
             console.log("flow and session ready")

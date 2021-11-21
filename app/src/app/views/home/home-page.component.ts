@@ -24,9 +24,7 @@ export class HomePageComponent implements OnInit, OnDestroy {
   public ngOnInit(): void {
     this._currentStepSub = this.flowService.$currentStep.subscribe((flowStep) => {
       this.currentStep = flowStep;
-      this.currentStepButtons = Object.values((button) => {
-        console.log(button)
-      })
+      this.currentStepButtons = Object.values(flowStep.buttons);
     })
 
     // this.flowService.selectDefaultFlow();

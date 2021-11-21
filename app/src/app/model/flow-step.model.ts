@@ -8,6 +8,7 @@ export interface FlowRoute {
     path: string;
 }
 
+// Check if this is really needed
 export enum FlowButtonType {
     START = "start",
     NEXT = "next",

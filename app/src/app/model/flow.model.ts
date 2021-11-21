@@ -10,7 +10,6 @@ export interface PersistableFlow {
     srcPlatform: Platform;
     // Not important at the moment
     destPlatform: Platform;
-    hasStarted: boolean;
 }
 
 export class Flow implements PersistableFlow {
@@ -21,7 +20,6 @@ export class Flow implements PersistableFlow {
     public currentStepId: string;
     public srcPlatform: Platform;
     public destPlatform: Platform;
-    public hasStarted: boolean = false;
 
     // Custom fields
     public currentStep?: FlowStep;
@@ -30,19 +28,20 @@ export class Flow implements PersistableFlow {
     constructor(list: FlowStep[], private router: Router) {
         this.list = new FlowList(list);
         this.currentStep = list[0];
-        this.hasStarted = false;
         this.destPlatform = Platform.YOUTUBE;
         this.srcPlatform = Platform.SPOTIFY;
     }
 
+    public get isActive() {
+        return this.currentStep?.id != "index";
+    }
+
     public start(): void {
         console.log("flow started");
-        this.hasStarted = true;
         this.next();
     }
 
     public abort(): void {
-        this.hasStarted = false;
         this.currentStep = this.list.find("index");
         this.currentStepId = this.currentStep.id;
         this.clearPersistedData()
@@ -82,14 +81,13 @@ export class Flow implements PersistableFlow {
         this.setStepById(this.currentStep?.navigation?.backId);
     }
 
-    
-
     public async persist() {
         if(!!sessionStorage && this.currentStepId) {
+            if(!this.isActive) return;
+
             const persistableFlow: PersistableFlow = {
                 currentStepId: this.currentStepId,
                 destPlatform: this.destPlatform,
-                hasStarted: this.hasStarted,
                 srcPlatform: Platform.SPOTIFY
             }
 

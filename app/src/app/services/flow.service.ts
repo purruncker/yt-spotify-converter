@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { Router } from "@angular/router";
 import { BehaviorSubject, Observable } from "rxjs";
-import { filter } from "rxjs/operators";
+import { filter, skip } from "rxjs/operators";
 import { SpotifyToYoutubeFlow } from "../flows/spotifyToYoutube.flow";
 import { FlowStep } from "../model/flow-step.model";
 import { Flow, FLOW_SESSIONSTORAGE_KEY, PersistableFlow } from "../model/flow.model";
@@ -15,7 +15,7 @@ export class FlowService {
     private _selectedFlowSubject: BehaviorSubject<Flow> = new BehaviorSubject(null);
 
     public $currentStep: Observable<FlowStep> = this._currentStepSubject.asObservable();
-    public $selectedFlow: Observable<Flow> = this._selectedFlowSubject.asObservable().pipe(filter((flow) => !!flow));
+    public $currentFlow: Observable<Flow> = this._selectedFlowSubject.asObservable().pipe(filter((flow) => !!flow));
 
     constructor(private router: Router) {
         this.restoreFlow().then((flow) => {
@@ -23,7 +23,10 @@ export class FlowService {
             this._selectedFlowSubject.next(flow);
 
             // Save flow to sessionStorage, if it updates
-            this.$selectedFlow.subscribe(async() => this.persistFlow())
+            this.$currentFlow.subscribe(async(flow) => {
+                this._currentStepSubject.next(flow.currentStep)
+                this.persistFlow()
+            })
         });
     }
 
@@ -62,7 +65,7 @@ export class FlowService {
     }
 
     public hasActiveFlow(): boolean {
-        return this._selectedFlowSubject.getValue()?.hasStarted
+        return this._selectedFlowSubject.getValue()?.isActive
     }
 
     public async persistFlow() {
@@ -84,7 +87,6 @@ export class FlowService {
                 const restoredFlow = new Flow(SpotifyToYoutubeFlow, this.router);
                 restoredFlow.srcPlatform = persistedFlow.srcPlatform;
                 restoredFlow.destPlatform = persistedFlow.destPlatform;
-                restoredFlow.hasStarted = persistedFlow.hasStarted;
                 restoredFlow.setStepById(persistedFlow.currentStepId);
     
                 this._selectedFlowSubject.next(restoredFlow);
