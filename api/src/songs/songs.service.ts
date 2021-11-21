@@ -77,7 +77,7 @@ export class SongsService {
       let modifieddata = data.data.items.filter(function (val) {
         return val.track != null;
       })
-      next = data.data?.next
+      next = data.data?.next || null
       //console.log(next)
       res = modifieddata.map(val => {
         return {
