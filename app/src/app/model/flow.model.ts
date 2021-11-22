@@ -1,4 +1,4 @@
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { FlowList } from "./flow-list.model";
 import { FlowStep } from "./flow-step.model";
 import { Platform } from "./platform.model";
@@ -25,7 +25,7 @@ export class Flow implements PersistableFlow {
     public currentStep?: FlowStep;
     public list: FlowList;
 
-    constructor(list: FlowStep[], private router: Router) {
+    constructor(list: FlowStep[], private router: Router, private currentRoute: ActivatedRoute) {
         this.list = new FlowList(list);
         this.currentStep = list[0];
         this.destPlatform = Platform.YOUTUBE;
@@ -65,8 +65,12 @@ export class Flow implements PersistableFlow {
         this.navigateToCurrentStep();
     }
 
-    public navigateToCurrentStep() {
-        this.router.navigateByUrl(this.currentStep?.route?.path || "/")
+    public async navigateToCurrentStep() {
+        const queryParams = (this.currentStep?.navigation?.preserveQuery ? await this.currentRoute.queryParams.toPromise() : {})
+
+        this.router.navigate([this.currentStep?.route?.path || "/"], {
+            queryParams: queryParams
+        })
     }
 
     public back(): void {

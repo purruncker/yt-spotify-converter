@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { AnimationOptions } from 'ngx-lottie';
 import { Subscription, zip } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
+import { Platform } from 'src/app/model/platform.model';
 import { AuthenticationService } from 'src/app/services/authentication.service';
 import { FlowService } from 'src/app/services/flow.service';
 
@@ -39,29 +40,39 @@ export class AuthHandlerComponent implements OnInit, OnDestroy {
     // Authservice ready is filtered, so that only true values come through, so that this observable only emits if auth service is actually ready, causing
     // the whole observable (zip) to hold until this one is ready.
     // The map at the end maps all the values from zip() into an object
-    zip(this.authService.$ready.pipe(filter((ready) => ready)), this.route.paramMap, this.flowService.$currentFlow.pipe(filter((flow) => !!flow))).pipe(map(([ready, params, flow]) => ({ ready, params, flow }))).subscribe((result) => {
-      
-
+    zip(this.authService.$ready.pipe(filter((ready) => ready)), this.route.paramMap, this.route.queryParamMap, this.flowService.$currentFlow.pipe(filter((flow) => !!flow))).pipe(map(([ready, params, queryParams, flow]) => ({ ready, params, queryParams, flow }))).subscribe((result) => {
       // Only proceed if session init and so on is ready
       if(!result.ready) return;
-      console.log(result.flow)
       
       // Turn off loader in the component
       this.isCheckingSession = false;
 
-      const platform = result.params.get("platform");
-      const grantCode = this.route.snapshot.queryParamMap.get("code")
+      const platform = result.params.get("platform") as Platform;
+      const grantCode = result.queryParams.get("code")
 
       if(!grantCode) {
-        // This step was accessed by flow itself 
-        // Redirect to platform authorize window.
-        console.log(`[AUTH-HANDLER] [${platform.toUpperCase()}] Found no grantCode in url: Redirecting to '${platform}' login`);
-        this.authService.requestSpotifyGrantCode()
+        if(!this.authService.hasValidSession()) {
+          // This step was accessed by flow itself 
+          // Redirect to platform authorize window.
+          console.log(`[AUTH-HANDLER] [${platform.toUpperCase()}] Found no grantCode in url: Redirecting to '${platform}' login`);
+          this.authService.requestSpotifyGrantCode()
+        } else {
+          // There is an existing valid session, can skip reauthenticating
+          this.authService.findUser(platform).then((user) => {
+            this.flowService.nextStep();
+          })
+        }
       } else {
         // Handle login etc
         console.log(`[AUTH-HANDLER] [${platform.toUpperCase()}] Found grantCode: Requesting accessToken and user data...`);
 
-        console.log("user got redirected, platform: ", platform, " with code ", grantCode)
+        this.authService.requestSpotifyAccessToken(grantCode).then((token) => {
+          this.authService.createSpotifyOrientedSession(token).then(() => {
+            this.authService.findUser(platform).then(() => {
+              this.flowService.nextStep()
+            })
+          })
+        })
       }
 
       /*if(!result.ready) return;

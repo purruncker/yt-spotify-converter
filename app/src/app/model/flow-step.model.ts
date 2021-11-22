@@ -46,6 +46,11 @@ export interface FlowNavigationOptions {
      * If not set, there will be no "back" button
      */
     backId?: string;
+
+    /**
+     * Define if the query params should be preserved on routing
+     */
+    preserveQuery?: boolean;
 }
 
 export class FlowStep {

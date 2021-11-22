@@ -33,6 +33,7 @@ export const SpotifyToYoutubeFlow: FlowStep[] = [
         },
         navigation: {
             nextId: "choose-playlist",
+            preserveQuery: true
         }
     },
     { 

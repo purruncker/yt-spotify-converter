@@ -52,7 +52,7 @@ export class AuthenticationService {
 
             // Subscribe to session changes to instantly 
             // persist them in cookie etc.
-            this.$session.subscribe(() => this.persistSession());
+            this.$session.pipe(filter((session) => session.type != SessionType.SESSION_ANONYMOUS)).subscribe(() => this.persistSession());
             this.$user.subscribe(() => this.persistUser());
 
             // Notify application that session and user initialization is done
@@ -134,7 +134,7 @@ export class AuthenticationService {
 
     public hasValidSession(): boolean {
         const session = this._sessionSubject.getValue();
-        return session && session.accessToken && session.type != SessionType.SESSION_ANONYMOUS;
+        return session && session.accessToken && session.type != SessionType.SESSION_ANONYMOUS && session.type != SessionType.SESSION_TENTATIVE;
     }
 
     public async persistSession(): Promise<void> {
@@ -157,7 +157,7 @@ export class AuthenticationService {
     }
 
     private async restoreSession(): Promise<Session> {
-        const sessionType = this.cookieService.hasKey(ACCESSTOKEN_COOKIE_NAME) ? this.cookieService.get(SESSIONTYPE_COOKIE_NAME) as Platform : SessionType.SESSION_ANONYMOUS
+        const sessionType = this.cookieService.hasKey(SESSIONTYPE_COOKIE_NAME) ? this.cookieService.get(SESSIONTYPE_COOKIE_NAME) as SessionType : SessionType.SESSION_ANONYMOUS
         const session: Session = {
             type: sessionType,
             accessToken: undefined,
@@ -165,7 +165,14 @@ export class AuthenticationService {
         }
         
         if(!this.cookieService.hasKey(ACCESSTOKEN_COOKIE_NAME)) {
-            console.warn("[SERVICE] [SESSION] No session cookie found: Session expired")
+            console.warn("[SERVICE] [SESSION] No session cookie found: Session expired?")
+
+            if(sessionType == SessionType.SESSION_TENTATIVE) {
+                console.log(`[SERVICE] [SESSION] Found session of type ${sessionType.toUpperCase()}`)
+
+                this._sessionSubject?.next(session);
+                return session;
+            }
 
             // Access token expired
             if(!this.cookieService.hasKey(REFRESHTOKEN_COOKIE_NAME)) {
@@ -218,8 +225,9 @@ export class AuthenticationService {
 
                 if(!this.hasValidSession()) {
                     console.warn("[SERVICE] [USER] Cannot request user data: Session invalid.")
+                    const currentSession = this._sessionSubject.getValue()
 
-                    if(this._sessionSubject.getValue().type != SessionType.SESSION_ANONYMOUS) {
+                    if(currentSession.type != SessionType.SESSION_ANONYMOUS && currentSession.type != SessionType.SESSION_TENTATIVE) {
                         console.warn("[SERVICE] [USER] Logging out user: No user data could be requested.")                      
                         this.logout();
                     }
