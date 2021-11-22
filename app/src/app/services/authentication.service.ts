@@ -1,14 +1,13 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { CookieService } from "ngx-cookie";
-import * as querystring from "query-string";
 import { BehaviorSubject, Observable } from "rxjs";
 import { filter } from "rxjs/operators";
+import { environment } from "src/environments/environment";
 import { SpotifyTokenDTO } from "../dto/spotifyToken.dto";
 import { Platform } from "../model/platform.model";
 import { Session, SessionType } from "../model/session.model";
 import { User } from "../model/user.model";
-import { FlowService } from "./flow.service";
 import { HttpErrorService } from "./http-error.service";
 
 export const USER_LOCALSTORAGE_ITEM = "cc-user";
@@ -49,6 +48,7 @@ export class AuthenticationService {
         this.restoreSession()
         .then(() => this.restoreUser())
         .then((user: User) => {
+            console.log("[SERVICE] [AUTH] Subscribing to session and user.")
 
             // Subscribe to session changes to instantly 
             // persist them in cookie etc.
@@ -60,15 +60,14 @@ export class AuthenticationService {
         })
     }
     public async requestSpotifyGrantCode(): Promise<void> {
-        const data = {
-          response_type: 'code',
-          client_id: this.CLIENT_ID_SPOTIFY,
-          scope: this.SPOTIFY_SCOPES,
-          redirect_uri: "http://localhost:4200/authorize/spotify",
-          state: "veryRandomString123"
-        }
+        const params = new URLSearchParams();
+        params.append("response_type", "code");
+        params.append("client_id", this.CLIENT_ID_SPOTIFY);
+        params.append("redirect_uri", (environment.production) ? `${window.location.origin}/authorize/spotify` : "http://localhost:4200/authorize/spotify")
+        params.append("scope", this.SPOTIFY_SCOPES);
+        params.append("state", "veryRandomString123")
     
-        window.location.href = "https://accounts.spotify.com/authorize?" + querystring.stringify(data);
+        window.location.href = "https://accounts.spotify.com/authorize?" + params;
     }
 
     public requestSpotifyAccessToken(grantCode: string, grantType: "authorization_code" | "refresh_token" = "authorization_code"): Promise<SpotifyTokenDTO> {
@@ -140,6 +139,8 @@ export class AuthenticationService {
 
     public async persistSession(): Promise<void> {
         const session: Session = this._sessionSubject.getValue()
+
+        console.log(`[SERVICE] [AUTH] Persisting session of type '${session.type.toUpperCase()}'`)
         if(session.refreshToken) this.cookieService.put(REFRESHTOKEN_COOKIE_NAME, session.refreshToken, { expires: new Date(Date.now() + 1000 * 60 * 60 * 7) })
         if(session.type) this.cookieService.put(SESSIONTYPE_COOKIE_NAME, session.type, { expires: new Date(Date.now() + 1000 * 60 * 60 * 7) })
 
@@ -164,11 +165,11 @@ export class AuthenticationService {
         }
         
         if(!this.cookieService.hasKey(ACCESSTOKEN_COOKIE_NAME)) {
-            console.warn("[SESSION] No session cookie found: Session expired")
+            console.warn("[SERVICE] [SESSION] No session cookie found: Session expired")
 
             // Access token expired
             if(!this.cookieService.hasKey(REFRESHTOKEN_COOKIE_NAME)) {
-                console.warn("[SESSION] No refresh token cookie found: Session is dead, can't be refreshed")
+                console.warn("[SERVICE] [SESSION] No refresh token cookie found: Session is dead, can't be refreshed")
 
                 // Refresh token is also expired
                 this.logout();
@@ -209,19 +210,22 @@ export class AuthenticationService {
         return new Promise((resolve) => {
             setTimeout(() => {
                 if(!localStorage) {
-                    console.error("[USER] LocalStorage is not supported by Browser")
+                    console.error("[SERVICE] [USER] LocalStorage is not supported by Browser")
                     resolve(null);
+                    this._userSubject.next(null);
                     return;
                 }
 
                 if(!this.hasValidSession()) {
-                    console.warn("[USER] Cannot request user data: Session invalid.")
+                    console.warn("[SERVICE] [USER] Cannot request user data: Session invalid.")
 
                     if(this._sessionSubject.getValue().type != SessionType.SESSION_ANONYMOUS) {
-                        console.warn("[USER] Logging at. No user data could be requested.")
-                        resolve(null)
+                        console.warn("[SERVICE] [USER] Logging out user: No user data could be requested.")                      
                         this.logout();
                     }
+
+                    this._userSubject.next(null);
+                    resolve(null);
                     return;
                 }
 
@@ -229,7 +233,7 @@ export class AuthenticationService {
                 this._userSubject.next(user);
                 
                 this.findUser(Platform.SPOTIFY).then((user) => {
-                    console.log("[USER] Reloaded user data in background.")
+                    console.log("[SERVICE] [USER] Reloaded user data in background.")
                     // if(!user) this.logout();
                     // else this._userSubject.next(user)
                     // TODO: Maybe check status code to check if the service is currently unavailable, or user account does not exist
@@ -237,7 +241,7 @@ export class AuthenticationService {
                     this._userSubject.next(user)
                 })
 
-                console.log("[USER] Restored user data from localStorage: ", user)
+                console.log("[SERVICE] [USER] Restored user data from localStorage: ", user)
                 resolve(user);
             }, 1000)
         })
@@ -247,13 +251,14 @@ export class AuthenticationService {
         console.log("logging out...")
 
         this.cookieService.removeAll();
-        if(!!localStorage) localStorage.clear();
-        if(!!sessionStorage) sessionStorage.clear();
+        if(!!localStorage) localStorage.removeItem(USER_LOCALSTORAGE_ITEM);
         
         this.setAnonymous();
     }
 
     public setTentative() {
+        console.log(`[SERVICE] [SESSION] Setting session to type '${SessionType.SESSION_TENTATIVE.toUpperCase()}'.`)
+
         this._sessionSubject.next({
             accessToken: undefined,
             refreshToken: undefined,
@@ -262,7 +267,8 @@ export class AuthenticationService {
     }
 
     public setAnonymous() {
-        // Create anonymous session
+        console.log(`[SERVICE] [SESSION] Setting session to type '${SessionType.SESSION_ANONYMOUS.toUpperCase()}'.`)
+
         this._sessionSubject.next({
             accessToken: undefined,
             refreshToken: undefined,
