@@ -33,6 +33,8 @@ export class AuthHandlerComponent implements OnInit, OnDestroy {
   private activeSubscriber: Subscription[] = [];
 
   public ngOnInit(): void {
+    console.log("auth-hander oninit")
+
     // Notify component that session is being checked on
     this.isCheckingSession = true;
 
