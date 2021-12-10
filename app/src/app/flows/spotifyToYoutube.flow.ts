@@ -33,6 +33,7 @@ export const SpotifyToYoutubeFlow: FlowStep[] = [
         },
         navigation: {
             nextId: "choose-playlist",
+            preserveQuery: true
         }
     },
     { 
@@ -58,44 +59,42 @@ export const SpotifyToYoutubeFlow: FlowStep[] = [
             path: "/choose-songs"
         },
         navigation: {
-            nextId: "yt"
+            nextId: "connect-youtube"
         }
     },
     { 
-        id: "yt", 
+        id: "connect-youtube", 
         title: "Connect to YouTube", 
         displayId: 3,
         isListed: true,
         route: {
-            path: "/yt"
+            path: "/authorize/youtube"
         },
         navigation: {
-            // TODO
+            nextId: "create-playlist",
+            preserveQuery: true
         }
     },
     { 
         id: "create-playlist", 
-        title: "Create playlist", 
+        title: "Create new playlist", 
         displayId: 3,
         isListed: false, 
         flowLabel: "You can now setup the playlist:",
         route: {
-            path: null
+            path: "/create-playlist"
         },
         navigation: {
-            // TODO
+            nextId: "done"
         }
     },
     { 
-        id: "convert-playlist", 
-        title: "Move playlist to YouTube", 
+        id: "done", 
+        title: "Done", 
         displayId: 3,
         isListed: false,
         route: {
-            path: null
-        },
-        navigation: {
-            // TODO
+            path: "/done"
         }
     }
 ]

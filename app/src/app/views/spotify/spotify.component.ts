@@ -36,6 +36,8 @@ export class SpotifyComponent implements OnInit {
   }
 
   public async ngOnInit(): Promise<void> {
+    this.getPlaylists()
+    
     //console.log(this.accessToken);
     //TODO: Localstorage for token
     this.currentRoute.queryParams.subscribe((map) => {
@@ -44,7 +46,7 @@ export class SpotifyComponent implements OnInit {
       // Received grant_code.
       // This is used to request an access_token, which is used
       // for future requests to spotify.
-      const grantCode = map.code;
+      /*const grantCode = map.code;
 
       // Prevent error, because observer also triggered if route
       // is accessed without a ?code query param.
@@ -66,7 +68,7 @@ export class SpotifyComponent implements OnInit {
         //console.log(access_token);
         this.hello()
         this.getPlaylists()
-      })
+      })*/
 
     })
   }

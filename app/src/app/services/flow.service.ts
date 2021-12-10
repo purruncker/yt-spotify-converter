@@ -1,10 +1,12 @@
 import { Injectable } from "@angular/core";
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { BehaviorSubject, Observable } from "rxjs";
-import { filter } from "rxjs/operators";
+import { filter, skip } from "rxjs/operators";
 import { SpotifyToYoutubeFlow } from "../flows/spotifyToYoutube.flow";
 import { FlowStep } from "../model/flow-step.model";
 import { Flow, FLOW_SESSIONSTORAGE_KEY, PersistableFlow } from "../model/flow.model";
+import { SessionType } from "../model/session.model";
+import { AuthenticationService } from "./authentication.service";
 
 @Injectable({
     providedIn: 'root'
@@ -15,20 +17,35 @@ export class FlowService {
     private _selectedFlowSubject: BehaviorSubject<Flow> = new BehaviorSubject(null);
 
     public $currentStep: Observable<FlowStep> = this._currentStepSubject.asObservable();
-    public $selectedFlow: Observable<Flow> = this._selectedFlowSubject.asObservable().pipe(filter((flow) => !!flow));
+    public $currentFlow: Observable<Flow> = this._selectedFlowSubject.asObservable().pipe(filter((flow) => !!flow));
 
-    constructor(private router: Router) {
+    constructor(private router: Router, private currentRoute: ActivatedRoute, private authService: AuthenticationService) {
         this.restoreFlow().then((flow) => {
             console.log("setting flow after init: ", flow)
             this._selectedFlowSubject.next(flow);
 
-            // Save flow to sessionStorage, if it updates
-            this.$selectedFlow.subscribe(async() => this.persistFlow())
+            // Save flow to localStorage, if it updates
+            this.$currentFlow.subscribe(async(flow) => {
+                this._currentStepSubject.next(flow.currentStep)
+                this.persistFlow()
+            })
         });
+
+        this.authService.$session.pipe(filter((session) => !!session)).subscribe((session) => {
+            if(session.type == SessionType.SESSION_ANONYMOUS && this.hasActiveFlow()) {
+                console.warn("[FLOW-SERVICE] Aborting current flow: Invalid session found.")
+                this.abort();
+            }
+        })
     }
 
     public async startFlow() {
-        console.log("starting flow...")
+        // Set session to tentative. This is for the router to know that the
+        // session is not to be treated like ANONYMOUS after being redirected back
+        // from platform login.
+        this.authService.setTentative();
+
+        console.log("[FLOW-SERVICE] Starting flow...")
         const flow = this._selectedFlowSubject.getValue();
         flow.start();
 
@@ -36,7 +53,7 @@ export class FlowService {
     }
 
     public async nextStep() {
-        console.log("triggering next step...")
+        console.log("[FLOW-SERVICE] Triggering next step in flow...")
         const flow = this._selectedFlowSubject.getValue();
         flow.next();
 
@@ -62,7 +79,7 @@ export class FlowService {
     }
 
     public hasActiveFlow(): boolean {
-        return this._selectedFlowSubject.getValue()?.hasStarted
+        return this._selectedFlowSubject.getValue()?.isActive
     }
 
     public async persistFlow() {
@@ -72,21 +89,21 @@ export class FlowService {
     }
 
     public createDefaultFlow(): Flow {
-        return new Flow(SpotifyToYoutubeFlow, this.router)
+        return new Flow(SpotifyToYoutubeFlow, this.router, this.currentRoute)
     }
 
     public async restoreFlow(): Promise<Flow> {
-        if(!!sessionStorage) {
+        if(!!localStorage) {
             console.log("restoring flow")
-            const persistedFlow: PersistableFlow = JSON.parse(sessionStorage.getItem(FLOW_SESSIONSTORAGE_KEY)) as PersistableFlow;
+            const persistedFlow: PersistableFlow = JSON.parse(localStorage.getItem(FLOW_SESSIONSTORAGE_KEY)) as PersistableFlow;
 
             if(persistedFlow) {
-                const restoredFlow = new Flow(SpotifyToYoutubeFlow, this.router);
+                const restoredFlow = new Flow(SpotifyToYoutubeFlow, this.router, this.currentRoute);
                 restoredFlow.srcPlatform = persistedFlow.srcPlatform;
                 restoredFlow.destPlatform = persistedFlow.destPlatform;
-                restoredFlow.hasStarted = persistedFlow.hasStarted;
                 restoredFlow.setStepById(persistedFlow.currentStepId);
-    
+
+                console.log("found persisted flow: ", restoredFlow)
                 this._selectedFlowSubject.next(restoredFlow);
     
                 return restoredFlow;

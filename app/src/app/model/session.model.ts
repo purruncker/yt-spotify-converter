@@ -12,5 +12,6 @@ export class Session {
 export const enum SessionType {
     SESSION_SPOTIFY = "spotify",
     SESSION_YOUTUBE = "youtube",
-    SESSION_ANONYMOUS = "anonymous"
+    SESSION_ANONYMOUS = "anonymous",
+    SESSION_TENTATIVE = "tentative" // Used when routing to auth handler after login on platform
 }

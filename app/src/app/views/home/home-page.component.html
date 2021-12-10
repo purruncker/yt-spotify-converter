@@ -14,8 +14,8 @@
                     <div *ngIf="!!(authService.$user | async)">
                         <app-profile-bar></app-profile-bar>
                     </div>
-                    <p class="text-primary text-center">{{ (flowService.$selectedFlow | async).currentStep.id }} - {{ (flowService.$selectedFlow | async).currentStep.title }}</p>
-                    <label class="text-accent-dark" *ngIf="(flowService.$selectedFlow | async)?.currentStep?.flowLabel">{{ (flowService.$selectedFlow | async)?.currentStep?.flowLabel }}</label>
+                    <p class="text-primary text-center">{{ (flowService.$currentFlow | async).currentStep.id }} - {{ (flowService.$currentFlow | async).currentStep.title }}</p>
+                    <label class="text-accent-dark" *ngIf="(flowService.$currentFlow | async)?.currentStep?.flowLabel">{{ (flowService.$currentFlow | async)?.currentStep?.flowLabel }}</label>
                 </div>
                 
                 <!-- Flow-Body -->
@@ -37,7 +37,8 @@
 
                         <!-- TODO: Fix not showing custom start button -->
                         <div *ngIf="currentStep?.buttons?.start">
-                            <app-flow-button [options]="(flowService.$selectedFlow | async).currentStep.buttons.next"></app-flow-button>
+                            <p class="text-primary">custom start button</p>
+                            <app-flow-button [options]="currentStep?.buttons?.start"></app-flow-button>
                         </div>
 
                         <p class="text-primary">{{ currentStep }} </p>

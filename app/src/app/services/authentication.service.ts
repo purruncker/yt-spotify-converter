@@ -1,14 +1,13 @@
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { Injectable } from "@angular/core";
 import { CookieService } from "ngx-cookie";
-import * as querystring from "query-string";
 import { BehaviorSubject, Observable } from "rxjs";
 import { filter } from "rxjs/operators";
+import { environment } from "src/environments/environment";
 import { SpotifyTokenDTO } from "../dto/spotifyToken.dto";
 import { Platform } from "../model/platform.model";
 import { Session, SessionType } from "../model/session.model";
 import { User } from "../model/user.model";
-import { FlowService } from "./flow.service";
 import { HttpErrorService } from "./http-error.service";
 
 export const USER_LOCALSTORAGE_ITEM = "cc-user";
@@ -39,7 +38,6 @@ export class AuthenticationService {
         private httpclient: HttpClient, 
         private errorService: HttpErrorService,
         private cookieService: CookieService,
-        private flowService: FlowService
     ) { 
         // Notify application that session 
         // and user data is being fetched and initialized
@@ -50,10 +48,11 @@ export class AuthenticationService {
         this.restoreSession()
         .then(() => this.restoreUser())
         .then((user: User) => {
+            console.log("[SERVICE] [AUTH] Subscribing to session and user.")
 
             // Subscribe to session changes to instantly 
             // persist them in cookie etc.
-            this.$session.subscribe(() => this.persistSession());
+            this.$session.pipe(filter((session) => session.type != SessionType.SESSION_ANONYMOUS)).subscribe(() => this.persistSession());
             this.$user.subscribe(() => this.persistUser());
 
             // Notify application that session and user initialization is done
@@ -61,15 +60,14 @@ export class AuthenticationService {
         })
     }
     public async requestSpotifyGrantCode(): Promise<void> {
-        const data = {
-          response_type: 'code',
-          client_id: this.CLIENT_ID_SPOTIFY,
-          scope: this.SPOTIFY_SCOPES,
-          redirect_uri: "http://localhost:4200/authorize/spotify",
-          state: "veryRandomString123"
-        }
+        const params = new URLSearchParams();
+        params.append("response_type", "code");
+        params.append("client_id", this.CLIENT_ID_SPOTIFY);
+        params.append("redirect_uri", (environment.production) ? `${window.location.origin}/authorize/spotify` : "http://localhost:4200/authorize/spotify")
+        params.append("scope", this.SPOTIFY_SCOPES);
+        params.append("state", "veryRandomString123")
     
-        window.location.href = "https://accounts.spotify.com/authorize?" + querystring.stringify(data);
+        window.location.href = "https://accounts.spotify.com/authorize?" + params;
     }
 
     public requestSpotifyAccessToken(grantCode: string, grantType: "authorization_code" | "refresh_token" = "authorization_code"): Promise<SpotifyTokenDTO> {
@@ -136,11 +134,13 @@ export class AuthenticationService {
 
     public hasValidSession(): boolean {
         const session = this._sessionSubject.getValue();
-        return session && session.accessToken && session.type != SessionType.SESSION_ANONYMOUS;
+        return session && session.accessToken && session.type != SessionType.SESSION_ANONYMOUS && session.type != SessionType.SESSION_TENTATIVE;
     }
 
     public async persistSession(): Promise<void> {
         const session: Session = this._sessionSubject.getValue()
+
+        console.log(`[SERVICE] [AUTH] Persisting session of type '${session.type.toUpperCase()}'`)
         if(session.refreshToken) this.cookieService.put(REFRESHTOKEN_COOKIE_NAME, session.refreshToken, { expires: new Date(Date.now() + 1000 * 60 * 60 * 7) })
         if(session.type) this.cookieService.put(SESSIONTYPE_COOKIE_NAME, session.type, { expires: new Date(Date.now() + 1000 * 60 * 60 * 7) })
 
@@ -157,7 +157,7 @@ export class AuthenticationService {
     }
 
     private async restoreSession(): Promise<Session> {
-        const sessionType = this.cookieService.hasKey(ACCESSTOKEN_COOKIE_NAME) ? this.cookieService.get(SESSIONTYPE_COOKIE_NAME) as Platform : SessionType.SESSION_ANONYMOUS
+        const sessionType = this.cookieService.hasKey(SESSIONTYPE_COOKIE_NAME) ? this.cookieService.get(SESSIONTYPE_COOKIE_NAME) as SessionType : SessionType.SESSION_ANONYMOUS
         const session: Session = {
             type: sessionType,
             accessToken: undefined,
@@ -165,8 +165,19 @@ export class AuthenticationService {
         }
         
         if(!this.cookieService.hasKey(ACCESSTOKEN_COOKIE_NAME)) {
+            console.warn("[SERVICE] [SESSION] No session cookie found: Session expired?")
+
+            if(sessionType == SessionType.SESSION_TENTATIVE) {
+                console.log(`[SERVICE] [SESSION] Found session of type ${sessionType.toUpperCase()}`)
+
+                this._sessionSubject?.next(session);
+                return session;
+            }
+
             // Access token expired
             if(!this.cookieService.hasKey(REFRESHTOKEN_COOKIE_NAME)) {
+                console.warn("[SERVICE] [SESSION] No refresh token cookie found: Session is dead, can't be refreshed")
+
                 // Refresh token is also expired
                 this.logout();
                 this._sessionSubject?.next(session)
@@ -206,13 +217,23 @@ export class AuthenticationService {
         return new Promise((resolve) => {
             setTimeout(() => {
                 if(!localStorage) {
+                    console.error("[SERVICE] [USER] LocalStorage is not supported by Browser")
                     resolve(null);
+                    this._userSubject.next(null);
                     return;
                 }
 
                 if(!this.hasValidSession()) {
-                    resolve(null)
-                    this.logout();
+                    console.warn("[SERVICE] [USER] Cannot request user data: Session invalid.")
+                    const currentSession = this._sessionSubject.getValue()
+
+                    if(currentSession.type != SessionType.SESSION_ANONYMOUS && currentSession.type != SessionType.SESSION_TENTATIVE) {
+                        console.warn("[SERVICE] [USER] Logging out user: No user data could be requested.")                      
+                        this.logout();
+                    }
+
+                    this._userSubject.next(null);
+                    resolve(null);
                     return;
                 }
 
@@ -220,24 +241,47 @@ export class AuthenticationService {
                 this._userSubject.next(user);
                 
                 this.findUser(Platform.SPOTIFY).then((user) => {
-                    if(!user) this.logout();
-                    else this._userSubject.next(user)
+                    console.log("[SERVICE] [USER] Reloaded user data in background.")
+                    // if(!user) this.logout();
+                    // else this._userSubject.next(user)
+                    // TODO: Maybe check status code to check if the service is currently unavailable, or user account does not exist
+                    // After checking this and the result is user account does not exists --> logout, otherwise continue as session is still working
+                    this._userSubject.next(user)
                 })
 
+                console.log("[SERVICE] [USER] Restored user data from localStorage: ", user)
                 resolve(user);
-            }, 3000)
+            }, 1000)
         })
     }
 
     public async logout() {
-        this.cookieService.removeAll();
-        if(!!localStorage) localStorage.clear();
-        if(!!sessionStorage) sessionStorage.clear();
+        console.log("logging out...")
 
-        if(this.flowService.hasActiveFlow()) {
-            this.flowService.abort();
-        }
+        this.cookieService.removeAll();
+        if(!!localStorage) localStorage.removeItem(USER_LOCALSTORAGE_ITEM);
         
+        this.setAnonymous();
+    }
+
+    public setTentative() {
+        console.log(`[SERVICE] [SESSION] Setting session to type '${SessionType.SESSION_TENTATIVE.toUpperCase()}'.`)
+
+        this._sessionSubject.next({
+            accessToken: undefined,
+            refreshToken: undefined,
+            type: SessionType.SESSION_TENTATIVE
+        })
+    }
+
+    public setAnonymous() {
+        console.log(`[SERVICE] [SESSION] Setting session to type '${SessionType.SESSION_ANONYMOUS.toUpperCase()}'.`)
+
+        this._sessionSubject.next({
+            accessToken: undefined,
+            refreshToken: undefined,
+            type: SessionType.SESSION_ANONYMOUS
+        })
     }
 
 }

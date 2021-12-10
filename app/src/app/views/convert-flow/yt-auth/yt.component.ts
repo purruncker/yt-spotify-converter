@@ -1,8 +1,7 @@
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Component, Input, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import * as querystring from "query-string";
 import { Observable } from 'rxjs';
 import { first, map } from 'rxjs/operators';
 import { PlaylistService } from 'src/app/services/playlist.service';
@@ -81,14 +80,14 @@ export class YtComponent implements OnInit {
   private scope_youtube: string = "https://www.googleapis.com/auth/youtube.force-ssl";
 
   public async requestYoutubeGrantCode(): Promise<void> {
-    const data = {
-      client_id: this.client_id_youtube,
-      scope: this.scope_youtube,
-      redirect_uri: "http://localhost:4200/yt",
-      response_type: "code"
-    }
 
-    window.location.href = "https://accounts.google.com/o/oauth2/v2/auth?" + querystring.stringify(data);
+    const params = new URLSearchParams();
+    params.append("client_id", this.client_id_youtube)
+    params.append("redirect_uri", "http://localhost:4200/yt")
+    params.append("scope", this.scope_youtube)
+    params.append("code", "code")
+
+    window.location.href = "https://accounts.google.com/o/oauth2/v2/auth?" + params;
 
   }
 

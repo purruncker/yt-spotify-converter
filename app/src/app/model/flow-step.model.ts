@@ -8,6 +8,7 @@ export interface FlowRoute {
     path: string;
 }
 
+// Check if this is really needed
 export enum FlowButtonType {
     START = "start",
     NEXT = "next",
@@ -45,6 +46,11 @@ export interface FlowNavigationOptions {
      * If not set, there will be no "back" button
      */
     backId?: string;
+
+    /**
+     * Define if the query params should be preserved on routing
+     */
+    preserveQuery?: boolean;
 }
 
 export class FlowStep {

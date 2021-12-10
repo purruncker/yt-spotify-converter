@@ -1,4 +1,4 @@
-import { Router } from "@angular/router";
+import { ActivatedRoute, Router } from "@angular/router";
 import { FlowList } from "./flow-list.model";
 import { FlowStep } from "./flow-step.model";
 import { Platform } from "./platform.model";
@@ -10,7 +10,6 @@ export interface PersistableFlow {
     srcPlatform: Platform;
     // Not important at the moment
     destPlatform: Platform;
-    hasStarted: boolean;
 }
 
 export class Flow implements PersistableFlow {
@@ -21,30 +20,31 @@ export class Flow implements PersistableFlow {
     public currentStepId: string;
     public srcPlatform: Platform;
     public destPlatform: Platform;
-    public hasStarted: boolean = false;
 
     // Custom fields
     public currentStep?: FlowStep;
     public list: FlowList;
 
-    constructor(list: FlowStep[], private router: Router) {
+    constructor(list: FlowStep[], private router: Router, private currentRoute: ActivatedRoute) {
         this.list = new FlowList(list);
         this.currentStep = list[0];
 
         console.log(this.currentStep)
-        this.hasStarted = false;
         this.destPlatform = Platform.YOUTUBE;
         this.srcPlatform = Platform.SPOTIFY;
     }
 
+    public get isActive() {
+        return this.currentStep?.id != "index";
+    }
+
     public start(): void {
         console.log("flow started");
-        this.hasStarted = true;
         this.next();
     }
 
     public abort(): void {
-        this.hasStarted = false;
+        console.log("aborting flow...")
         this.currentStep = this.list.find("index");
         this.currentStepId = this.currentStep.id;
         this.clearPersistedData()
@@ -65,11 +65,14 @@ export class Flow implements PersistableFlow {
         this.currentStepId = this.currentStep.id;
         console.log("routing to flow: ", id, " on route ", this.currentStep.route.path)
         this.navigateToCurrentStep();
-        this.persist();
     }
 
-    public navigateToCurrentStep() {
-        this.router.navigateByUrl(this.currentStep?.route?.path || "/")
+    public async navigateToCurrentStep() {
+        const queryParams = (this.currentStep?.navigation?.preserveQuery ? await this.currentRoute.queryParams.toPromise() : {})
+
+        this.router.navigate([this.currentStep?.route?.path || "/"], {
+            queryParams: queryParams
+        })
     }
 
     public back(): void {
@@ -84,27 +87,26 @@ export class Flow implements PersistableFlow {
         this.setStepById(this.currentStep?.navigation?.backId);
     }
 
-    
-
     public async persist() {
-        if(!!sessionStorage && this.currentStepId) {
+        if(!!localStorage && this.currentStepId) {
+            if(!this.isActive) return;
+
             const persistableFlow: PersistableFlow = {
                 currentStepId: this.currentStepId,
                 destPlatform: this.destPlatform,
-                hasStarted: this.hasStarted,
                 srcPlatform: Platform.SPOTIFY
             }
 
             console.log("persisting flow...", persistableFlow)
 
-            sessionStorage.setItem(FLOW_SESSIONSTORAGE_KEY, JSON.stringify(persistableFlow))
+            localStorage.setItem(FLOW_SESSIONSTORAGE_KEY, JSON.stringify(persistableFlow))
         }
     }
 
     public async clearPersistedData() {
-        if(!!sessionStorage) {
+        if(!!localStorage) {
             console.log("clearing persisted flow...")
-            sessionStorage.removeItem(FLOW_SESSIONSTORAGE_KEY)
+            localStorage.removeItem(FLOW_SESSIONSTORAGE_KEY)
         }
     }
 
