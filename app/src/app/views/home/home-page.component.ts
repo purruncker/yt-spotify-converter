@@ -36,11 +36,6 @@ export class HomePageComponent implements OnInit, OnDestroy {
     this._currentStepSub?.unsubscribe();
   }
 
-  public startFlow(): void {
-    this.flowService.startFlow();
-    this.authService.requestSpotifyGrantCode();
-  }
-
   public nextStepInFlow() {
     this.flowService.nextStep()
   }

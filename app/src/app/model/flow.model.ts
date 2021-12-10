@@ -30,6 +30,8 @@ export class Flow implements PersistableFlow {
     constructor(list: FlowStep[], private router: Router) {
         this.list = new FlowList(list);
         this.currentStep = list[0];
+
+        console.log(this.currentStep)
         this.hasStarted = false;
         this.destPlatform = Platform.YOUTUBE;
         this.srcPlatform = Platform.SPOTIFY;

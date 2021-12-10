@@ -56,7 +56,7 @@ export class AuthHandlerComponent implements OnInit, OnDestroy {
         const grantCode = this.route.snapshot.queryParamMap.get("code")
         this.platformName = platform;
 
-        if(grantCode) {
+        /*if(grantCode) {
           this.authService.requestSpotifyAccessToken(grantCode).then((token) => {
               console.log(token)
               this.authService.createSpotifyOrientedSession(token).then((session) => {
@@ -66,7 +66,7 @@ export class AuthHandlerComponent implements OnInit, OnDestroy {
           }).catch(() => {})          
         } else {
           this.authService.requestSpotifyGrantCode()
-        }
+        }*/
       } else {
         // TODO: Show error --> platform name not found, therefor not supported
       }

@@ -29,6 +29,8 @@ export class FlowButtonComponent implements OnInit {
   public clickEvent() {
     const options: FlowButtonOptions = this.options;
 
+    console.log("flow button clicked: ", options)
+
     if(options) {
       switch (options.type) {
         case FlowButtonType.START:

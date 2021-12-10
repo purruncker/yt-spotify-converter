@@ -39,6 +39,9 @@
                         <div *ngIf="currentStep?.buttons?.start">
                             <app-flow-button [options]="(flowService.$selectedFlow | async).currentStep.buttons.next"></app-flow-button>
                         </div>
+
+                        <p class="text-primary">{{ currentStep }} </p>
+
                         <div *ngIf="!currentStep?.buttons?.start">
                             <p class="text-primary">No custom start button</p>
                             <button class="btn btn-lg btn-spotify mt-8 w-full" (click)="nextStepInFlow()"><i class="fab fa-spotify"></i>Start now with connecting to Spotify</button>
