@@ -31,11 +31,12 @@ export class ChooseSongsComponent implements OnInit {
 
   public finishSelection(): void {
     // TODO: Do proper validation
-    if(this.songs.length <= 0) return;
+    if (this.songs.length <= 0) return;
 
     this.playlistService.setSelectedSongs(this.songs)
     this.flowService.nextStep();
     this.router.navigate(["/yt"])
+    localStorage.setItem('songs', JSON.stringify(this.songs))
   }
 
 }
