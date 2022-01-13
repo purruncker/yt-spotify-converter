@@ -8,6 +8,8 @@ export class YtSongsController {
 
   @Post()
   getToInsertedSongs(@Body() ytSongDto: CreateYtSongDto) {
+    console.log(ytSongDto)
+
     return this.ytSongsService.getSongs(ytSongDto);
   }
 

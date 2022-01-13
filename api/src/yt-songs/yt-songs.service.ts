@@ -25,15 +25,20 @@ export class YtSongsService {
 
       await axios.get(url + `part=snippet&maxResults=1&order=relevance&q=${artists}${x.name}&key=${process.env.YT_API_KEY}`, config)
         .then(data => {
+          if (typeof data === undefined || data === undefined) {
+            console.log('no  items');
+            return;
+          }
           const item: IdsToInsertDTO = {
             id: data['data']['items'][0].id.videoId,
             name: data['data']['items'][0].snippet.title,
             channelTitle: data['data']['items'][0].snippet.channelTitle
           }
+          console.log(data)
           result.push(item);
           //console.log(result)
         }).catch(error => {
-          console.log(error['response']['data'])
+          console.log(error['response'])
           throw new HttpException(error.response.data.error.message, error.response.data.error.code)
 
         })
